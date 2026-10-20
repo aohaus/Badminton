@@ -11,6 +11,14 @@ https://aohaus.github.io/Badminton/
 | ErrorZero | [/Badminton/ErrorZero/](https://aohaus.github.io/Badminton/ErrorZero/) | aohaus/ErrorZero | v1.0.4 |
 | Shatomin | [/Badminton/Shatomin/](https://aohaus.github.io/Badminton/Shatomin/) | aohaus/Shatomin | v1.0.5 |
 
+## 開発版
+
+| アプリ | URL | 内容 |
+|---|---|---|
+| PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | v1.5.0（英日併記・吹き出しヒント） |
+
+開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。
+
 各アプリは 1 ファイル完結の HTML で、ビルドは不要です。旧バージョン（`v1.x.x.html` など）は移行元リポジトリに残しています。
 
 ## 構成
