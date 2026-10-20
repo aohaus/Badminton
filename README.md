@@ -8,7 +8,7 @@ https://aohaus.github.io/Badminton/
 |---|---|---|---|
 | PairPlay | [/Badminton/PairPlay/](https://aohaus.github.io/Badminton/PairPlay/) | aohaus/PairPlay | v1.5.0 |
 | RallyScore | [/Badminton/RallyScore/](https://aohaus.github.io/Badminton/RallyScore/) | aohaus/RallyScore | v2.1.3 |
-| ErrorZero | [/Badminton/ErrorZero/](https://aohaus.github.io/Badminton/ErrorZero/) | aohaus/ErrorZero | v1.0.4 |
+| ErrorZero | [/Badminton/ErrorZero/](https://aohaus.github.io/Badminton/ErrorZero/) | aohaus/ErrorZero | v1.2.0（前の安定版は `ErrorZero/v1.0.4.html`） |
 | Shatomin | [/Badminton/Shatomin/](https://aohaus.github.io/Badminton/Shatomin/) | aohaus/Shatomin | v1.0.5 |
 
 ## 開発版
@@ -16,7 +16,7 @@ https://aohaus.github.io/Badminton/
 | アプリ | URL | 内容 |
 |---|---|---|
 | PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | 次の開発用（現在は v1.5.0 と同じ内容） |
-| ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | v1.2.0（1タップのコードウィンドウ・頻度でボタンの大きさ・長押しリセット） |
+| ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | 次の開発用（現在は v1.2.0 と同じ内容） |
 | ErrorZero | [/Badminton/ErrorZero/dev-v1.1.0.html](https://aohaus.github.io/Badminton/ErrorZero/dev-v1.1.0.html) | v1.1.0 の保存版（戻す場合はこれを dev.html にコピー。Git ではコミット `1264eef` の状態） |
 
 開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。

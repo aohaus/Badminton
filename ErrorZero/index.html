@@ -1052,6 +1052,268 @@
       .scoreboard { grid-template-columns: 1fr auto 1fr; }
       .sheet { min-width: max-content; }
     }
+
+    /* ===== Match flow (dev) ===== */
+    button small, h2 small { font-size: .74em; font-weight: 700; opacity: .8; margin-left: 4px; }
+    .dev-badge { font-size: 11px; font-weight: 850; color: #92400e; background: #fef3c7; border-radius: 999px; padding: 2px 8px; text-decoration: none; margin-left: 4px; }
+    .muted { color: var(--muted); }
+    .gameover {
+      position: sticky; top: 8px; z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin: 0 0 12px; padding: 12px 14px; border-radius: 18px; background: #111827; color: #fff; box-shadow: var(--shadow);
+    }
+    .gameover[hidden] { display: none; }
+    .go-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .go-text strong { font-size: 17px; }
+    .go-text span { font-size: 12px; opacity: .8; }
+    .go-btn { flex: none; padding: 14px 18px; font-size: 16px; }
+    .match-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: -2px 0 12px; flex-wrap: wrap; }
+    .target-seg { display: inline-flex; align-items: center; gap: 6px; }
+    .seg-label { font-size: 12px; font-weight: 800; color: var(--muted); margin-right: 2px; }
+    .seg { padding: 9px 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); color: var(--ink); font-size: 15px; }
+    .seg.on { background: var(--ink); color: var(--card); border-color: var(--ink); }
+    .match-bar .btn-ghost { padding: 10px 14px; }
+    .next-btn { width: 100%; margin-top: 12px; padding: 17px 14px; font-size: 17px; }
+    .next-btn.pulse { animation: ezPulse 1.4s ease-in-out infinite; }
+    @keyframes ezPulse { 0%,100% { box-shadow: 0 10px 22px rgba(50,103,255,.22); } 50% { box-shadow: 0 0 0 6px rgba(50,103,255,.25); } }
+    .next-modal { width: min(560px, 100%); }
+    .next-saved { background: rgba(22,163,74,.1); color: #166534; border-radius: 14px; padding: 10px 12px; font-weight: 750; font-size: 14px; margin-bottom: 12px; }
+    .pick-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 850; color: var(--muted); margin: 10px 0 6px; }
+    .side-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); }
+    .side-dot.b { background: var(--red); }
+    .pick-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pick { padding: 12px 16px; border-radius: 999px; background: var(--card); border: 1.5px solid var(--line); color: var(--ink); font-size: 16px; }
+    #pickA .pick.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+    #pickB .pick.on { background: var(--red); border-color: var(--red); color: #fff; }
+    .add-row { display: flex; gap: 8px; margin-top: 12px; }
+    .add-row input { flex: 1; min-width: 0; }
+    .target-seg.in-modal { margin-top: 14px; }
+    .next-preview { margin-top: 14px; padding: 12px; border-radius: 14px; background: rgba(107,114,128,.08); font-weight: 850; font-size: 16px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .next-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
+    .next-actions .btn-blue { padding: 15px 22px; font-size: 16px; }
+    .action-toast { display: flex; align-items: center; gap: 12px; pointer-events: auto; padding: 8px 8px 8px 16px; }
+    .action-toast:not(.show) { pointer-events: none; }
+    .action-toast button { background: #fff; color: #111827; padding: 8px 12px; border-radius: 999px; font-size: 13px; }
+    .report-modal { width: min(980px, 100%); max-height: 92vh; }
+    .report-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .report-actions select { padding: 10px; border-radius: 12px; border: 1px solid var(--line); font: inherit; font-weight: 700; }
+    .report { font-size: 12.5px; color: #111827; background: #fff; border-radius: 14px; padding: 12px; }
+    .report .muted { color: #6b7280; }
+    .report h3 { font-size: 13px; margin: 14px 0 6px; }
+    .rep-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; border-bottom: 2px solid #111827; padding-bottom: 6px; }
+    .rep-title { font-size: 18px; font-weight: 900; letter-spacing: -.02em; }
+    .rep-gen { font-size: 10px; }
+    .rep-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    .rep-table th { font-size: 10.5px; color: #6b7280; text-align: left; font-weight: 800; border-bottom: 1px solid #d9e0ea; padding: 4px 5px; vertical-align: bottom; }
+    .rep-table th small { font-weight: 700; }
+    .rep-table td { border-bottom: 1px solid #edf0f5; padding: 4px 5px; vertical-align: middle; }
+    .rep-table td.num, .rep-table th:not(:first-child) { text-align: center; }
+    .rep-table.matches th:nth-child(3), .rep-table.matches td:nth-child(3) { text-align: left; }
+    .rep-table td.zero { color: #c7ccd4; }
+    .rep-table td.fscore { font-weight: 850; white-space: nowrap; }
+    .rep-table td.codes { white-space: nowrap; }
+    .rep-table .win { font-weight: 850; }
+    .rep-table .tag { font-size: 10px; color: #92400e; background: #fef3c7; border-radius: 6px; padding: 1px 5px; }
+    .rep-table .del { padding: 4px 9px; border-radius: 8px; background: rgba(239,68,68,.1); color: #b91c1c; font-size: 14px; }
+    .spark { display: block; }
+    .rep-legend { margin-top: 10px; font-size: 10.5px; color: #374151; line-height: 1.5; }
+    .report-empty { padding: 30px; text-align: center; color: #6b7280; font-weight: 800; }
+    @media (max-width: 560px) {
+      .match-bar { margin-top: 0; }
+      .point-btn { min-height: 64px; font-size: 18px; }
+      .gameover { flex-direction: column; align-items: stretch; }
+      .go-btn { width: 100%; }
+      .report { overflow-x: auto; }
+    }
+    @media print {
+      body.print-report .app, body.print-report .toast { display: none !important; }
+      body.print-report .modal-backdrop { display: none !important; }
+      body.print-report #reportModal.modal-backdrop { display: block !important; position: static; background: none; padding: 0; }
+      body.print-report .report-modal { width: auto; max-height: none; overflow: visible; box-shadow: none; padding: 0; border-radius: 0; }
+      body.print-report .no-print { display: none !important; }
+      body.print-report .report { padding: 0; font-size: 11px; }
+      body.print-report { background: #fff !important; }
+      .gameover, .next-btn, .match-bar { display: none !important; }
+    }
+    @page { size: A4 portrait; margin: 10mm; }
+
+    /* --- Coder layout: names come from the Players sheet, every control fits the first phone screen --- */
+    .setup[hidden] { display: none !important; }
+    .ver-badge { font-size: 11px; font-weight: 850; color: #1e40af; background: #dbeafe; border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
+    .wf { margin: 2px 0 12px; }
+    .wf-title { font-size: 11px; font-weight: 850; color: var(--muted); margin-bottom: 5px; }
+    .wf-title small, .wf-legend small { font-weight: 700; opacity: .85; }
+    .wf-bar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--line); }
+    .wf-win { background: var(--green); }
+    .wf-fail { background: var(--amber); }
+    .wf-win, .wf-fail { transition: width .25s ease; }
+    .wf-legend { display: flex; justify-content: space-between; gap: 8px; margin-top: 5px; font-size: 12px; font-weight: 750; color: var(--ink); flex-wrap: wrap; }
+    .wf-legend small { color: var(--muted); font-size: 10.5px; }
+    .wf-legend span:last-child { margin-left: auto; }
+    .wf-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin: 0 5px; vertical-align: 0; }
+    .wf-dot.win { background: var(--green); margin-left: 0; }
+    .wf-dot.fail { background: var(--amber); margin-right: 0; }
+    .team-name[role="button"] { cursor: pointer; }
+    @media (max-width: 560px) {
+      .app { padding-top: 8px; }
+      header { margin: 0 0 8px; gap: 6px; }
+      .brand h1 { font-size: 22px; }
+      .brand .tagline { display: none; }
+      .header-right { gap: 6px; }
+      .match-meta { flex-wrap: nowrap; gap: 6px; }
+      .meta-pill { min-height: 30px; padding: 5px 8px; }
+      .top-actions { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 6px; }
+      .top-actions button { width: auto; min-height: 36px; padding: 6px 4px; font-size: 13px; border-radius: 12px; }
+      .top-actions button small { display: none; }
+      .card { padding: 10px; }
+      .match-bar { margin: 0 0 8px; }
+      .seg { padding: 7px 12px; }
+      .match-bar .btn-ghost { padding: 8px 12px; }
+      .scoreboard { margin-bottom: 6px; gap: 8px; }
+      .team-panel { min-height: 0; padding: 8px; }
+      .team-name { min-height: 22px; font-size: 16px; }
+      .score { font-size: 60px; margin: 4px 0 8px; }
+      .point-btn { min-height: 50px; padding: 12px 6px; font-size: 16px; }
+      .pending { margin-top: 6px; min-height: 30px; padding: 6px 10px; font-size: 12px; }
+      .reason-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+      .reason-btn { min-height: 54px; padding: 6px 4px; }
+      .next-btn { margin-top: 8px; padding: 13px 10px; font-size: 16px; }
+      .controls { grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+      .controls button { padding: 11px 6px; font-size: 14px; }
+      .brand { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 8px; }
+      /* Float the game-over banner over the header so the scoring controls do not move */
+      .gameover { position: fixed; top: 8px; left: 10px; right: 10px; margin: 0; z-index: 18; }
+    }
+    /* Short phones (iPhone SE class): tighten further so the controls still fit */
+    @media (max-width: 560px) and (max-height: 620px) {
+      header { margin-bottom: 4px; }
+      .brand h1 { font-size: 19px; }
+      .match-meta { display: none; }
+      .top-actions button { min-height: 32px; }
+      .team-name { font-size: 14px; min-height: 18px; }
+      .score { font-size: 44px; margin: 2px 0 6px; }
+      .point-btn { min-height: 44px; padding: 9px 6px; }
+      .pending { display: none; }
+      .reason-btn { min-height: 46px; }
+      .reason-btn .code { font-size: 17px; }
+      .next-btn { padding: 11px 10px; }
+      .controls button { padding: 9px 6px; }
+    }
+
+    /* ===== Code window v1.2: hierarchy by frequency ===== */
+    body.mode-code #classicCard, body.mode-code #gameOverBar { display: none !important; }
+    body.mode-classic #codeWindow { display: none; }
+    body.mode-code .top-actions #openHelpTop, body.mode-code .top-actions #openStatsTop,
+    body.mode-code .top-actions #printBtn, body.mode-code .top-actions #themeToggle,
+    body.mode-code .match-meta { display: none !important; }
+    .menu-btn { font-size: 20px; line-height: 1; }
+    .code-window { padding: 10px; min-width: 0; }
+    .grid > * { min-width: 0; }
+    .code-col, .code-row, .code-btn { min-width: 0; }
+    .score-strip { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 16px; background: rgba(107,114,128,.07); }
+    .score-strip.flipped { flex-direction: row-reverse; }
+    .score-strip.flipped .strip-target { order: -1; }
+    .strip-side { flex: 1; display: flex; align-items: center; gap: 8px; background: none; padding: 4px 6px; min-width: 0; color: var(--ink); }
+    .strip-side.a { justify-content: flex-end; }
+    .strip-side.b { justify-content: flex-start; }
+    .score-strip.flipped .strip-side.a { flex-direction: row-reverse; justify-content: flex-end; }
+    .score-strip.flipped .strip-side.b { flex-direction: row-reverse; justify-content: flex-start; }
+    .strip-name { font-size: 14px; font-weight: 850; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .strip-side.a .strip-name { color: var(--blue); }
+    .strip-side.b .strip-name { color: var(--red); }
+    .strip-score { font-size: 34px; font-weight: 950; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1; min-width: 1.2em; text-align: center; border-radius: 10px; }
+    .strip-score.lead { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
+    .strip-score.flash { animation: ezFlash .6s ease; }
+    @keyframes ezFlash { 0% { background: rgba(250,204,21,.85); transform: scale(1.18); } 100% { background: transparent; transform: scale(1); } }
+    .strip-dash { font-weight: 900; color: var(--muted); }
+    .strip-target { background: none; padding: 6px 4px; font-size: 12px; color: var(--muted); }
+    .last-line { display: flex; align-items: center; gap: 8px; margin: 8px 0; min-height: 38px; }
+    .last-text { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .last-text small { color: var(--muted); font-weight: 700; }
+    .last-text .side-dot { width: 8px; height: 8px; margin-right: 4px; }
+    .undo-mini { padding: 9px 14px; font-size: 15px; flex: none; }
+    .code-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .code-cols.flipped .code-col.a { order: 2; }
+    .code-col { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 18px; border-top: 4px solid var(--blue); background: rgba(50,103,255,.04); transition: opacity .2s ease; }
+    .code-col.b { border-top-color: var(--red); background: rgba(239,68,68,.04); }
+    .col-head { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 900; min-width: 0; }
+    .col-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .code-row { display: grid; gap: 6px; }
+    .code-row.two { grid-template-columns: 1fr 1fr; }
+    .code-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    .code-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 6px 4px; border-radius: 14px; border: 1px solid var(--line); color: var(--ink); background: var(--card); min-height: 44px; }
+    .code-btn b { font-size: 14px; font-weight: 900; }
+    .code-btn small { font-size: 10px; font-weight: 700; color: var(--muted); white-space: nowrap; letter-spacing: -.02em; }
+    .code-btn.win { min-height: 72px; background: var(--green); border-color: var(--green); color: #fff; }
+    .code-btn.win b { font-size: 20px; }
+    .code-btn.win small { color: rgba(255,255,255,.85); }
+    .code-btn.err { background: rgba(239,68,68,.07); border-color: rgba(239,68,68,.25); }
+    .code-btn.err.big { min-height: 60px; }
+    .code-btn.err.big b { font-size: 17px; }
+    .code-btn.unk { flex-direction: row; gap: 6px; min-height: 34px; background: rgba(107,114,128,.08); }
+    .code-btn.unk b { font-size: 12px; color: var(--muted); }
+    .code-btn:active { transform: scale(.96); }
+    body.game-over .code-col { opacity: .38; }
+    .code-foot { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 10px; }
+    .foot-next { padding: 12px; font-size: 14px; }
+    body.game-over .foot-next { grid-column: 1 / -1; order: -1; padding: 18px; font-size: 18px; animation: ezPulse 1.4s ease-in-out infinite; }
+    .foot-swap { padding: 10px 16px; font-size: 18px; }
+    .foot-reset { position: relative; overflow: hidden; padding: 10px 14px; font-size: 13px; touch-action: none; }
+    .hold-fill { position: absolute; inset: 0; width: 0; background: rgba(239,68,68,.35); }
+    .foot-reset.holding .hold-fill { width: 100%; transition: width .8s linear; }
+    .hold-text { position: relative; }
+    .menu-modal { width: min(460px, 100%); }
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .menu-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .menu-loc .location-pill { display: inline-flex; }
+    .menu-loc .location-input { width: 180px; }
+    .rep-table .dot-a, .rep-table .dot-b { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; background: #3267ff; }
+    .rep-table .dot-b { background: #ef4444; }
+    @media (max-width: 560px) {
+      body.mode-code header { flex-direction: row; align-items: center; }
+      body.mode-code .header-right { width: auto; }
+      body.mode-code .top-actions { display: flex; width: auto; flex-wrap: nowrap; }
+      body.mode-code header { flex-wrap: nowrap; }
+      body.mode-code .brand { flex: 1; min-width: 0; }
+      body.mode-code .brand h1 { font-size: 20px; }
+      body.mode-code .top-actions button { flex: none; padding: 8px 12px; min-height: 36px; }
+      .code-cols { gap: 8px; }
+      .code-col { padding: 6px; }
+    }
+    @media print { #codeWindow { display: none !important; } }
+
+    /* --- Score sheet: freeze game / name / serve columns while rallies scroll sideways --- */
+    .standard-sheet { --gl-w: 42px; --name-w: 190px; --svc-w: 34px; --cell-w: 34px; min-width: 0; overflow: visible; }
+    .standard-sheet .player-name { left: var(--gl-w); }
+    .standard-sheet .service-cell { left: calc(var(--gl-w) + var(--name-w)); }
+    .standard-sheet .rally-cell { position: relative; z-index: 1; }
+    .standard-sheet .service-cell { background: #fff; }
+    body.night .standard-sheet .service-cell, body.night .standard-sheet .player-name:not(.future-partner), body.night .standard-sheet .game-label { background: #0f172a; }
+    .standard-sheet .player-name, .standard-sheet .service-cell, .standard-sheet .game-label { box-shadow: 4px 0 6px -4px rgba(17,24,39,.25); }
+    .sheet { overflow: visible; }
+    /* --- Score progression: no sideways scroll, fills the card width --- */
+    .progress-wrap { overflow-x: visible; }
+    .progress-panel { min-width: 0; }
+    .progress-chart { width: 100%; height: auto; }
+    @media (max-width: 560px) {
+      .standard-sheet { --gl-w: 24px; --name-w: 92px; --svc-w: 26px; --cell-w: 30px; }
+      .standard-sheet .player-name { font-size: 13px; padding: 0 6px; }
+      .standard-sheet .game-label { font-size: 10px; letter-spacing: 0; }
+      .standard-sheet .service-cell, .standard-sheet .rally-cell { font-size: 15px; }
+      .progress-panel { padding: 8px 6px 6px; }
+      .progress-legend { flex-wrap: wrap; font-size: 11px; }
+    }
+
+    /* --- Report: coach feedback --- */
+    .adv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 14px; }
+    .adv-player { break-inside: avoid; border: 1px solid #e5e9f0; border-radius: 10px; padding: 7px 9px; }
+    .adv-name { font-weight: 900; font-size: 12.5px; margin-bottom: 3px; }
+    .adv-list { margin: 0; padding-left: 16px; display: grid; gap: 3px; }
+    .adv-list li { font-size: 11px; line-height: 1.5; color: #1f2937; }
+    .adv-mark { display: inline-block; font-size: 9.5px; font-weight: 900; border-radius: 5px; padding: 0 5px; margin-right: 5px; }
+    .adv-good .adv-mark { background: #dcfce7; color: #166534; }
+    .adv-fix .adv-mark { background: #fee2e2; color: #991b1b; }
+    .adv-note { font-size: 10px; margin-top: 4px; }
+    @media print { body.print-report .adv-list li { font-size: 10px; } }
   </style>
 </head>
 <body>
@@ -1059,7 +1321,7 @@
     <header>
       <div class="brand">
         <h1>ErrorZero Badminton</h1>
-        <p>Track every point. Eliminate every mistake.</p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.2.0</span></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1083,6 +1345,8 @@
           </div>
         </div>
         <div class="top-actions">
+          <button class="btn-ghost" id="openReportTop">Today <small>今日の記録</small></button>
+          <button class="btn-ghost menu-btn" id="openMenu" aria-label="Menu">⋯</button>
           <button class="btn-ghost" id="openHelpTop">Help</button>
           <button class="btn-ghost" id="openStatsTop">Stats</button>
           <button class="btn-ghost" id="printBtn">Print</button>
@@ -1091,9 +1355,62 @@
       </div>
     </header>
 
+    <div class="gameover" id="gameOverBar" hidden>
+      <div class="go-text"><strong id="goTitle">Game over</strong><span id="goSub"></span></div>
+      <button class="btn-blue go-btn" id="goNextBtn">Save &amp; next <small>保存して次へ</small></button>
+    </div>
+
     <main class="grid">
-      <section class="card">
-        <div class="setup">
+      <section class="card code-window" id="codeWindow">
+        <div class="score-strip" id="scoreStrip">
+          <button type="button" class="strip-side a" data-side="A"><span class="strip-name" id="stripNameA">Team A</span><span class="strip-score" id="stripScoreA">0</span></button>
+          <span class="strip-dash">–</span>
+          <button type="button" class="strip-side b" data-side="B"><span class="strip-score" id="stripScoreB">0</span><span class="strip-name" id="stripNameB">Team B</span></button>
+          <button type="button" class="strip-target" id="stripTarget" title="Game to / 点数">/15</button>
+        </div>
+        <div class="last-line">
+          <span id="lastEvent" class="last-text">Tap what happened — one tap per rally. <small>1ラリー1タップで記録</small></span>
+          <button type="button" class="btn-ghost undo-mini" id="undoMini">↶ Undo</button>
+        </div>
+        <div class="code-cols" id="codeCols">
+          <div class="code-col a" data-side="A">
+            <div class="col-head"><span class="side-dot a"></span><span class="col-name" id="colNameA">Team A</span></div>
+            <button class="code-btn win" data-side="A" data-reason="W"><b>Winner</b><small>ウィナー</small></button>
+            <div class="code-row two">
+              <button class="code-btn err big" data-side="A" data-reason="N"><b>Net</b><small>ネット</small></button>
+              <button class="code-btn err big" data-side="A" data-reason="O"><b>Out</b><small>アウト</small></button>
+            </div>
+            <div class="code-row three">
+              <button class="code-btn err" data-side="A" data-reason="S"><b>Serve</b><small>サーブ</small></button>
+              <button class="code-btn err" data-side="A" data-reason="R"><b>Return</b><small>レシーブ</small></button>
+              <button class="code-btn err" data-side="A" data-reason="F"><b>Fault</b><small>反則</small></button>
+            </div>
+            <button class="code-btn unk" data-side="A" data-reason="U"><b>Unknown</b> <small>不明</small></button>
+          </div>
+          <div class="code-col b" data-side="B">
+            <div class="col-head"><span class="side-dot b"></span><span class="col-name" id="colNameB">Team B</span></div>
+            <button class="code-btn win" data-side="B" data-reason="W"><b>Winner</b><small>ウィナー</small></button>
+            <div class="code-row two">
+              <button class="code-btn err big" data-side="B" data-reason="N"><b>Net</b><small>ネット</small></button>
+              <button class="code-btn err big" data-side="B" data-reason="O"><b>Out</b><small>アウト</small></button>
+            </div>
+            <div class="code-row three">
+              <button class="code-btn err" data-side="B" data-reason="S"><b>Serve</b><small>サーブ</small></button>
+              <button class="code-btn err" data-side="B" data-reason="R"><b>Return</b><small>レシーブ</small></button>
+              <button class="code-btn err" data-side="B" data-reason="F"><b>Fault</b><small>反則</small></button>
+            </div>
+            <button class="code-btn unk" data-side="B" data-reason="U"><b>Unknown</b> <small>不明</small></button>
+          </div>
+        </div>
+        <div class="code-foot">
+          <button type="button" class="btn-blue foot-next" id="footNext"><span id="footNextText">Save &amp; next <small>保存して次へ</small></span></button>
+          <button type="button" class="btn-ghost foot-swap" id="swapSides" title="Swap sides / 左右入れ替え">⇄</button>
+          <button type="button" class="btn-red foot-reset" id="holdReset" title="Hold to reset / 長押しでリセット"><span class="hold-fill"></span><span class="hold-text">Reset <small>長押し</small></span></button>
+        </div>
+      </section>
+
+      <section class="card classic-card" id="classicCard">
+        <div class="setup" hidden>
           <div>
             <label for="teamAName">Team A</label>
             <input id="teamAName" value="Team A" maxlength="28" />
@@ -1104,15 +1421,25 @@
           </div>
         </div>
 
+        <div class="match-bar">
+          <div class="target-seg" id="targetSeg" role="group" aria-label="Game to">
+            <span class="seg-label">Game to <small>点数</small></span>
+            <button type="button" class="seg" data-target="11">11</button>
+            <button type="button" class="seg" data-target="15">15</button>
+            <button type="button" class="seg" data-target="21">21</button>
+          </div>
+          <button type="button" class="btn-ghost" id="openPlayers">Players <small>選手</small></button>
+        </div>
+
         <div class="scoreboard">
           <div class="team-panel" id="panelA">
-            <div class="team-name" id="displayTeamA">Team A</div>
+            <div class="team-name" id="displayTeamA" role="button" tabindex="0" title="Change players / 選手を変更">Team A</div>
             <div class="score" id="scoreA">0</div>
             <button class="point-btn" data-team="A">Team A +1</button>
           </div>
           <div class="vs">VS</div>
           <div class="team-panel" id="panelB">
-            <div class="team-name" id="displayTeamB">Team B</div>
+            <div class="team-name" id="displayTeamB" role="button" tabindex="0" title="Change players / 選手を変更">Team B</div>
             <div class="score" id="scoreB">0</div>
             <button class="point-btn" data-team="B">Team B +1</button>
           </div>
@@ -1131,6 +1458,8 @@
           <button class="reason-btn" id="cancelPending"><span class="code">×</span><span class="label">Cancel</span></button>
         </div>
 
+        <button class="btn-blue next-btn" id="saveNextBtn">Save &amp; next match <small>保存して次へ</small></button>
+
         <div class="controls">
           <button class="btn-ghost" id="undoBtn">Undo Last</button>
           <button class="btn-dark" id="openStats">Stats</button>
@@ -1147,7 +1476,7 @@
         <div class="summary-cards">
           <div class="summary-card"><span class="num" id="totalErrors">0</span><span class="txt">Total Errors</span></div>
           <div class="summary-card"><span class="num" id="winnerCount">0</span><span class="txt">Winners</span></div>
-          <div class="summary-card"><span class="num" id="after15Errors">0</span><span class="txt">Errors after 15</span></div>
+          <div class="summary-card"><span class="num" id="after15Errors">0</span><span class="txt late-label">Late errors</span></div>
         </div>
 
         <div class="stats-grid" id="statsInline"></div>
@@ -1204,7 +1533,7 @@
       <div class="summary-cards">
         <div class="summary-card"><span class="num" id="modalScore">0-0</span><span class="txt">Score</span></div>
         <div class="summary-card"><span class="num" id="modalErrors">0</span><span class="txt">Total Errors</span></div>
-        <div class="summary-card"><span class="num" id="modalAfter15">0</span><span class="txt">Errors after 15</span></div>
+        <div class="summary-card"><span class="num" id="modalAfter15">0</span><span class="txt late-label">Late errors</span></div>
       </div>
       <div class="stats-grid" id="statsModalBody"></div>
       <div class="insight" id="modalInsight" style="margin-top:12px;"></div>
@@ -1227,8 +1556,80 @@
         <div><span class="help-code">R</span><span>Return error</span></div>
         <div><span class="help-code">U</span><span>Unknown error</span></div>
       </div>
+      <div class="insight" style="margin-top:12px;"><b>1-tap input / 1タップ入力:</b> tap what the player did. Left column = Team A, right = Team B (⇄ swaps). “Winner” scores for that player; an error (Net, Out…) gives the point to the other side. 選手がしたプレーを押します。Winner はその選手の得点、ミスは相手の得点になります。</div>
       <div class="insight" style="margin-top:12px;">Plain number = winner / clean point. Number with small code = point caused by opponent error.</div>
     </div>
+  </div>
+
+  <div class="modal-backdrop" id="menuModal">
+    <div class="modal menu-modal">
+      <div class="modal-header">
+        <h2>Menu <small>メニュー</small></h2>
+        <button class="btn-ghost" id="closeMenu">Close</button>
+      </div>
+      <div class="menu-grid">
+        <button class="btn-ghost" data-menu="stats">Stats <small>分析</small></button>
+        <button class="btn-ghost" data-menu="print">Print <small>印刷</small></button>
+        <button class="btn-ghost" data-menu="help">Help <small>ヘルプ</small></button>
+        <button class="btn-ghost" data-menu="theme" id="menuTheme">Night <small>夜間</small></button>
+      </div>
+      <div class="menu-row">
+        <span class="seg-label">Input <small>入力方式</small></span>
+        <div class="target-seg" id="modeSeg">
+          <button type="button" class="seg" data-mode="code">1-tap <small>1タップ</small></button>
+          <button type="button" class="seg" data-mode="classic">2-tap <small>従来</small></button>
+        </div>
+      </div>
+      <div class="menu-row"><span class="seg-label">Location <small>場所</small></span><span id="menuLocationSlot" class="menu-loc"></span></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="nextModal">
+    <div class="modal next-modal">
+      <div class="modal-header">
+        <h2 id="nextTitle">Next match <small>次の試合</small></h2>
+        <button class="btn-ghost" id="closeNext">Close</button>
+      </div>
+      <div class="next-saved" id="nextSaved" hidden></div>
+      <div class="pick-label"><span class="side-dot a"></span>Team A</div>
+      <div class="pick-row" id="pickA"></div>
+      <div class="pick-label"><span class="side-dot b"></span>Team B</div>
+      <div class="pick-row" id="pickB"></div>
+      <form class="add-row" id="addPlayerForm">
+        <input id="newPlayerName" maxlength="28" placeholder="Add player / 名前を追加" autocomplete="off" />
+        <button type="submit" class="btn-ghost">Add <small>追加</small></button>
+      </form>
+      <div class="target-seg in-modal" id="nextTargetSeg" role="group" aria-label="Game to">
+        <span class="seg-label">Game to <small>点数</small></span>
+        <button type="button" class="seg" data-target="11">11</button>
+        <button type="button" class="seg" data-target="15">15</button>
+        <button type="button" class="seg" data-target="21">21</button>
+      </div>
+      <div class="next-preview" id="nextPreview"></div>
+      <div class="next-actions">
+        <button type="button" class="btn-ghost" id="renameOnly">Rename only <small>名前だけ変更</small></button>
+        <button type="button" class="btn-blue" id="startNext">Start <small>開始</small></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="reportModal">
+    <div class="modal report-modal">
+      <div class="modal-header no-print">
+        <h2>Today <small>今日の記録</small></h2>
+        <div class="report-actions">
+          <select id="reportDate" aria-label="Date"></select>
+          <button class="btn-dark" id="printReport">Print A4 <small>印刷</small></button>
+          <button class="btn-ghost" id="closeReport">Close</button>
+        </div>
+      </div>
+      <div id="reportBody" class="report"></div>
+    </div>
+  </div>
+
+  <div class="toast action-toast" id="actionToast" role="status">
+    <span id="actionToastText"></span>
+    <button type="button" id="actionToastBtn">Undo <small>取り消し</small></button>
   </div>
 
   <div class="toast" id="toast">Saved</div>
@@ -1246,13 +1647,24 @@
     const ERROR_CODES = ['N', 'O', 'S', 'F', 'R', 'U'];
     const STORAGE_KEY = 'errorzero_mvp_state_v1';
     const LOCATION_KEY = 'errorzero_match_location_v104';
+    const LOG_KEY = 'errorzero_matchlog_v1';
+    const ROSTER_KEY = 'errorzero_roster_v1';
+    const SETTINGS_KEY = 'errorzero_settings_v1';
+    // Win at the target with a 2-point lead; the cap ends a long deuce (BWF: 21 -> 30).
+    const GAME_CAPS = { 11: 15, 15: 21, 21: 30 };
+    const DEFAULT_NAMES = ['Team A', 'Team B'];
 
     const state = {
       score: { A: 0, B: 0 },
       pendingTeam: null,
       rallies: [],
-      names: { A: 'Team A', B: 'Team B' }
+      names: { A: 'Team A', B: 'Team B' },
+      target: 15,
+      startedAt: null
     };
+    let matchLog = [];   // saved matches, oldest first
+    let ui = { mode: 'code', flipped: false };   // input mode and which side is on the left
+    let roster = [];     // recently used player names, newest first
 
     const $ = (id) => document.getElementById(id);
 
@@ -1280,7 +1692,7 @@
 
     function save() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ score: state.score, rallies: state.rallies, names: state.names }));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ score: state.score, rallies: state.rallies, names: state.names, target: state.target, startedAt: state.startedAt }));
       } catch (e) {}
     }
 
@@ -1293,6 +1705,8 @@
           state.score = saved.score;
           state.rallies = saved.rallies;
           state.names = saved.names;
+          if (GAME_CAPS[saved.target]) state.target = saved.target;
+          state.startedAt = saved.startedAt || null;
           $('teamAName').value = state.names.A || 'Team A';
           $('teamBName').value = state.names.B || 'Team B';
         }
@@ -1300,6 +1714,8 @@
     }
 
     function setPending(team) {
+      // A point tapped after the game is over starts the next match: keep the finished one.
+      if (gameWinner()) autoStartNext();
       state.pendingTeam = team;
       $('panelA').classList.toggle('active', team === 'A');
       $('panelB').classList.toggle('active', team === 'B');
@@ -1320,6 +1736,7 @@
         return;
       }
       const losingTeam = opponentOf(scoringTeam);
+      if (!state.startedAt) state.startedAt = new Date().toISOString();
       state.score[scoringTeam] += 1;
       const rally = {
         scoringTeam,
@@ -1348,28 +1765,34 @@
     }
 
     function resetGame() {
-      const ok = confirm('Reset this game? This will clear all rallies.');
+      if (!state.rallies.length) { clearCurrent(); return; }
+      const ok = confirm('Reset this game? It is saved to today\'s list first.\n今日の記録に保存してからリセットします。');
       if (!ok) return;
-      state.score = { A: 0, B: 0 };
-      state.rallies = [];
-      clearPending();
-      save();
-      render();
+      const m = archiveCurrent();
+      clearCurrent();
+      if (m) showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
     }
 
-    function computeStats() {
+    function isLate(r, target) {
+      const before = { A: r.scoreAfter.A, B: r.scoreAfter.B };
+      before[r.scoringTeam] -= 1;
+      return Math.max(before.A, before.B) >= lateFrom(target);
+    }
+    function lateFrom(target) { return Math.max(1, target - 4); }
+
+    function computeStats(rallies = state.rallies, target = state.target) {
       const stats = {
         A: { W: 0, N: 0, O: 0, S: 0, F: 0, R: 0, U: 0, totalErrors: 0, after15Errors: 0 },
         B: { W: 0, N: 0, O: 0, S: 0, F: 0, R: 0, U: 0, totalErrors: 0, after15Errors: 0 }
       };
 
-      for (const r of state.rallies) {
+      for (const r of rallies) {
         if (r.reason === 'W') {
           stats[r.scoringTeam].W += 1;
         } else {
           stats[r.losingTeam][r.reason] += 1;
           stats[r.losingTeam].totalErrors += 1;
-          if (totalScoreAfter(r) >= 15) stats[r.losingTeam].after15Errors += 1;
+          if (isLate(r, target)) stats[r.losingTeam].after15Errors += 1;
         }
       }
       return stats;
@@ -1410,11 +1833,31 @@
             <strong>${escapeHtml(teamName(team))}</strong>
             <span>${total} errors</span>
           </div>
+          ${winFailBar(winner, stats[opponentOf(team)].totalErrors)}
           ${rows}
           <div style="height:1px;background:var(--line);margin:10px 0;"></div>
           <div class="bar-row"><div class="stat-label">${formatReasonLabel('W')}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, winner * 14)}%"></div></div><div>${winner}</div></div>
           <div style="color:var(--muted);font-size:12px;font-weight:800;margin-top:8px;">Most common error: ${topText}</div>
         </div>`;
+    }
+
+    /** How this side's points were won: own shots (Win) vs opponent mistakes (Fail). */
+    function winFailBar(win, fail) {
+      const total = win + fail;
+      const pct = (n) => total ? Math.round(n / total * 100) : 0;
+      const w = pct(win);
+      const bar = total
+        ? `<div class="wf-bar" role="img" aria-label="Win ${win}, Fail ${fail}"><span class="wf-win" style="width:${w}%"></span><span class="wf-fail" style="width:${100 - w}%"></span></div>`
+        : '<div class="wf-bar empty"></div>';
+      return `
+          <div class="wf">
+            <div class="wf-title">Win/Fail Ratio <small>得点の内訳</small></div>
+            ${bar}
+            <div class="wf-legend">
+              <span><i class="wf-dot win"></i>Win <b>${win}</b>${total ? ` · ${w}%` : ''} <small>自分のショット</small></span>
+              <span><small>相手のミス</small> Fail <b>${fail}</b>${total ? ` · ${100 - w}%` : ''}<i class="wf-dot fail"></i></span>
+            </div>
+          </div>`;
     }
 
     function buildInsight(stats) {
@@ -1425,7 +1868,7 @@
       parts.push(`${teamName('A')}: ${stats.A.totalErrors} errors${aTop.count ? `, most frequent is ${REASONS[aTop.code].label}` : ''}.`);
       parts.push(`${teamName('B')}: ${stats.B.totalErrors} errors${bTop.count ? `, most frequent is ${REASONS[bTop.code].label}` : ''}.`);
       const late = stats.A.after15Errors + stats.B.after15Errors;
-      if (late > 0) parts.push(`${late} error point${late === 1 ? '' : 's'} occurred after total score reached 15.`);
+      if (late > 0) parts.push(`${late} error point${late === 1 ? '' : 's'} came late in the game (from ${lateFrom(state.target)} points).`);
       return parts.join(' ');
     }
 
@@ -1446,7 +1889,7 @@
       ];
 
       const html = [];
-      html.push(`<div class="standard-sheet" style="grid-template-columns:42px 190px 34px repeat(${maxCols}, 34px);">`);
+      html.push(`<div class="standard-sheet" style="grid-template-columns:var(--gl-w) var(--name-w) var(--svc-w) repeat(${maxCols}, var(--cell-w));">`);
       html.push('<div class="game-label">Game 1</div>');
 
       rows.forEach((row, idx) => {
@@ -1500,10 +1943,11 @@
         return;
       }
 
-      const width = 1000;
-      const height = 170;
-      const padL = 42;
-      const padR = 18;
+      const width = Math.round(target.clientWidth) || 1000;
+      const narrow = width < 520;
+      const height = narrow ? 200 : 170;
+      const padL = narrow ? 30 : 42;
+      const padR = narrow ? 10 : 18;
       const padT = 12;
       const padB = 26;
       const chartW = width - padL - padR;
@@ -1511,7 +1955,8 @@
       const rallyCount = state.rallies.length;
       const isEarlyView = rallyCount <= 10;
       const maxRally = isEarlyView ? 10 : Math.max(11, rallyCount);
-      const maxScore = isEarlyView ? 10 : 21;
+      const reached = Math.max(state.score.A, state.score.B);
+      const maxScore = isEarlyView ? 10 : Math.max(state.target, reached);
       $('progressMeta').textContent = `${rallyCount} rall${rallyCount === 1 ? 'y' : 'ies'} · ${isEarlyView ? 'Early View' : 'Full View'} · Axis 0–${maxRally} / Score 0–${maxScore}`;
 
       const pointsA = [{ x: 0, y: 0 }];
@@ -1524,7 +1969,7 @@
       const sx = (i) => padL + (i / maxRally) * chartW;
       const sy = (score) => padT + chartH - (score / maxScore) * chartH;
       const poly = (pts) => pts.map(p => `${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(' ');
-      const guideValues = isEarlyView ? [0, 5, 10] : [0, 5, 10, 15, 20, 21];
+      const guideValues = isEarlyView ? [0, 5, 10] : [...new Set([0, 5, 10, 15, 20, 25, 30, state.target].filter(v => v <= maxScore && (v === state.target || Math.abs(v - state.target) > 1)))].sort((a, b) => a - b);
 
       const guides = guideValues.map(v => {
         const y = sy(v).toFixed(1);
@@ -1533,7 +1978,7 @@
       }).join('');
 
       const xLabels = isEarlyView
-        ? Array.from({ length: 10 }, (_, i) => i + 1)
+        ? Array.from({ length: 10 }, (_, i) => i + 1).filter(v => !narrow || v % 2 === 0 || v === 1)
         : [0, Math.ceil(maxRally / 2), maxRally].filter((v, i, arr) => arr.indexOf(v) === i);
       const labels = xLabels.map(v => {
         const x = sx(v).toFixed(1);
@@ -1545,7 +1990,7 @@
       const lastA = pointsA[pointsA.length - 1];
       const lastB = pointsB[pointsB.length - 1];
       target.innerHTML = `
-        <svg class="progress-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Score progression chart">
+        <svg class="progress-chart" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="Score progression chart">
           ${guides}
           <line x1="${padL}" y1="${padT + chartH}" x2="${width - padR}" y2="${padT + chartH}" stroke="var(--line)" stroke-width="1.5" />
           <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + chartH}" stroke="var(--line)" stroke-width="1.5" />
@@ -1554,8 +1999,8 @@
           <circle cx="${sx(lastA.x).toFixed(1)}" cy="${sy(lastA.y).toFixed(1)}" r="5" fill="var(--blue)" />
           <circle cx="${sx(lastB.x).toFixed(1)}" cy="${sy(lastB.y).toFixed(1)}" r="5" fill="var(--red)" />
           ${labels}
-          <text x="${width - padR}" y="14" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Score</text>
-          <text x="${width - padR}" y="${height - 7}" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Rally</text>
+          ${narrow ? '' : `<text x="${width - padR}" y="14" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Score</text>
+          <text x="${width - padR}" y="${height - 7}" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Rally</text>`}
         </svg>`;
     }
 
@@ -1604,6 +2049,554 @@
       renderSheet();
       renderScoreProgression();
       renderRecent();
+      renderMatchState();
+    }
+
+
+    /* ===== Match flow: game end, save & next, players, daily report ===== */
+    function gameWinner(score = state.score, target = state.target) {
+      const cap = GAME_CAPS[target] || target + 9;
+      for (const t of ['A', 'B']) {
+        const me = score[t], other = score[opponentOf(t)];
+        if (me >= cap || (me >= target && me - other >= 2)) return t;
+      }
+      return null;
+    }
+
+    function dateKey(iso) {
+      const d = iso ? new Date(iso) : new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+    function timeLabel(iso) {
+      const d = new Date(iso);
+      return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+    function matchDate(m) { return dateKey(m.endedAt || m.savedAt); }
+    function matchNumber(m) {
+      return matchLog.filter(x => matchDate(x) === matchDate(m)).indexOf(m) + 1;
+    }
+
+    function loadExtras() {
+      try { matchLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]') || []; } catch (e) { matchLog = []; }
+      try { roster = JSON.parse(localStorage.getItem(ROSTER_KEY) || '[]') || []; } catch (e) { roster = []; }
+      try {
+        const st = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') || {};
+        if (!state.rallies.length && GAME_CAPS[st.target]) state.target = st.target;
+        if (st.mode === 'classic' || st.mode === 'code') ui.mode = st.mode;
+        ui.flipped = !!st.flipped;
+      } catch (e) {}
+    }
+    function saveLog() { try { localStorage.setItem(LOG_KEY, JSON.stringify(matchLog)); } catch (e) {} }
+    function saveRoster() { try { localStorage.setItem(ROSTER_KEY, JSON.stringify(roster)); } catch (e) {} }
+    function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ target: state.target, mode: ui.mode, flipped: ui.flipped })); } catch (e) {} }
+
+    function rememberNames(...names) {
+      const clean = names.map(n => String(n || '').trim()).filter(n => n && !DEFAULT_NAMES.includes(n));
+      roster = [...new Set([...clean, ...roster])].slice(0, 12);
+      saveRoster();
+    }
+
+    /** Move the current match into the log. Returns the saved match, or null when empty. */
+    function archiveCurrent() {
+      if (!state.rallies.length) return null;
+      const m = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        savedAt: new Date().toISOString(),
+        startedAt: state.startedAt || state.rallies[0].ts,
+        endedAt: state.rallies[state.rallies.length - 1].ts,
+        names: { A: teamName('A'), B: teamName('B') },
+        score: { A: state.score.A, B: state.score.B },
+        rallies: state.rallies.slice(),
+        target: state.target,
+        finished: !!gameWinner(),
+        location: ($('matchLocation').value || '').trim()
+      };
+      matchLog.push(m);
+      if (matchLog.length > 300) matchLog = matchLog.slice(-300);
+      saveLog();
+      rememberNames(m.names.A, m.names.B);
+      return m;
+    }
+
+    function clearCurrent() {
+      state.score = { A: 0, B: 0 };
+      state.rallies = [];
+      state.startedAt = null;
+      clearPending();
+      save();
+      render();
+    }
+
+    function setNames(a, b) {
+      $('teamAName').value = a;
+      $('teamBName').value = b;
+      render();
+      save();
+    }
+
+    /** Bring a saved match back as the current one (only while nothing new is recorded). */
+    function restoreMatch(m) {
+      if (state.rallies.length) { showToast('New match already started'); return; }
+      matchLog = matchLog.filter(x => x.id !== m.id);
+      saveLog();
+      state.score = { A: m.score.A, B: m.score.B };
+      state.rallies = m.rallies.slice();
+      state.target = m.target;
+      state.startedAt = m.startedAt;
+      closeModal('nextModal');
+      setNames(m.names.A, m.names.B);
+      showToast('Restored / 元に戻しました');
+    }
+
+    /** Guess the next pairing from today's order: repeat the cycle, else the pairing waiting longest. */
+    function predictNext() {
+      const today = matchLog.filter(m => matchDate(m) === dateKey());
+      if (!today.length) return { A: teamName('A'), B: teamName('B') };
+      const key = (m) => [m.names.A, m.names.B].sort().join('\u0000');
+      const keys = today.map(key);
+      const n = keys.length;
+      const last = keys[n - 1];
+      for (let j = n - 2; j >= 0; j--) {
+        if (keys[j] === last) return { ...today[j + 1].names };
+      }
+      const lastSeen = new Map();
+      keys.forEach((k, i) => lastSeen.set(k, i));
+      let pick = null;
+      lastSeen.forEach((i, k) => { if (k !== last && (pick === null || i < lastSeen.get(pick))) pick = k; });
+      return { ...(pick === null ? today[n - 1] : today[lastSeen.get(pick)]).names };
+    }
+
+    function autoStartNext() {
+      const m = archiveCurrent();
+      if (!m) return;
+      const next = predictNext();
+      state.score = { A: 0, B: 0 };
+      state.rallies = [];
+      state.startedAt = null;
+      setNames(next.A, next.B);
+      showActionToast(`Saved #${matchNumber(m)} · Now ${next.A} vs ${next.B}`, () => restoreMatch(m));
+    }
+
+    function saveAndNext() {
+      const m = archiveCurrent();
+      if (m) {
+        clearCurrent();
+        showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
+      }
+      openNext(m);
+    }
+
+    // ----- Next match sheet -----
+    let pick = { A: '', B: '' };
+    let nextTarget = 15;
+
+    function openNext(savedMatch) {
+      const guess = savedMatch ? predictNext() : { A: teamName('A'), B: teamName('B') };
+      pick = { A: guess.A, B: guess.B };
+      nextTarget = state.target;
+      const saved = $('nextSaved');
+      if (savedMatch) {
+        const w = gameWinner(savedMatch.score, savedMatch.target);
+        saved.innerHTML = `✓ Saved #${matchNumber(savedMatch)}: ${escapeHtml(savedMatch.names.A)} <b>${savedMatch.score.A}-${savedMatch.score.B}</b> ${escapeHtml(savedMatch.names.B)}${w ? '' : ' <span class="muted">(unfinished / 途中)</span>'}`;
+        saved.hidden = false;
+      } else {
+        saved.hidden = true;
+      }
+      const editing = !savedMatch && state.rallies.length > 0;
+      $('nextTitle').innerHTML = editing ? 'Players <small>選手</small>' : 'Next match <small>次の試合</small>';
+      $('renameOnly').hidden = !editing;
+      $('startNext').innerHTML = editing ? 'Save &amp; start new <small>保存して新しい試合</small>' : 'Start <small>開始</small>';
+      renderPicker();
+      $('nextModal').classList.add('show');
+    }
+
+    function renderPicker() {
+      const names = [...new Set([...roster, pick.A, pick.B].filter(n => n && !DEFAULT_NAMES.includes(n)))];
+      for (const side of ['A', 'B']) {
+        $('pick' + side).innerHTML = names.map(n =>
+          `<button type="button" class="pick${pick[side] === n ? ' on' : ''}" data-side="${side}" data-name="${escapeHtml(n)}">${escapeHtml(n)}</button>`
+        ).join('') || '<span class="muted">Add players below / 下で名前を追加</span>';
+      }
+      $('nextPreview').innerHTML = `<span class="side-dot a"></span>${escapeHtml(pick.A || 'Team A')} <span class="muted">vs</span> <span class="side-dot b"></span>${escapeHtml(pick.B || 'Team B')} <span class="muted">· to ${nextTarget}</span>`;
+      document.querySelectorAll('#nextTargetSeg .seg').forEach(b => b.classList.toggle('on', +b.dataset.target === nextTarget));
+    }
+
+    function choose(side, name) {
+      const other = opponentOf(side);
+      if (pick[other] === name) pick[other] = pick[side];   // picking the other side's player swaps them
+      pick[side] = name;
+      renderPicker();
+    }
+
+    function startNext() {
+      let m = null;
+      if (state.rallies.length) m = archiveCurrent();
+      state.score = { A: 0, B: 0 };
+      state.rallies = [];
+      state.startedAt = null;
+      state.target = nextTarget;
+      saveSettings();
+      clearPending();
+      setNames(pick.A || 'Team A', pick.B || 'Team B');
+      rememberNames(pick.A, pick.B);
+      closeModal('nextModal');
+      if (m) showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
+    }
+
+    function renameOnly() {
+      setNames(pick.A || 'Team A', pick.B || 'Team B');
+      rememberNames(pick.A, pick.B);
+      if (!state.rallies.length) { state.target = nextTarget; saveSettings(); save(); render(); }
+      closeModal('nextModal');
+    }
+
+    function closeModal(id) { $(id).classList.remove('show'); }
+
+    function setTarget(t) {
+      if (!GAME_CAPS[t]) return;
+      state.target = t;
+      saveSettings();
+      save();
+      render();
+    }
+
+    // ----- Game state on screen -----
+    function renderMatchState() {
+      const w = gameWinner();
+      const bar = $('gameOverBar');
+      bar.hidden = !w;
+      if (w) {
+        $('goTitle').textContent = `Game over ${state.score.A}-${state.score.B} · ${teamName(w)} wins`;
+        $('goSub').textContent = '試合終了 — 保存して次の試合へ（次の得点をタップしても自動保存されます）';
+      }
+      document.querySelectorAll('#targetSeg .seg').forEach(b => b.classList.toggle('on', +b.dataset.target === state.target));
+      const lf = lateFrom(state.target);
+      document.querySelectorAll('.late-label').forEach(el => { el.textContent = `Late errors (≥${lf})`; });
+      const nb = $('saveNextBtn');
+      nb.classList.toggle('pulse', !!w);
+      renderCodeWindow(w);
+      const todayCount = matchLog.filter(m => matchDate(m) === dateKey()).length;
+      $('openReportTop').innerHTML = `Today${todayCount ? ` (${todayCount})` : ''} <small>今日の記録</small>`;
+    }
+
+
+    /* ===== Code window (1-tap input) ===== */
+    const JA_REASON = { W: 'ウィナー', N: 'ネット', O: 'アウト', S: 'サーブ', F: '反則', R: 'レシーブ', U: '不明' };
+
+    /** One tap = what one player did. Winner scores for that side; an error gives the point to the other side. */
+    function codeEvent(side, reason) {
+      const scorer = reason === 'W' ? side : opponentOf(side);
+      const before = { A: state.score.A, B: state.score.B };
+      setPending(scorer);
+      addPoint(reason);
+      const changed = state.score.A !== before.A ? 'A' : (state.score.B !== before.B ? 'B' : null);
+      if (changed) flashScore(changed);
+      try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+    }
+
+    function flashScore(team) {
+      const el = $('stripScore' + team);
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+
+    function describeLast() {
+      const r = state.rallies[state.rallies.length - 1];
+      if (!r) return 'Tap what happened — one tap per rally. <small>1ラリー1タップで記録</small>';
+      const actor = r.reason === 'W' ? r.scoringTeam : r.losingTeam;
+      const what = r.reason === 'W' ? 'Winner' : `${REASONS[r.reason].label} error`;
+      return `<span class="side-dot ${actor.toLowerCase()}"></span><b>${escapeHtml(teamName(actor))}</b> · ${what} <small>${JA_REASON[r.reason]}</small> → <b>${r.scoreAfter.A}-${r.scoreAfter.B}</b>`;
+    }
+
+    function renderCodeWindow(winner) {
+      document.body.classList.toggle('mode-code', ui.mode === 'code');
+      document.body.classList.toggle('mode-classic', ui.mode !== 'code');
+      document.body.classList.toggle('game-over', !!winner);
+      $('codeCols').classList.toggle('flipped', ui.flipped);
+      $('scoreStrip').classList.toggle('flipped', ui.flipped);
+      for (const t of ['A', 'B']) {
+        $('stripName' + t).textContent = teamName(t);
+        $('colName' + t).textContent = teamName(t);
+        $('stripScore' + t).textContent = state.score[t];
+        $('stripScore' + t).classList.toggle('lead', state.score[t] > state.score[opponentOf(t)]);
+      }
+      $('stripTarget').textContent = `/${state.target}`;
+      $('lastEvent').innerHTML = describeLast();
+      $('undoMini').disabled = !state.rallies.length;
+      $('footNextText').innerHTML = winner
+        ? `Game over ${state.score.A}-${state.score.B} · Save &amp; next <small>保存して次へ</small>`
+        : 'Save &amp; next <small>保存して次へ</small>';
+      document.querySelectorAll('#modeSeg .seg').forEach(b => b.classList.toggle('on', b.dataset.mode === ui.mode));
+      $('menuTheme').innerHTML = document.body.classList.contains('night') ? 'Day <small>昼間</small>' : 'Night <small>夜間</small>';
+    }
+
+    function setMode(mode) {
+      ui.mode = mode;
+      saveSettings();
+      render();
+    }
+
+    // Reset needs a 0.8 s hold so it cannot be hit by accident while coding.
+    function bindHoldReset() {
+      const btn = $('holdReset');
+      let timer = null;
+      const cancel = () => { window.clearTimeout(timer); timer = null; btn.classList.remove('holding'); };
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        btn.classList.add('holding');
+        timer = window.setTimeout(() => {
+          cancel();
+          if (!state.rallies.length) { clearCurrent(); return; }
+          const m = archiveCurrent();
+          clearCurrent();
+          if (m) showActionToast(`Saved #${matchNumber(m)} & reset / 保存してリセット`, () => restoreMatch(m));
+        }, 800);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, () => {
+        if (timer) { cancel(); showToast('Hold to reset / 長押しでリセット'); }
+      }));
+      btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    function openMenu() {
+      const slot = $('menuLocationSlot');
+      const pill = document.querySelector('.location-pill');
+      if (pill && pill.parentElement !== slot) { slot.appendChild(pill); }
+      $('menuModal').classList.add('show');
+    }
+    function closeMenu() {
+      const pill = document.querySelector('#menuLocationSlot .location-pill');
+      if (pill) document.querySelector('.match-meta').appendChild(pill);
+      closeModal('menuModal');
+    }
+
+    let actionToastTimer = null;
+    function showActionToast(text, onUndo) {
+      const t = $('actionToast');
+      $('actionToastText').textContent = text;
+      const btn = $('actionToastBtn');
+      btn.onclick = () => { t.classList.remove('show'); onUndo(); };
+      t.classList.add('show');
+      window.clearTimeout(actionToastTimer);
+      actionToastTimer = window.setTimeout(() => t.classList.remove('show'), 7000);
+    }
+
+    // ----- Daily report (A4 portrait, one page) -----
+    function reportMatches(day) {
+      const list = matchLog.filter(m => matchDate(m) === day);
+      if (day === dateKey() && state.rallies.length) {
+        list.push({
+          id: 'current', inProgress: true, names: { A: teamName('A'), B: teamName('B') },
+          score: { ...state.score }, rallies: state.rallies, target: state.target,
+          startedAt: state.startedAt || state.rallies[0].ts, endedAt: state.rallies[state.rallies.length - 1].ts,
+          location: ($('matchLocation').value || '').trim()
+        });
+      }
+      return list;
+    }
+
+    function sparkline(m) {
+      const w = 120, h = 30, n = m.rallies.length;
+      const max = Math.max(m.target, m.score.A, m.score.B);
+      const x = (i) => (i / Math.max(1, n)) * (w - 2) + 1;
+      const y = (v) => h - 2 - (v / max) * (h - 4);
+      const line = (t) => [`${x(0)},${y(0)}`].concat(m.rallies.map((r, i) => `${x(i + 1).toFixed(1)},${y(r.scoreAfter[t]).toFixed(1)}`)).join(' ');
+      return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><polyline points="${line('A')}" fill="none" stroke="#3267ff" stroke-width="1.8"/><polyline points="${line('B')}" fill="none" stroke="#ef4444" stroke-width="1.8"/></svg>`;
+    }
+
+    function codeCounts(st) {
+      const parts = ERROR_CODES.filter(c => st[c]).map(c => `${c}${st[c]}`);
+      return parts.length ? parts.join(' ') : '—';
+    }
+
+
+    /* ===== Coach feedback: up to 3 points per player, chosen by rules from the day's numbers ===== */
+    const ERROR_ADVICE = {
+      N: 'ネットミスが最多（{n}本）。打点が落ちてから手先で打つとネットにかかります。前に一歩踏み込んで高い打点で触り、ドライブ・プッシュは白帯の上30〜50cmを通す意識で。',
+      O: 'アウトが最多（{n}本）。特にクリアとスマッシュの飛ばし過ぎに注意。狙いをサイドライン・バックラインの30cm内側に置き、終盤ほど安全な余白を取ること。',
+      S: 'サーブミスが最多（{n}本）。ラリーなしで相手に渡す最も惜しい失点です。構え→ひと呼吸→打つのルーティンを固定し、ショートサーブは白帯すれすれより確実に入れることを優先。',
+      R: 'レシーブミスが最多（{n}本）。構えが遅いと押し込まれます。相手が打つ瞬間に軽くスプリットステップ、ラケットは体の前に。まずは相手のいない所へ確実に返すことから。',
+      F: 'フォルト（反則）が最多（{n}本）。サーブの打点の高さ（床から115cm以下）、両足が床に着いているか、ネットタッチを練習で確認しておきましょう。',
+      U: '原因不明のミスが{n}本。記録者は「ネット・アウト・サーブ・レシーブ・反則」のどれかを選べるよう、見るポイントを事前に決めておくと分析の精度が上がります。'
+    };
+
+    function coachAdvice(p) {
+      const items = [];   // { kind: 'good' | 'fix', score, text }
+      const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+      const ownShare = pct(p.W, p.pf);                 // points won by own shots
+      const errShare = pct(p.err, p.pa);               // points lost by own mistakes
+
+      // Most frequent error type, with a concrete fix
+      let top = null;
+      ERROR_CODES.forEach(c => { if (p.codes[c] && (!top || p.codes[c] > p.codes[top])) top = c; });
+      if (top && p.codes[top] >= 2) {
+        items.push({ kind: 'fix', score: 50 + p.codes[top] * 4 + (top === 'S' ? 10 : 0), text: ERROR_ADVICE[top].replace('{n}', p.codes[top]) });
+      }
+      // Second most frequent error type
+      let second = null;
+      ERROR_CODES.forEach(c => { if (c !== top && p.codes[c] && (!second || p.codes[c] > p.codes[second])) second = c; });
+      if (second && second !== 'S' && p.codes[second] >= 2) {
+        items.push({ kind: 'fix', score: 36 + p.codes[second] * 3, text: ERROR_ADVICE[second].replace('{n}', p.codes[second]).replace('が最多', 'が次に多い') });
+      }
+      // Serve errors are free points even when they are not the most frequent
+      if (top !== 'S' && p.codes.S >= 2) {
+        items.push({ kind: 'fix', score: 45 + p.codes.S * 5, text: `サーブミスが${p.codes.S}本。ラリーをせずに渡す失点なので、まずここをゼロに。構え→ひと呼吸→打つのルーティンを固定しましょう。` });
+      }
+      // Too many self-inflicted points
+      if (p.pa >= 6 && errShare >= 60) {
+        items.push({ kind: 'fix', score: 40 + errShare / 2, text: `失点の${errShare}%が自分のミス。相手に決められる前に自分で崩れています。無理な決め球を減らし、高く深いクリアで時間を作ってラリーを続けることを優先。` });
+      }
+      // Errors pile up late in the game
+      if (p.err >= 4 && p.late >= 3 && pct(p.late, p.err) >= 40) {
+        items.push({ kind: 'fix', score: 45 + pct(p.late, p.err) / 3, text: `ミスの${pct(p.late, p.err)}%（${p.late}/${p.err}本）が終盤に集中。点差を意識すると打ち急ぎます。終盤こそ同じリズムで、高く深い球から組み立て直しを。体力面ならフットワークの持久練習も。` });
+      }
+      // Close games
+      if (p.closeLost >= 1 && p.closeLost > p.closeWon) {
+        items.push({ kind: 'fix', score: 38 + p.closeLost * 6, text: `2点差以内の接戦を${p.closeLost}試合落としています。デュースや終盤の1点で使う「自分の勝負球」（例：ロングサーブ→攻撃、ネット前で待つ）を1つ決めておきましょう。` });
+      }
+      // Scoring depends on the opponent's mistakes
+      if (p.pf >= 6 && ownShare <= 30) {
+        items.push({ kind: 'fix', score: 35 + (30 - ownShare), text: `得点の${100 - ownShare}%が相手のミスによるもの。自分から決める形が少ないので、甘い球をスマッシュやプッシュで沈める「決めの1本」を練習で増やしましょう。` });
+      }
+      // Strengths
+      if (p.pf >= 6 && ownShare >= 50) {
+        items.push({ kind: 'good', score: 30 + ownShare / 4, text: `得点の${ownShare}%が自分のショット（決定打${p.W}本）。攻撃力は武器です。決めた形を練習で再現し、試合でも迷わず打ち切りましょう。` });
+      }
+      if (p.games >= 2 && p.err <= p.games * 3) {
+        items.push({ kind: 'good', score: 32, text: `1試合あたりのミスが${(p.err / p.games).toFixed(1)}本と少なく安定しています。この安定感を土台に、攻撃の割合を少しずつ増やしていきましょう。` });
+      }
+      const pm = p.perMatch;
+      if (pm.length >= 2) {
+        const first = pm[0].err, last = pm[pm.length - 1].err;
+        if (last <= first - 2) items.push({ kind: 'good', score: 34, text: `ミスが1試合目${first}本→最後${last}本と減っています。試合中に修正できている証拠。何を変えたかを言葉にして次回の最初から使いましょう。` });
+        else if (last >= first + 3) items.push({ kind: 'fix', score: 42, text: `ミスが1試合目${first}本→最後${last}本と増えています。集中か体力が落ちている可能性。試合間に水分補給と、次の試合の目標を1つだけ決めてから入りましょう。` });
+      }
+
+      // Coach style: lead with one strength if there is one, then the most important fixes; max 3.
+      const good = items.filter(x => x.kind === 'good').sort((a, b) => b.score - a.score);
+      const fix = items.filter(x => x.kind === 'fix').sort((a, b) => b.score - a.score);
+      const picked = [];
+      if (good.length) picked.push(good[0]);
+      for (const f of fix) { if (picked.length < 3) picked.push(f); }
+      for (const g of good.slice(1)) { if (picked.length < 3) picked.push(g); }
+      if (!picked.length) picked.push({ kind: 'good', text: 'データがまだ少ないため、大きな傾向は見られません。次回も記録を続けましょう。' });
+      return picked;
+    }
+
+    function buildAdviceSection(players) {
+      const blocks = [...players.entries()].map(([name, p]) => {
+        const items = coachAdvice(p).map(x =>
+          `<li class="adv-${x.kind}"><span class="adv-mark">${x.kind === 'good' ? '✓ 強み' : '▲ 課題'}</span>${escapeHtml(x.text)}</li>`).join('');
+        return `<div class="adv-player"><div class="adv-name">${escapeHtml(name)}</div><ol class="adv-list">${items}</ol></div>`;
+      }).join('');
+      return `<h3>Coach feedback <span class="muted">コーチからのフィードバック（各選手 最大3点）</span></h3>
+        <div class="adv-grid">${blocks}</div>
+        <div class="adv-note muted">記録データから自動で選んだコメントです（ミスの種類・終盤のミス・決定打の割合・接戦・試合ごとの推移）。</div>`;
+    }
+
+    function buildReport(day) {
+      const matches = reportMatches(day);
+      if (!matches.length) return '<div class="report-empty">No matches on this day. / この日の記録はありません。</div>';
+      const players = new Map();
+      const row = (name) => {
+        if (!players.has(name)) players.set(name, { games: 0, won: 0, lost: 0, pf: 0, pa: 0, W: 0, err: 0, late: 0, codes: { N: 0, O: 0, S: 0, F: 0, R: 0, U: 0 }, perMatch: [], closeLost: 0, closeWon: 0 });
+        return players.get(name);
+      };
+      const matchRows = matches.map((m, i) => {
+        const st = computeStats(m.rallies, m.target);
+        const w = gameWinner(m.score, m.target);
+        for (const t of ['A', 'B']) {
+          const p = row(m.names[t]);
+          p.games += 1;
+          if (w === t) p.won += 1; else if (w) p.lost += 1;
+          p.pf += m.score[t]; p.pa += m.score[opponentOf(t)];
+          p.W += st[t].W; p.err += st[t].totalErrors; p.late += st[t].after15Errors;
+          ERROR_CODES.forEach(c => { p.codes[c] += st[t][c]; });
+          if (!m.inProgress) p.perMatch.push({ err: st[t].totalErrors, rallies: m.rallies.length });
+          if (w && Math.abs(m.score.A - m.score.B) <= 2) { if (w === t) p.closeWon += 1; else p.closeLost += 1; }
+        }
+        const nm = (t) => `<span class="dot-${t.toLowerCase()}"></span><span class="${w === t ? 'win' : ''}">${escapeHtml(m.names[t])}</span>`;
+        return `<tr>
+          <td class="num">${i + 1}</td>
+          <td class="num">${timeLabel(m.startedAt)}</td>
+          <td>${nm('A')} <span class="muted">vs</span> ${nm('B')}${m.inProgress ? ' <span class="tag">in progress / 記録中</span>' : (w ? '' : ' <span class="tag">unfinished / 途中</span>')}</td>
+          <td class="num fscore">${m.score.A}-${m.score.B}<span class="muted"> /${m.target}</span></td>
+          <td class="codes">${st.A.totalErrors} <span class="muted">${codeCounts(st.A)}</span></td>
+          <td class="codes">${st.B.totalErrors} <span class="muted">${codeCounts(st.B)}</span></td>
+          <td class="num">${st.A.W}/${st.B.W}</td>
+          <td>${sparkline(m)}</td>
+          <td class="no-print">${m.inProgress ? '' : `<button type="button" class="del" data-id="${m.id}" title="Delete / 削除">×</button>`}</td>
+        </tr>`;
+      }).join('');
+
+      const playerRows = [...players.entries()].map(([name, p]) => {
+        let top = null;
+        ERROR_CODES.forEach(c => { if (p.codes[c] && (!top || p.codes[c] > p.codes[top])) top = c; });
+        return `<tr>
+          <td><b>${escapeHtml(name)}</b></td>
+          <td class="num">${p.games}</td>
+          <td class="num">${p.won}-${p.lost}</td>
+          <td class="num">${p.pf}-${p.pa}</td>
+          <td class="num"><b>${p.err}</b></td>
+          ${ERROR_CODES.map(c => `<td class="num${p.codes[c] ? '' : ' zero'}">${p.codes[c]}</td>`).join('')}
+          <td class="num">${p.W}</td>
+          <td class="num">${p.late}</td>
+          <td>${top ? `${REASONS[top].label}` : '—'}</td>
+        </tr>`;
+      }).join('');
+
+      const locations = [...new Set(matches.map(m => m.location).filter(Boolean))].join(', ');
+      const d = new Date(day + 'T00:00:00');
+      const dayLabel = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} (${'日月火水木金土'[d.getDay()]})`;
+      return `
+        <div class="rep-head">
+          <div><div class="rep-title">ErrorZero · Daily report <span class="muted">今日の記録</span></div>
+          <div class="muted">${dayLabel}${locations ? ' · ' + escapeHtml(locations) : ''} · ${matches.length} match${matches.length === 1 ? '' : 'es'}</div></div>
+          <div class="muted rep-gen">Printed ${formatLocalDateTime()}</div>
+        </div>
+        <h3>Players <span class="muted">選手ごと</span></h3>
+        <table class="rep-table players">
+          <thead><tr><th>Player</th><th>Games<br><small>試合</small></th><th>W-L<br><small>勝敗</small></th><th>Pts<br><small>得失点</small></th><th>Errors<br><small>ミス</small></th>${ERROR_CODES.map(c => `<th title="${REASONS[c].label}">${c}</th>`).join('')}<th>Win<br><small>決定打</small></th><th>Late<br><small>終盤</small></th><th>Most<br><small>最多</small></th></tr></thead>
+          <tbody>${playerRows}</tbody>
+        </table>
+        <h3>Matches <span class="muted">試合ごと</span></h3>
+        <table class="rep-table matches">
+          <thead><tr><th>#</th><th>Time</th><th>Match <small>対戦</small></th><th>Score</th><th>A errors <small>ミス</small></th><th>B errors <small>ミス</small></th><th>Win A/B</th><th>Progress <small>推移</small></th><th class="no-print"></th></tr></thead>
+          <tbody>${matchRows}</tbody>
+        </table>
+        ${buildAdviceSection(players)}
+        <div class="rep-legend">N Net · O Out · S Serve · F Fault · R Return · U Unknown — Errors = points lost by own mistake. Late = errors once either side reached target−4. <span class="muted">ミス＝自分のミスで失った点。終盤＝どちらかが「点数−4」に達した後。</span></div>`;
+    }
+
+    function openReport() {
+      const days = [...new Set(matchLog.map(matchDate))];
+      if (state.rallies.length) days.push(dateKey());
+      const unique = [...new Set(days)].sort().reverse();
+      if (!unique.length) unique.push(dateKey());
+      $('reportDate').innerHTML = unique.map(d => `<option value="${d}">${d}</option>`).join('');
+      renderReport();
+      $('reportModal').classList.add('show');
+    }
+    function renderReport() { $('reportBody').innerHTML = buildReport($('reportDate').value); }
+
+    function deleteMatch(id) {
+      const m = matchLog.find(x => x.id === id);
+      if (!m) return;
+      if (!confirm(`Delete ${m.names.A} vs ${m.names.B} (${m.score.A}-${m.score.B})?\nこの試合を削除しますか？`)) return;
+      matchLog = matchLog.filter(x => x.id !== id);
+      saveLog();
+      renderReport();
+      render();
+    }
+
+    function printReport() {
+      document.body.classList.add('print-report');
+      const done = () => document.body.classList.remove('print-report');
+      window.addEventListener('afterprint', done, { once: true });
+      window.print();
+      window.setTimeout(done, 1500);
     }
 
     function escapeHtml(str) {
@@ -1663,6 +2656,78 @@
     $('statsModal').addEventListener('click', (e) => {
       if (e.target === $('statsModal')) $('statsModal').classList.remove('show');
     });
+    $('saveNextBtn').addEventListener('click', saveAndNext);
+    $('goNextBtn').addEventListener('click', saveAndNext);
+    $('openPlayers').addEventListener('click', () => openNext(null));
+    ['displayTeamA', 'displayTeamB'].forEach(id => $(id).addEventListener('click', () => openNext(null)));
+    $('closeNext').addEventListener('click', () => closeModal('nextModal'));
+    $('startNext').addEventListener('click', startNext);
+    $('renameOnly').addEventListener('click', renameOnly);
+    $('nextModal').addEventListener('click', (e) => {
+      if (e.target === $('nextModal')) closeModal('nextModal');
+      const b = e.target.closest('.pick');
+      if (b) choose(b.dataset.side, b.dataset.name);
+      const seg = e.target.closest('#nextTargetSeg .seg');
+      if (seg) { nextTarget = +seg.dataset.target; renderPicker(); }
+    });
+    $('addPlayerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = $('newPlayerName').value.trim();
+      if (!name) return;
+      rememberNames(name);
+      if (!pick.A || DEFAULT_NAMES.includes(pick.A)) pick.A = name;
+      else if (!pick.B || DEFAULT_NAMES.includes(pick.B)) { if (pick.A !== name) pick.B = name; }
+      $('newPlayerName').value = '';
+      renderPicker();
+    });
+    $('targetSeg').addEventListener('click', (e) => {
+      const seg = e.target.closest('.seg');
+      if (seg) setTarget(+seg.dataset.target);
+    });
+    $('openReportTop').addEventListener('click', openReport);
+    $('codeCols').addEventListener('click', (e) => {
+      const b = e.target.closest('.code-btn');
+      if (b) codeEvent(b.dataset.side, b.dataset.reason);
+    });
+    $('undoMini').addEventListener('click', undo);
+    $('footNext').addEventListener('click', saveAndNext);
+    $('swapSides').addEventListener('click', () => { ui.flipped = !ui.flipped; saveSettings(); render(); showToast('Sides swapped / 左右を入れ替えました'); });
+    $('scoreStrip').addEventListener('click', (e) => {
+      if (e.target.closest('.strip-target')) { openNext(null); return; }
+      if (e.target.closest('.strip-side')) openNext(null);
+    });
+    bindHoldReset();
+    let progressResizeTimer = null;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(progressResizeTimer);
+      progressResizeTimer = window.setTimeout(renderScoreProgression, 150);
+    });
+    $('openMenu').addEventListener('click', openMenu);
+    $('closeMenu').addEventListener('click', closeMenu);
+    $('menuModal').addEventListener('click', (e) => {
+      if (e.target === $('menuModal')) { closeMenu(); return; }
+      const m = e.target.closest('[data-menu]');
+      if (m) {
+        const act = m.dataset.menu;
+        if (act === 'theme') { $('themeToggle').click(); render(); return; }
+        closeMenu();
+        if (act === 'stats') $('statsModal').classList.add('show');
+        if (act === 'print') window.print();
+        if (act === 'help') $('helpModal').classList.add('show');
+      }
+      const seg = e.target.closest('#modeSeg .seg');
+      if (seg) setMode(seg.dataset.mode);
+    });
+    $('closeReport').addEventListener('click', () => closeModal('reportModal'));
+    $('reportModal').addEventListener('click', (e) => {
+      if (e.target === $('reportModal')) closeModal('reportModal');
+      const del = e.target.closest('.del');
+      if (del) deleteMatch(del.dataset.id);
+    });
+    $('reportDate').addEventListener('change', renderReport);
+    $('printReport').addEventListener('click', printReport);
+    $('teamAName').addEventListener('change', () => rememberNames($('teamAName').value));
+    $('teamBName').addEventListener('change', () => rememberNames($('teamBName').value));
     $('teamAName').addEventListener('input', () => { render(); save(); });
     $('teamBName').addEventListener('input', () => { render(); save(); });
     $('matchLocation').addEventListener('input', saveMatchLocation);
@@ -1671,6 +2736,7 @@
     window.setInterval(updateLocalDateTime, 30000);
     loadMatchLocation();
     load();
+    loadExtras();
     render();
   </script>
 </body>
