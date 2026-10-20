@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf6ee"/><stop offset="1" stop-color="#d3ecdc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <rect x="150" y="140" width="724" height="720" rx="170" fill="url(#bg)"/>
+  <!-- open rule book -->
+  <path d="M512 300 C440 260 340 255 260 275 L260 565 C340 545 440 550 512 590 Z" fill="#1e6b2a"/>
+  <path d="M512 300 C584 260 684 255 764 275 L764 565 C684 545 584 550 512 590 Z" fill="#13235c"/>
+  <path d="M500 310 C440 280 360 278 290 292 L290 545 C360 532 440 535 500 565 Z" fill="#ffffff"/>
+  <path d="M524 310 C584 280 664 278 734 292 L734 545 C664 532 584 535 524 565 Z" fill="#ffffff"/>
+  <!-- court lines on the left page -->
+  <g stroke="#1e6b2a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M330 330 L460 340 L460 515 L330 505 Z" stroke-width="9"/>
+    <path d="M348 331 L348 506 M442 339 L442 514" stroke-width="5"/>
+    <path d="M330 392 L460 402 M330 444 L460 454" stroke-width="5"/>
+    <path d="M395 335 L395 397 M395 449 L395 510" stroke-width="5"/>
+  </g>
+  <path d="M322 417 L468 429" stroke="#13235c" stroke-width="13" stroke-linecap="round"/>
+  <!-- shuttle on the right page -->
+  <g transform="rotate(-30 630 425)">
+    <path d="M585 355 L675 355 L652 455 L608 455 Z" fill="#13235c"/>
+    <path d="M610 355 L620 455 M630 355 L630 455 M650 355 L640 455" stroke="#ffffff" stroke-width="6"/>
+    <path d="M604 455 h52 v8 a26 26 0 0 1 -52 0 Z" fill="#13235c"/>
+  </g>
+  <text x="512" y="760" text-anchor="middle" font-family="Inter" font-weight="900" font-size="150" letter-spacing="2" fill="#13235c">RULE</text>
+</svg>
