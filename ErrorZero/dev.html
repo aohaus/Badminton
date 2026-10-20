@@ -1138,6 +1138,19 @@
 
     /* --- Coder layout: names come from the Players sheet, every control fits the first phone screen --- */
     .setup[hidden] { display: none !important; }
+    .wf { margin: 2px 0 12px; }
+    .wf-title { font-size: 11px; font-weight: 850; color: var(--muted); margin-bottom: 5px; }
+    .wf-title small, .wf-legend small { font-weight: 700; opacity: .85; }
+    .wf-bar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--line); }
+    .wf-win { background: var(--green); }
+    .wf-fail { background: var(--amber); }
+    .wf-win, .wf-fail { transition: width .25s ease; }
+    .wf-legend { display: flex; justify-content: space-between; gap: 8px; margin-top: 5px; font-size: 12px; font-weight: 750; color: var(--ink); flex-wrap: wrap; }
+    .wf-legend small { color: var(--muted); font-size: 10.5px; }
+    .wf-legend span:last-child { margin-left: auto; }
+    .wf-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin: 0 5px; vertical-align: 0; }
+    .wf-dot.win { background: var(--green); margin-left: 0; }
+    .wf-dot.fail { background: var(--amber); margin-right: 0; }
     .team-name[role="button"] { cursor: pointer; }
     @media (max-width: 560px) {
       .app { padding-top: 8px; }
@@ -1629,11 +1642,31 @@
             <strong>${escapeHtml(teamName(team))}</strong>
             <span>${total} errors</span>
           </div>
+          ${winFailBar(winner, stats[opponentOf(team)].totalErrors)}
           ${rows}
           <div style="height:1px;background:var(--line);margin:10px 0;"></div>
           <div class="bar-row"><div class="stat-label">${formatReasonLabel('W')}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, winner * 14)}%"></div></div><div>${winner}</div></div>
           <div style="color:var(--muted);font-size:12px;font-weight:800;margin-top:8px;">Most common error: ${topText}</div>
         </div>`;
+    }
+
+    /** How this side's points were won: own shots (Win) vs opponent mistakes (Fail). */
+    function winFailBar(win, fail) {
+      const total = win + fail;
+      const pct = (n) => total ? Math.round(n / total * 100) : 0;
+      const w = pct(win);
+      const bar = total
+        ? `<div class="wf-bar" role="img" aria-label="Win ${win}, Fail ${fail}"><span class="wf-win" style="width:${w}%"></span><span class="wf-fail" style="width:${100 - w}%"></span></div>`
+        : '<div class="wf-bar empty"></div>';
+      return `
+          <div class="wf">
+            <div class="wf-title">Win/Fail Ratio <small>得点の内訳</small></div>
+            ${bar}
+            <div class="wf-legend">
+              <span><i class="wf-dot win"></i>Win <b>${win}</b>${total ? ` · ${w}%` : ''} <small>自分のショット</small></span>
+              <span><small>相手のミス</small> Fail <b>${fail}</b>${total ? ` · ${100 - w}%` : ''}<i class="wf-dot fail"></i></span>
+            </div>
+          </div>`;
     }
 
     function buildInsight(stats) {
