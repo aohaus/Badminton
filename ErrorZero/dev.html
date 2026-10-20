@@ -1301,6 +1301,18 @@
       .progress-panel { padding: 8px 6px 6px; }
       .progress-legend { flex-wrap: wrap; font-size: 11px; }
     }
+
+    /* --- Report: coach feedback --- */
+    .adv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 14px; }
+    .adv-player { break-inside: avoid; border: 1px solid #e5e9f0; border-radius: 10px; padding: 7px 9px; }
+    .adv-name { font-weight: 900; font-size: 12.5px; margin-bottom: 3px; }
+    .adv-list { margin: 0; padding-left: 16px; display: grid; gap: 3px; }
+    .adv-list li { font-size: 11px; line-height: 1.5; color: #1f2937; }
+    .adv-mark { display: inline-block; font-size: 9.5px; font-weight: 900; border-radius: 5px; padding: 0 5px; margin-right: 5px; }
+    .adv-good .adv-mark { background: #dcfce7; color: #166534; }
+    .adv-fix .adv-mark { background: #fee2e2; color: #991b1b; }
+    .adv-note { font-size: 10px; margin-top: 4px; }
+    @media print { body.print-report .adv-list li { font-size: 10px; } }
   </style>
 </head>
 <body>
@@ -2398,12 +2410,97 @@
       return parts.length ? parts.join(' ') : '—';
     }
 
+
+    /* ===== Coach feedback: up to 3 points per player, chosen by rules from the day's numbers ===== */
+    const ERROR_ADVICE = {
+      N: 'ネットミスが最多（{n}本）。打点が落ちてから手先で打つとネットにかかります。前に一歩踏み込んで高い打点で触り、ドライブ・プッシュは白帯の上30〜50cmを通す意識で。',
+      O: 'アウトが最多（{n}本）。特にクリアとスマッシュの飛ばし過ぎに注意。狙いをサイドライン・バックラインの30cm内側に置き、終盤ほど安全な余白を取ること。',
+      S: 'サーブミスが最多（{n}本）。ラリーなしで相手に渡す最も惜しい失点です。構え→ひと呼吸→打つのルーティンを固定し、ショートサーブは白帯すれすれより確実に入れることを優先。',
+      R: 'レシーブミスが最多（{n}本）。構えが遅いと押し込まれます。相手が打つ瞬間に軽くスプリットステップ、ラケットは体の前に。まずは相手のいない所へ確実に返すことから。',
+      F: 'フォルト（反則）が最多（{n}本）。サーブの打点の高さ（床から115cm以下）、両足が床に着いているか、ネットタッチを練習で確認しておきましょう。',
+      U: '原因不明のミスが{n}本。記録者は「ネット・アウト・サーブ・レシーブ・反則」のどれかを選べるよう、見るポイントを事前に決めておくと分析の精度が上がります。'
+    };
+
+    function coachAdvice(p) {
+      const items = [];   // { kind: 'good' | 'fix', score, text }
+      const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+      const ownShare = pct(p.W, p.pf);                 // points won by own shots
+      const errShare = pct(p.err, p.pa);               // points lost by own mistakes
+
+      // Most frequent error type, with a concrete fix
+      let top = null;
+      ERROR_CODES.forEach(c => { if (p.codes[c] && (!top || p.codes[c] > p.codes[top])) top = c; });
+      if (top && p.codes[top] >= 2) {
+        items.push({ kind: 'fix', score: 50 + p.codes[top] * 4 + (top === 'S' ? 10 : 0), text: ERROR_ADVICE[top].replace('{n}', p.codes[top]) });
+      }
+      // Second most frequent error type
+      let second = null;
+      ERROR_CODES.forEach(c => { if (c !== top && p.codes[c] && (!second || p.codes[c] > p.codes[second])) second = c; });
+      if (second && second !== 'S' && p.codes[second] >= 2) {
+        items.push({ kind: 'fix', score: 36 + p.codes[second] * 3, text: ERROR_ADVICE[second].replace('{n}', p.codes[second]).replace('が最多', 'が次に多い') });
+      }
+      // Serve errors are free points even when they are not the most frequent
+      if (top !== 'S' && p.codes.S >= 2) {
+        items.push({ kind: 'fix', score: 45 + p.codes.S * 5, text: `サーブミスが${p.codes.S}本。ラリーをせずに渡す失点なので、まずここをゼロに。構え→ひと呼吸→打つのルーティンを固定しましょう。` });
+      }
+      // Too many self-inflicted points
+      if (p.pa >= 6 && errShare >= 60) {
+        items.push({ kind: 'fix', score: 40 + errShare / 2, text: `失点の${errShare}%が自分のミス。相手に決められる前に自分で崩れています。無理な決め球を減らし、高く深いクリアで時間を作ってラリーを続けることを優先。` });
+      }
+      // Errors pile up late in the game
+      if (p.err >= 4 && p.late >= 3 && pct(p.late, p.err) >= 40) {
+        items.push({ kind: 'fix', score: 45 + pct(p.late, p.err) / 3, text: `ミスの${pct(p.late, p.err)}%（${p.late}/${p.err}本）が終盤に集中。点差を意識すると打ち急ぎます。終盤こそ同じリズムで、高く深い球から組み立て直しを。体力面ならフットワークの持久練習も。` });
+      }
+      // Close games
+      if (p.closeLost >= 1 && p.closeLost > p.closeWon) {
+        items.push({ kind: 'fix', score: 38 + p.closeLost * 6, text: `2点差以内の接戦を${p.closeLost}試合落としています。デュースや終盤の1点で使う「自分の勝負球」（例：ロングサーブ→攻撃、ネット前で待つ）を1つ決めておきましょう。` });
+      }
+      // Scoring depends on the opponent's mistakes
+      if (p.pf >= 6 && ownShare <= 30) {
+        items.push({ kind: 'fix', score: 35 + (30 - ownShare), text: `得点の${100 - ownShare}%が相手のミスによるもの。自分から決める形が少ないので、甘い球をスマッシュやプッシュで沈める「決めの1本」を練習で増やしましょう。` });
+      }
+      // Strengths
+      if (p.pf >= 6 && ownShare >= 50) {
+        items.push({ kind: 'good', score: 30 + ownShare / 4, text: `得点の${ownShare}%が自分のショット（決定打${p.W}本）。攻撃力は武器です。決めた形を練習で再現し、試合でも迷わず打ち切りましょう。` });
+      }
+      if (p.games >= 2 && p.err <= p.games * 3) {
+        items.push({ kind: 'good', score: 32, text: `1試合あたりのミスが${(p.err / p.games).toFixed(1)}本と少なく安定しています。この安定感を土台に、攻撃の割合を少しずつ増やしていきましょう。` });
+      }
+      const pm = p.perMatch;
+      if (pm.length >= 2) {
+        const first = pm[0].err, last = pm[pm.length - 1].err;
+        if (last <= first - 2) items.push({ kind: 'good', score: 34, text: `ミスが1試合目${first}本→最後${last}本と減っています。試合中に修正できている証拠。何を変えたかを言葉にして次回の最初から使いましょう。` });
+        else if (last >= first + 3) items.push({ kind: 'fix', score: 42, text: `ミスが1試合目${first}本→最後${last}本と増えています。集中か体力が落ちている可能性。試合間に水分補給と、次の試合の目標を1つだけ決めてから入りましょう。` });
+      }
+
+      // Coach style: lead with one strength if there is one, then the most important fixes; max 3.
+      const good = items.filter(x => x.kind === 'good').sort((a, b) => b.score - a.score);
+      const fix = items.filter(x => x.kind === 'fix').sort((a, b) => b.score - a.score);
+      const picked = [];
+      if (good.length) picked.push(good[0]);
+      for (const f of fix) { if (picked.length < 3) picked.push(f); }
+      for (const g of good.slice(1)) { if (picked.length < 3) picked.push(g); }
+      if (!picked.length) picked.push({ kind: 'good', text: 'データがまだ少ないため、大きな傾向は見られません。次回も記録を続けましょう。' });
+      return picked;
+    }
+
+    function buildAdviceSection(players) {
+      const blocks = [...players.entries()].map(([name, p]) => {
+        const items = coachAdvice(p).map(x =>
+          `<li class="adv-${x.kind}"><span class="adv-mark">${x.kind === 'good' ? '✓ 強み' : '▲ 課題'}</span>${escapeHtml(x.text)}</li>`).join('');
+        return `<div class="adv-player"><div class="adv-name">${escapeHtml(name)}</div><ol class="adv-list">${items}</ol></div>`;
+      }).join('');
+      return `<h3>Coach feedback <span class="muted">コーチからのフィードバック（各選手 最大3点）</span></h3>
+        <div class="adv-grid">${blocks}</div>
+        <div class="adv-note muted">記録データから自動で選んだコメントです（ミスの種類・終盤のミス・決定打の割合・接戦・試合ごとの推移）。</div>`;
+    }
+
     function buildReport(day) {
       const matches = reportMatches(day);
       if (!matches.length) return '<div class="report-empty">No matches on this day. / この日の記録はありません。</div>';
       const players = new Map();
       const row = (name) => {
-        if (!players.has(name)) players.set(name, { games: 0, won: 0, lost: 0, pf: 0, pa: 0, W: 0, err: 0, late: 0, codes: { N: 0, O: 0, S: 0, F: 0, R: 0, U: 0 } });
+        if (!players.has(name)) players.set(name, { games: 0, won: 0, lost: 0, pf: 0, pa: 0, W: 0, err: 0, late: 0, codes: { N: 0, O: 0, S: 0, F: 0, R: 0, U: 0 }, perMatch: [], closeLost: 0, closeWon: 0 });
         return players.get(name);
       };
       const matchRows = matches.map((m, i) => {
@@ -2416,6 +2513,8 @@
           p.pf += m.score[t]; p.pa += m.score[opponentOf(t)];
           p.W += st[t].W; p.err += st[t].totalErrors; p.late += st[t].after15Errors;
           ERROR_CODES.forEach(c => { p.codes[c] += st[t][c]; });
+          if (!m.inProgress) p.perMatch.push({ err: st[t].totalErrors, rallies: m.rallies.length });
+          if (w && Math.abs(m.score.A - m.score.B) <= 2) { if (w === t) p.closeWon += 1; else p.closeLost += 1; }
         }
         const nm = (t) => `<span class="dot-${t.toLowerCase()}"></span><span class="${w === t ? 'win' : ''}">${escapeHtml(m.names[t])}</span>`;
         return `<tr>
@@ -2466,6 +2565,7 @@
           <thead><tr><th>#</th><th>Time</th><th>Match <small>対戦</small></th><th>Score</th><th>A errors <small>ミス</small></th><th>B errors <small>ミス</small></th><th>Win A/B</th><th>Progress <small>推移</small></th><th class="no-print"></th></tr></thead>
           <tbody>${matchRows}</tbody>
         </table>
+        ${buildAdviceSection(players)}
         <div class="rep-legend">N Net · O Out · S Serve · F Fault · R Return · U Unknown — Errors = points lost by own mistake. Late = errors once either side reached target−4. <span class="muted">ミス＝自分のミスで失った点。終盤＝どちらかが「点数−4」に達した後。</span></div>`;
     }
 
