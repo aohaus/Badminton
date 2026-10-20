@@ -16,6 +16,7 @@ https://aohaus.github.io/Badminton/
 | アプリ | URL | 内容 |
 |---|---|---|
 | PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | 次の開発用（現在は v1.5.0 と同じ内容） |
+| ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | v1.1.0（試合終了の検知・保存して次へ・選手選択・今日の記録 A4） |
 
 開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。
 
