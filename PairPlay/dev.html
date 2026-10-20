@@ -554,6 +554,35 @@ th{background:#f3f7f4}
 .rsBtn{color:var(--accent);border-color:var(--accent);border-radius:999px}
 .rsBtn:hover{background:#eef7f1}
 .footer{color:var(--muted)}
+
+/* --- Summary panel (replaces the two text blocks; text log kept in a collapsed section) --- */
+.sumPanel{margin-top:16px;background:#f7faf8;border-radius:18px;padding:14px}
+.sumHead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sumMeta{font-size:11px;color:var(--muted)}
+.sumTiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.sumTile{background:#fff;border-radius:14px;padding:10px 12px;min-width:0}
+.sumVal{font-size:20px;font-weight:850;letter-spacing:-.03em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sumKey{font-size:11px;color:var(--muted);font-weight:700}
+.sumChecks{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sumCheck{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:#fff;color:var(--ink)}
+.sumCheck.ok{background:#e3f3e8;color:#1f6b43}
+.sumCheck.warn{background:#fff3df;color:#8a4b00}
+.sumSub{font-size:12px;font-weight:800;color:var(--muted);margin:14px 0 6px}
+.sumChips{display:flex;flex-wrap:wrap;gap:6px}
+.sumChip{font-size:12px;background:#fff;border-radius:999px;padding:4px 10px}
+.sumChip b{color:var(--accent)}
+.sumRows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;row-gap:4px}
+.sumRow{display:grid;grid-template-columns:minmax(0,7em) 1fr auto 3em;align-items:center;gap:8px;font-size:13px;padding:3px 0}
+.sumName{font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sumBar{height:6px;background:#e1e8e3;border-radius:999px;overflow:hidden}
+.sumBar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.sumNum{font-variant-numeric:tabular-nums;font-weight:750}
+.sumNum small{color:var(--muted);font-weight:600}
+.sumRest{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+.sumLog{margin-top:10px}
+.sumLog summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);list-style:none}
+.sumLog pre{margin-top:8px;font-size:11px}
+@media (max-width:720px){.sumTiles{grid-template-columns:repeat(2,minmax(0,1fr))}.sumRows{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -672,14 +701,12 @@ th{background:#f3f7f4}
 
     <div id="schedule" style="margin-top:12px"></div>
 
-    <div style="margin-top:12px">
-      <div class="sectionTitle">Confirmation info / 確認情報</div>
+    <div id="summaryPanel" class="sumPanel" hidden></div>
+    <details class="sumLog" id="summaryLog" hidden>
+      <summary>Text log <span class="jb">テキスト記録</span></summary>
       <pre class="mono" id="audit"></pre>
-      <div style="margin-top:12px">
-        <div class="sectionTitle">Visual summary (text) / 一覧（テキスト）</div>
-        <pre class="mono" id="visualText"></pre>
-      </div>
-    </div>
+      <pre class="mono" id="visualText" style="margin-top:8px"></pre>
+    </details>
   </section>
 
   <section class="card wizardStep" id="wizardStep4">
@@ -1090,6 +1117,7 @@ function renderFromSnapshot(snap){
   document.getElementById("audit").textContent = snap.auditText;
   const vtEl = document.getElementById("visualText");
   if(vtEl){ vtEl.textContent = snap.visualText || ""; }
+  renderSummary(snap);
   currentSnapshot = snap;
 }
 
@@ -1156,6 +1184,93 @@ function buildVisualText(params){
   return lines.join("\n");
 }
 
+/** Structured data for the summary panel (the text log keeps the same facts as plain text). */
+function buildSummaryData(pairCount, consecutiveRestPlayers){
+  const repeated = [];
+  pairCount.forEach(function(cnt, key){ if(cnt > 1) repeated.push({ pair: key.split("-"), count: cnt }); });
+  repeated.sort(function(a,b){ return b.count - a.count || a.pair.join("-").localeCompare(b.pair.join("-")); });
+  return {
+    uniquePairs: pairCount.size,
+    repeatedPairs: repeated,
+    consecutiveRestPlayers: consecutiveRestPlayers.slice()
+  };
+}
+
+function renderSummary(snap){
+  const panel = document.getElementById("summaryPanel");
+  const log = document.getElementById("summaryLog");
+  if(!panel) return;
+  if(!snap){
+    panel.hidden = true;
+    panel.innerHTML = "";
+    if(log){ log.hidden = true; log.open = false; }
+    return;
+  }
+  const esc = escapeHtml;
+  const players = snap.players || [];
+  const rests = snap.restCountObj || {};
+  const rounds = snap.rounds || 0;
+  const perMatchRest = Math.max(0, players.length - 4 * (snap.courtCount || 0));
+  const sum = snap.summary;
+
+  const tiles = [
+    ["Matches", "試合", rounds],
+    ["Courts", "コート", (snap.courtLabels || []).join(" · ") || snap.courtCount],
+    ["Players", "選手", players.length],
+    ["Rest / match", "休憩/試合", perMatchRest]
+  ].map(function(t){
+    return '<div class="sumTile"><div class="sumVal">'+esc(String(t[2]))+'</div><div class="sumKey">'+t[0]+' <span class="jb">'+t[1]+'</span></div></div>';
+  }).join("");
+
+  const checks = [];
+  const consec = snap.consecutiveRestEvents || 0;
+  if(consec === 0){
+    checks.push('<span class="sumCheck ok">✓ No back-to-back rests <span class="jb">連続休憩なし</span></span>');
+  }else{
+    const who = sum && sum.consecutiveRestPlayers.length ? ": " + sum.consecutiveRestPlayers.map(esc).join(", ") : "";
+    checks.push('<span class="sumCheck warn">⚠ Back-to-back rests <span class="jb">連続休憩</span> ×'+consec+who+'</span>');
+  }
+  let pairChips = "";
+  if(sum){
+    // Fair share: partner slots spread over every possible pair, rounded up.
+    const n = players.length;
+    const slots = rounds * Math.min(snap.courtCount || 0, Math.floor(n / 4)) * 2;
+    const fair = Math.max(1, Math.ceil(slots / Math.max(1, n * (n - 1) / 2)));
+    const maxPair = sum.repeatedPairs.length ? sum.repeatedPairs[0].count : 1;
+    const over = sum.repeatedPairs.filter(function(x){ return x.count > fair; });
+    if(!over.length){
+      checks.push('<span class="sumCheck ok">✓ Partners evenly spread · max ×'+maxPair+' <span class="jb">ペアの偏りなし（最多'+maxPair+'回）</span></span>');
+    }else{
+      checks.push('<span class="sumCheck warn">⚠ Some pairs repeat often · max ×'+maxPair+' <span class="jb">ペアに偏りあり（最多'+maxPair+'回）</span></span>');
+      pairChips = '<div class="sumChips" style="margin-top:6px">' +
+        over.slice(0, 8).map(function(x){ return '<span class="sumChip">'+esc(x.pair[0])+' – '+esc(x.pair[1])+' <b>×'+x.count+'</b></span>'; }).join("") + '</div>';
+    }
+  }
+
+  const maxPlay = players.reduce(function(m,p){ return Math.max(m, rounds - (rests[p]||0)); }, 0) || 1;
+  const rows = players.map(function(p){
+    const rest = rests[p] || 0;
+    const played = Math.max(0, rounds - rest);
+    const w = Math.round(played / maxPlay * 100);
+    return '<div class="sumRow"><span class="sumName">'+esc(p)+'</span>' +
+      '<span class="sumBar"><i style="width:'+w+'%"></i></span>' +
+      '<span class="sumNum">'+played+'<small>/'+rounds+'</small></span>' +
+      '<span class="sumRest">'+(rest ? '休 ' + rest : '—')+'</span></div>';
+  }).join("");
+
+  const meta = ['#' + esc(String(snap.version)), esc(snap.timestamp || "")];
+  if(snap.code) meta.push('Code ' + esc(snap.code));
+  panel.innerHTML =
+    '<div class="sumHead"><div class="sectionTitle" style="margin:0">Summary <span class="jb">サマリー</span></div><div class="sumMeta">'+meta.join(' · ')+'</div></div>' +
+    '<div class="sumTiles">'+tiles+'</div>' +
+    '<div class="sumChecks">'+checks.join("")+'</div>' +
+    pairChips +
+    '<div class="sumSub">Matches played per player <span class="jb">選手ごとの出場数・休憩数</span></div>' +
+    '<div class="sumRows">'+rows+'</div>';
+  panel.hidden = false;
+  if(log) log.hidden = false;
+}
+
 function snapshotCurrent(args){
   const tableHtml = args.tableHtml;
   const restCountObj = args.restCountObj;
@@ -1192,6 +1307,7 @@ function snapshotCurrent(args){
     auditText: auditText,
     visualText: (args.visualText || ''),
     matchData: (args.matchData || []),
+    summary: (args.summary || null),
     tableHtml: tableHtml
   };
 }
@@ -1301,6 +1417,7 @@ function generateNew(){
     consecutiveRestEvents: consecutiveRestEvents,
     visualText: visualTextStr,
     matchData: matchData,
+    summary: buildSummaryData(pairCount, Array.from(consecPlayers)),
     timestamp: timestamp,
     version: generateCount
   });
@@ -1311,6 +1428,7 @@ function generateNew(){
     try{ vtEl.textContent = visualTextStr; }
     catch(e){ vtEl.textContent = "Failed to render visual summary / 一覧を表示できません: " + (e && e.message ? e.message : String(e)); }
   }
+  renderSummary(snap);
 
   currentSnapshot = snap;
   history.unshift(snap);
@@ -1465,6 +1583,7 @@ function showInitialPrompt(){
   if(audit) audit.textContent = "";
   const v = document.getElementById("visualText");
   if(v) v.textContent = "";
+  renderSummary(null);
   currentSnapshot = null;
 }
 
@@ -1489,6 +1608,7 @@ document.getElementById("btnClearHistory").addEventListener("click", ()=>{
   renderHistory();
   document.getElementById("audit").textContent="";
   const vEl=document.getElementById("visualText"); if(vEl) vEl.textContent="";
+  renderSummary(null);
 });
 
 document.getElementById("btnSave").addEventListener("click", exportHtmlWithState);
