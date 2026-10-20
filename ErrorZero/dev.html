@@ -1135,6 +1135,55 @@
       .gameover, .next-btn, .match-bar { display: none !important; }
     }
     @page { size: A4 portrait; margin: 10mm; }
+
+    /* --- Coder layout: names come from the Players sheet, every control fits the first phone screen --- */
+    .setup[hidden] { display: none !important; }
+    .team-name[role="button"] { cursor: pointer; }
+    @media (max-width: 560px) {
+      .app { padding-top: 8px; }
+      header { margin: 0 0 8px; gap: 6px; }
+      .brand h1 { font-size: 22px; }
+      .brand .tagline { display: none; }
+      .header-right { gap: 6px; }
+      .match-meta { flex-wrap: nowrap; gap: 6px; }
+      .meta-pill { min-height: 30px; padding: 5px 8px; }
+      .top-actions { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 6px; }
+      .top-actions button { width: auto; min-height: 36px; padding: 6px 4px; font-size: 13px; border-radius: 12px; }
+      .top-actions button small { display: none; }
+      .card { padding: 10px; }
+      .match-bar { margin: 0 0 8px; }
+      .seg { padding: 7px 12px; }
+      .match-bar .btn-ghost { padding: 8px 12px; }
+      .scoreboard { margin-bottom: 6px; gap: 8px; }
+      .team-panel { min-height: 0; padding: 8px; }
+      .team-name { min-height: 22px; font-size: 16px; }
+      .score { font-size: 60px; margin: 4px 0 8px; }
+      .point-btn { min-height: 50px; padding: 12px 6px; font-size: 16px; }
+      .pending { margin-top: 6px; min-height: 30px; padding: 6px 10px; font-size: 12px; }
+      .reason-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+      .reason-btn { min-height: 54px; padding: 6px 4px; }
+      .next-btn { margin-top: 8px; padding: 13px 10px; font-size: 16px; }
+      .controls { grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+      .controls button { padding: 11px 6px; font-size: 14px; }
+      .brand { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 8px; }
+      /* Float the game-over banner over the header so the scoring controls do not move */
+      .gameover { position: fixed; top: 8px; left: 10px; right: 10px; margin: 0; z-index: 18; }
+    }
+    /* Short phones (iPhone SE class): tighten further so the controls still fit */
+    @media (max-width: 560px) and (max-height: 620px) {
+      header { margin-bottom: 4px; }
+      .brand h1 { font-size: 19px; }
+      .match-meta { display: none; }
+      .top-actions button { min-height: 32px; }
+      .team-name { font-size: 14px; min-height: 18px; }
+      .score { font-size: 44px; margin: 2px 0 6px; }
+      .point-btn { min-height: 44px; padding: 9px 6px; }
+      .pending { display: none; }
+      .reason-btn { min-height: 46px; }
+      .reason-btn .code { font-size: 17px; }
+      .next-btn { padding: 11px 10px; }
+      .controls button { padding: 9px 6px; }
+    }
   </style>
 </head>
 <body>
@@ -1142,7 +1191,7 @@
     <header>
       <div class="brand">
         <h1>ErrorZero Badminton</h1>
-        <p>Track every point. Eliminate every mistake. <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.1.0</a></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.1.0</a></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1182,7 +1231,7 @@
 
     <main class="grid">
       <section class="card">
-        <div class="setup">
+        <div class="setup" hidden>
           <div>
             <label for="teamAName">Team A</label>
             <input id="teamAName" value="Team A" maxlength="28" />
@@ -1205,13 +1254,13 @@
 
         <div class="scoreboard">
           <div class="team-panel" id="panelA">
-            <div class="team-name" id="displayTeamA">Team A</div>
+            <div class="team-name" id="displayTeamA" role="button" tabindex="0" title="Change players / 選手を変更">Team A</div>
             <div class="score" id="scoreA">0</div>
             <button class="point-btn" data-team="A">Team A +1</button>
           </div>
           <div class="vs">VS</div>
           <div class="team-panel" id="panelB">
-            <div class="team-name" id="displayTeamB">Team B</div>
+            <div class="team-name" id="displayTeamB" role="button" tabindex="0" title="Change players / 選手を変更">Team B</div>
             <div class="score" id="scoreB">0</div>
             <button class="point-btn" data-team="B">Team B +1</button>
           </div>
@@ -2202,6 +2251,7 @@
     $('saveNextBtn').addEventListener('click', saveAndNext);
     $('goNextBtn').addEventListener('click', saveAndNext);
     $('openPlayers').addEventListener('click', () => openNext(null));
+    ['displayTeamA', 'displayTeamB'].forEach(id => $(id).addEventListener('click', () => openNext(null)));
     $('closeNext').addEventListener('click', () => closeModal('nextModal'));
     $('startNext').addEventListener('click', startNext);
     $('renameOnly').addEventListener('click', renameOnly);
