@@ -1,0 +1,16 @@
+{
+  "name": "Badminton Apps",
+  "short_name": "Badminton",
+  "description": "練習・組み合わせ・スコア・振り返りのためのバドミントンアプリ集",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f5",
+  "theme_color": "#dcefe2",
+  "icons": [
+    { "src": "icons/badminton-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/badminton-icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/badminton-icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
