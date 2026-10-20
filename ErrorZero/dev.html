@@ -1279,6 +1279,28 @@
       .code-col { padding: 6px; }
     }
     @media print { #codeWindow { display: none !important; } }
+
+    /* --- Score sheet: freeze game / name / serve columns while rallies scroll sideways --- */
+    .standard-sheet { --gl-w: 42px; --name-w: 190px; --svc-w: 34px; --cell-w: 34px; min-width: 0; overflow: visible; }
+    .standard-sheet .player-name { left: var(--gl-w); }
+    .standard-sheet .service-cell { left: calc(var(--gl-w) + var(--name-w)); }
+    .standard-sheet .rally-cell { position: relative; z-index: 1; }
+    .standard-sheet .service-cell { background: #fff; }
+    body.night .standard-sheet .service-cell, body.night .standard-sheet .player-name:not(.future-partner), body.night .standard-sheet .game-label { background: #0f172a; }
+    .standard-sheet .player-name, .standard-sheet .service-cell, .standard-sheet .game-label { box-shadow: 4px 0 6px -4px rgba(17,24,39,.25); }
+    .sheet { overflow: visible; }
+    /* --- Score progression: no sideways scroll, fills the card width --- */
+    .progress-wrap { overflow-x: visible; }
+    .progress-panel { min-width: 0; }
+    .progress-chart { width: 100%; height: auto; }
+    @media (max-width: 560px) {
+      .standard-sheet { --gl-w: 24px; --name-w: 92px; --svc-w: 26px; --cell-w: 30px; }
+      .standard-sheet .player-name { font-size: 13px; padding: 0 6px; }
+      .standard-sheet .game-label { font-size: 10px; letter-spacing: 0; }
+      .standard-sheet .service-cell, .standard-sheet .rally-cell { font-size: 15px; }
+      .progress-panel { padding: 8px 6px 6px; }
+      .progress-legend { flex-wrap: wrap; font-size: 11px; }
+    }
   </style>
 </head>
 <body>
@@ -1854,7 +1876,7 @@
       ];
 
       const html = [];
-      html.push(`<div class="standard-sheet" style="grid-template-columns:42px 190px 34px repeat(${maxCols}, 34px);">`);
+      html.push(`<div class="standard-sheet" style="grid-template-columns:var(--gl-w) var(--name-w) var(--svc-w) repeat(${maxCols}, var(--cell-w));">`);
       html.push('<div class="game-label">Game 1</div>');
 
       rows.forEach((row, idx) => {
@@ -1908,10 +1930,11 @@
         return;
       }
 
-      const width = 1000;
-      const height = 170;
-      const padL = 42;
-      const padR = 18;
+      const width = Math.round(target.clientWidth) || 1000;
+      const narrow = width < 520;
+      const height = narrow ? 200 : 170;
+      const padL = narrow ? 30 : 42;
+      const padR = narrow ? 10 : 18;
       const padT = 12;
       const padB = 26;
       const chartW = width - padL - padR;
@@ -1933,7 +1956,7 @@
       const sx = (i) => padL + (i / maxRally) * chartW;
       const sy = (score) => padT + chartH - (score / maxScore) * chartH;
       const poly = (pts) => pts.map(p => `${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(' ');
-      const guideValues = isEarlyView ? [0, 5, 10] : [...new Set([0, 5, 10, 15, 20, 25, 30, state.target].filter(v => v <= maxScore))].sort((a, b) => a - b);
+      const guideValues = isEarlyView ? [0, 5, 10] : [...new Set([0, 5, 10, 15, 20, 25, 30, state.target].filter(v => v <= maxScore && (v === state.target || Math.abs(v - state.target) > 1)))].sort((a, b) => a - b);
 
       const guides = guideValues.map(v => {
         const y = sy(v).toFixed(1);
@@ -1942,7 +1965,7 @@
       }).join('');
 
       const xLabels = isEarlyView
-        ? Array.from({ length: 10 }, (_, i) => i + 1)
+        ? Array.from({ length: 10 }, (_, i) => i + 1).filter(v => !narrow || v % 2 === 0 || v === 1)
         : [0, Math.ceil(maxRally / 2), maxRally].filter((v, i, arr) => arr.indexOf(v) === i);
       const labels = xLabels.map(v => {
         const x = sx(v).toFixed(1);
@@ -1954,7 +1977,7 @@
       const lastA = pointsA[pointsA.length - 1];
       const lastB = pointsB[pointsB.length - 1];
       target.innerHTML = `
-        <svg class="progress-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Score progression chart">
+        <svg class="progress-chart" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="Score progression chart">
           ${guides}
           <line x1="${padL}" y1="${padT + chartH}" x2="${width - padR}" y2="${padT + chartH}" stroke="var(--line)" stroke-width="1.5" />
           <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + chartH}" stroke="var(--line)" stroke-width="1.5" />
@@ -1963,8 +1986,8 @@
           <circle cx="${sx(lastA.x).toFixed(1)}" cy="${sy(lastA.y).toFixed(1)}" r="5" fill="var(--blue)" />
           <circle cx="${sx(lastB.x).toFixed(1)}" cy="${sy(lastB.y).toFixed(1)}" r="5" fill="var(--red)" />
           ${labels}
-          <text x="${width - padR}" y="14" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Score</text>
-          <text x="${width - padR}" y="${height - 7}" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Rally</text>
+          ${narrow ? '' : `<text x="${width - padR}" y="14" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Score</text>
+          <text x="${width - padR}" y="${height - 7}" text-anchor="end" fill="var(--muted)" font-size="11" font-weight="800">Rally</text>`}
         </svg>`;
     }
 
@@ -2573,6 +2596,11 @@
       if (e.target.closest('.strip-side')) openNext(null);
     });
     bindHoldReset();
+    let progressResizeTimer = null;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(progressResizeTimer);
+      progressResizeTimer = window.setTimeout(renderScoreProgression, 150);
+    });
     $('openMenu').addEventListener('click', openMenu);
     $('closeMenu').addEventListener('click', closeMenu);
     $('menuModal').addEventListener('click', (e) => {
