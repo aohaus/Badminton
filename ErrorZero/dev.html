@@ -1197,6 +1197,88 @@
       .next-btn { padding: 11px 10px; }
       .controls button { padding: 9px 6px; }
     }
+
+    /* ===== Code window v1.2: hierarchy by frequency ===== */
+    body.mode-code #classicCard, body.mode-code #gameOverBar { display: none !important; }
+    body.mode-classic #codeWindow { display: none; }
+    body.mode-code .top-actions #openHelpTop, body.mode-code .top-actions #openStatsTop,
+    body.mode-code .top-actions #printBtn, body.mode-code .top-actions #themeToggle,
+    body.mode-code .match-meta { display: none !important; }
+    .menu-btn { font-size: 20px; line-height: 1; }
+    .code-window { padding: 10px; min-width: 0; }
+    .grid > * { min-width: 0; }
+    .code-col, .code-row, .code-btn { min-width: 0; }
+    .score-strip { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 16px; background: rgba(107,114,128,.07); }
+    .score-strip.flipped { flex-direction: row-reverse; }
+    .score-strip.flipped .strip-target { order: -1; }
+    .strip-side { flex: 1; display: flex; align-items: center; gap: 8px; background: none; padding: 4px 6px; min-width: 0; color: var(--ink); }
+    .strip-side.a { justify-content: flex-end; }
+    .strip-side.b { justify-content: flex-start; }
+    .score-strip.flipped .strip-side.a { flex-direction: row-reverse; justify-content: flex-end; }
+    .score-strip.flipped .strip-side.b { flex-direction: row-reverse; justify-content: flex-start; }
+    .strip-name { font-size: 14px; font-weight: 850; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .strip-side.a .strip-name { color: var(--blue); }
+    .strip-side.b .strip-name { color: var(--red); }
+    .strip-score { font-size: 34px; font-weight: 950; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1; min-width: 1.2em; text-align: center; border-radius: 10px; }
+    .strip-score.lead { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
+    .strip-score.flash { animation: ezFlash .6s ease; }
+    @keyframes ezFlash { 0% { background: rgba(250,204,21,.85); transform: scale(1.18); } 100% { background: transparent; transform: scale(1); } }
+    .strip-dash { font-weight: 900; color: var(--muted); }
+    .strip-target { background: none; padding: 6px 4px; font-size: 12px; color: var(--muted); }
+    .last-line { display: flex; align-items: center; gap: 8px; margin: 8px 0; min-height: 38px; }
+    .last-text { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .last-text small { color: var(--muted); font-weight: 700; }
+    .last-text .side-dot { width: 8px; height: 8px; margin-right: 4px; }
+    .undo-mini { padding: 9px 14px; font-size: 15px; flex: none; }
+    .code-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .code-cols.flipped .code-col.a { order: 2; }
+    .code-col { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 18px; border-top: 4px solid var(--blue); background: rgba(50,103,255,.04); transition: opacity .2s ease; }
+    .code-col.b { border-top-color: var(--red); background: rgba(239,68,68,.04); }
+    .col-head { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 900; min-width: 0; }
+    .col-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .code-row { display: grid; gap: 6px; }
+    .code-row.two { grid-template-columns: 1fr 1fr; }
+    .code-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    .code-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 6px 4px; border-radius: 14px; border: 1px solid var(--line); color: var(--ink); background: var(--card); min-height: 44px; }
+    .code-btn b { font-size: 14px; font-weight: 900; }
+    .code-btn small { font-size: 10px; font-weight: 700; color: var(--muted); white-space: nowrap; letter-spacing: -.02em; }
+    .code-btn.win { min-height: 72px; background: var(--green); border-color: var(--green); color: #fff; }
+    .code-btn.win b { font-size: 20px; }
+    .code-btn.win small { color: rgba(255,255,255,.85); }
+    .code-btn.err { background: rgba(239,68,68,.07); border-color: rgba(239,68,68,.25); }
+    .code-btn.err.big { min-height: 60px; }
+    .code-btn.err.big b { font-size: 17px; }
+    .code-btn.unk { flex-direction: row; gap: 6px; min-height: 34px; background: rgba(107,114,128,.08); }
+    .code-btn.unk b { font-size: 12px; color: var(--muted); }
+    .code-btn:active { transform: scale(.96); }
+    body.game-over .code-col { opacity: .38; }
+    .code-foot { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 10px; }
+    .foot-next { padding: 12px; font-size: 14px; }
+    body.game-over .foot-next { grid-column: 1 / -1; order: -1; padding: 18px; font-size: 18px; animation: ezPulse 1.4s ease-in-out infinite; }
+    .foot-swap { padding: 10px 16px; font-size: 18px; }
+    .foot-reset { position: relative; overflow: hidden; padding: 10px 14px; font-size: 13px; touch-action: none; }
+    .hold-fill { position: absolute; inset: 0; width: 0; background: rgba(239,68,68,.35); }
+    .foot-reset.holding .hold-fill { width: 100%; transition: width .8s linear; }
+    .hold-text { position: relative; }
+    .menu-modal { width: min(460px, 100%); }
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .menu-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .menu-loc .location-pill { display: inline-flex; }
+    .menu-loc .location-input { width: 180px; }
+    .rep-table .dot-a, .rep-table .dot-b { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; background: #3267ff; }
+    .rep-table .dot-b { background: #ef4444; }
+    @media (max-width: 560px) {
+      body.mode-code header { flex-direction: row; align-items: center; }
+      body.mode-code .header-right { width: auto; }
+      body.mode-code .top-actions { display: flex; width: auto; flex-wrap: nowrap; }
+      body.mode-code header { flex-wrap: nowrap; }
+      body.mode-code .brand { flex: 1; min-width: 0; }
+      body.mode-code .brand h1 { font-size: 20px; }
+      body.mode-code .top-actions button { flex: none; padding: 8px 12px; min-height: 36px; }
+      .code-cols { gap: 8px; }
+      .code-col { padding: 6px; }
+    }
+    @media print { #codeWindow { display: none !important; } }
   </style>
 </head>
 <body>
@@ -1204,7 +1286,7 @@
     <header>
       <div class="brand">
         <h1>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.1.0</a></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.2.0</a></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1229,6 +1311,7 @@
         </div>
         <div class="top-actions">
           <button class="btn-ghost" id="openReportTop">Today <small>今日の記録</small></button>
+          <button class="btn-ghost menu-btn" id="openMenu" aria-label="Menu">⋯</button>
           <button class="btn-ghost" id="openHelpTop">Help</button>
           <button class="btn-ghost" id="openStatsTop">Stats</button>
           <button class="btn-ghost" id="printBtn">Print</button>
@@ -1243,7 +1326,55 @@
     </div>
 
     <main class="grid">
-      <section class="card">
+      <section class="card code-window" id="codeWindow">
+        <div class="score-strip" id="scoreStrip">
+          <button type="button" class="strip-side a" data-side="A"><span class="strip-name" id="stripNameA">Team A</span><span class="strip-score" id="stripScoreA">0</span></button>
+          <span class="strip-dash">–</span>
+          <button type="button" class="strip-side b" data-side="B"><span class="strip-score" id="stripScoreB">0</span><span class="strip-name" id="stripNameB">Team B</span></button>
+          <button type="button" class="strip-target" id="stripTarget" title="Game to / 点数">/15</button>
+        </div>
+        <div class="last-line">
+          <span id="lastEvent" class="last-text">Tap what happened — one tap per rally. <small>1ラリー1タップで記録</small></span>
+          <button type="button" class="btn-ghost undo-mini" id="undoMini">↶ Undo</button>
+        </div>
+        <div class="code-cols" id="codeCols">
+          <div class="code-col a" data-side="A">
+            <div class="col-head"><span class="side-dot a"></span><span class="col-name" id="colNameA">Team A</span></div>
+            <button class="code-btn win" data-side="A" data-reason="W"><b>Winner</b><small>ウィナー</small></button>
+            <div class="code-row two">
+              <button class="code-btn err big" data-side="A" data-reason="N"><b>Net</b><small>ネット</small></button>
+              <button class="code-btn err big" data-side="A" data-reason="O"><b>Out</b><small>アウト</small></button>
+            </div>
+            <div class="code-row three">
+              <button class="code-btn err" data-side="A" data-reason="S"><b>Serve</b><small>サーブ</small></button>
+              <button class="code-btn err" data-side="A" data-reason="R"><b>Return</b><small>レシーブ</small></button>
+              <button class="code-btn err" data-side="A" data-reason="F"><b>Fault</b><small>反則</small></button>
+            </div>
+            <button class="code-btn unk" data-side="A" data-reason="U"><b>Unknown</b> <small>不明</small></button>
+          </div>
+          <div class="code-col b" data-side="B">
+            <div class="col-head"><span class="side-dot b"></span><span class="col-name" id="colNameB">Team B</span></div>
+            <button class="code-btn win" data-side="B" data-reason="W"><b>Winner</b><small>ウィナー</small></button>
+            <div class="code-row two">
+              <button class="code-btn err big" data-side="B" data-reason="N"><b>Net</b><small>ネット</small></button>
+              <button class="code-btn err big" data-side="B" data-reason="O"><b>Out</b><small>アウト</small></button>
+            </div>
+            <div class="code-row three">
+              <button class="code-btn err" data-side="B" data-reason="S"><b>Serve</b><small>サーブ</small></button>
+              <button class="code-btn err" data-side="B" data-reason="R"><b>Return</b><small>レシーブ</small></button>
+              <button class="code-btn err" data-side="B" data-reason="F"><b>Fault</b><small>反則</small></button>
+            </div>
+            <button class="code-btn unk" data-side="B" data-reason="U"><b>Unknown</b> <small>不明</small></button>
+          </div>
+        </div>
+        <div class="code-foot">
+          <button type="button" class="btn-blue foot-next" id="footNext"><span id="footNextText">Save &amp; next <small>保存して次へ</small></span></button>
+          <button type="button" class="btn-ghost foot-swap" id="swapSides" title="Swap sides / 左右入れ替え">⇄</button>
+          <button type="button" class="btn-red foot-reset" id="holdReset" title="Hold to reset / 長押しでリセット"><span class="hold-fill"></span><span class="hold-text">Reset <small>長押し</small></span></button>
+        </div>
+      </section>
+
+      <section class="card classic-card" id="classicCard">
         <div class="setup" hidden>
           <div>
             <label for="teamAName">Team A</label>
@@ -1390,7 +1521,31 @@
         <div><span class="help-code">R</span><span>Return error</span></div>
         <div><span class="help-code">U</span><span>Unknown error</span></div>
       </div>
+      <div class="insight" style="margin-top:12px;"><b>1-tap input / 1タップ入力:</b> tap what the player did. Left column = Team A, right = Team B (⇄ swaps). “Winner” scores for that player; an error (Net, Out…) gives the point to the other side. 選手がしたプレーを押します。Winner はその選手の得点、ミスは相手の得点になります。</div>
       <div class="insight" style="margin-top:12px;">Plain number = winner / clean point. Number with small code = point caused by opponent error.</div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="menuModal">
+    <div class="modal menu-modal">
+      <div class="modal-header">
+        <h2>Menu <small>メニュー</small></h2>
+        <button class="btn-ghost" id="closeMenu">Close</button>
+      </div>
+      <div class="menu-grid">
+        <button class="btn-ghost" data-menu="stats">Stats <small>分析</small></button>
+        <button class="btn-ghost" data-menu="print">Print <small>印刷</small></button>
+        <button class="btn-ghost" data-menu="help">Help <small>ヘルプ</small></button>
+        <button class="btn-ghost" data-menu="theme" id="menuTheme">Night <small>夜間</small></button>
+      </div>
+      <div class="menu-row">
+        <span class="seg-label">Input <small>入力方式</small></span>
+        <div class="target-seg" id="modeSeg">
+          <button type="button" class="seg" data-mode="code">1-tap <small>1タップ</small></button>
+          <button type="button" class="seg" data-mode="classic">2-tap <small>従来</small></button>
+        </div>
+      </div>
+      <div class="menu-row"><span class="seg-label">Location <small>場所</small></span><span id="menuLocationSlot" class="menu-loc"></span></div>
     </div>
   </div>
 
@@ -1473,6 +1628,7 @@
       startedAt: null
     };
     let matchLog = [];   // saved matches, oldest first
+    let ui = { mode: 'code', flipped: false };   // input mode and which side is on the left
     let roster = [];     // recently used player names, newest first
 
     const $ = (id) => document.getElementById(id);
@@ -1891,11 +2047,13 @@
       try {
         const st = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') || {};
         if (!state.rallies.length && GAME_CAPS[st.target]) state.target = st.target;
+        if (st.mode === 'classic' || st.mode === 'code') ui.mode = st.mode;
+        ui.flipped = !!st.flipped;
       } catch (e) {}
     }
     function saveLog() { try { localStorage.setItem(LOG_KEY, JSON.stringify(matchLog)); } catch (e) {} }
     function saveRoster() { try { localStorage.setItem(ROSTER_KEY, JSON.stringify(roster)); } catch (e) {} }
-    function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ target: state.target })); } catch (e) {} }
+    function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ target: state.target, mode: ui.mode, flipped: ui.flipped })); } catch (e) {} }
 
     function rememberNames(...names) {
       const clean = names.map(n => String(n || '').trim()).filter(n => n && !DEFAULT_NAMES.includes(n));
@@ -2081,8 +2239,101 @@
       document.querySelectorAll('.late-label').forEach(el => { el.textContent = `Late errors (≥${lf})`; });
       const nb = $('saveNextBtn');
       nb.classList.toggle('pulse', !!w);
+      renderCodeWindow(w);
       const todayCount = matchLog.filter(m => matchDate(m) === dateKey()).length;
       $('openReportTop').innerHTML = `Today${todayCount ? ` (${todayCount})` : ''} <small>今日の記録</small>`;
+    }
+
+
+    /* ===== Code window (1-tap input) ===== */
+    const JA_REASON = { W: 'ウィナー', N: 'ネット', O: 'アウト', S: 'サーブ', F: '反則', R: 'レシーブ', U: '不明' };
+
+    /** One tap = what one player did. Winner scores for that side; an error gives the point to the other side. */
+    function codeEvent(side, reason) {
+      const scorer = reason === 'W' ? side : opponentOf(side);
+      const before = { A: state.score.A, B: state.score.B };
+      setPending(scorer);
+      addPoint(reason);
+      const changed = state.score.A !== before.A ? 'A' : (state.score.B !== before.B ? 'B' : null);
+      if (changed) flashScore(changed);
+      try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+    }
+
+    function flashScore(team) {
+      const el = $('stripScore' + team);
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+
+    function describeLast() {
+      const r = state.rallies[state.rallies.length - 1];
+      if (!r) return 'Tap what happened — one tap per rally. <small>1ラリー1タップで記録</small>';
+      const actor = r.reason === 'W' ? r.scoringTeam : r.losingTeam;
+      const what = r.reason === 'W' ? 'Winner' : `${REASONS[r.reason].label} error`;
+      return `<span class="side-dot ${actor.toLowerCase()}"></span><b>${escapeHtml(teamName(actor))}</b> · ${what} <small>${JA_REASON[r.reason]}</small> → <b>${r.scoreAfter.A}-${r.scoreAfter.B}</b>`;
+    }
+
+    function renderCodeWindow(winner) {
+      document.body.classList.toggle('mode-code', ui.mode === 'code');
+      document.body.classList.toggle('mode-classic', ui.mode !== 'code');
+      document.body.classList.toggle('game-over', !!winner);
+      $('codeCols').classList.toggle('flipped', ui.flipped);
+      $('scoreStrip').classList.toggle('flipped', ui.flipped);
+      for (const t of ['A', 'B']) {
+        $('stripName' + t).textContent = teamName(t);
+        $('colName' + t).textContent = teamName(t);
+        $('stripScore' + t).textContent = state.score[t];
+        $('stripScore' + t).classList.toggle('lead', state.score[t] > state.score[opponentOf(t)]);
+      }
+      $('stripTarget').textContent = `/${state.target}`;
+      $('lastEvent').innerHTML = describeLast();
+      $('undoMini').disabled = !state.rallies.length;
+      $('footNextText').innerHTML = winner
+        ? `Game over ${state.score.A}-${state.score.B} · Save &amp; next <small>保存して次へ</small>`
+        : 'Save &amp; next <small>保存して次へ</small>';
+      document.querySelectorAll('#modeSeg .seg').forEach(b => b.classList.toggle('on', b.dataset.mode === ui.mode));
+      $('menuTheme').innerHTML = document.body.classList.contains('night') ? 'Day <small>昼間</small>' : 'Night <small>夜間</small>';
+    }
+
+    function setMode(mode) {
+      ui.mode = mode;
+      saveSettings();
+      render();
+    }
+
+    // Reset needs a 0.8 s hold so it cannot be hit by accident while coding.
+    function bindHoldReset() {
+      const btn = $('holdReset');
+      let timer = null;
+      const cancel = () => { window.clearTimeout(timer); timer = null; btn.classList.remove('holding'); };
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        btn.classList.add('holding');
+        timer = window.setTimeout(() => {
+          cancel();
+          if (!state.rallies.length) { clearCurrent(); return; }
+          const m = archiveCurrent();
+          clearCurrent();
+          if (m) showActionToast(`Saved #${matchNumber(m)} & reset / 保存してリセット`, () => restoreMatch(m));
+        }, 800);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, () => {
+        if (timer) { cancel(); showToast('Hold to reset / 長押しでリセット'); }
+      }));
+      btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    function openMenu() {
+      const slot = $('menuLocationSlot');
+      const pill = document.querySelector('.location-pill');
+      if (pill && pill.parentElement !== slot) { slot.appendChild(pill); }
+      $('menuModal').classList.add('show');
+    }
+    function closeMenu() {
+      const pill = document.querySelector('#menuLocationSlot .location-pill');
+      if (pill) document.querySelector('.match-meta').appendChild(pill);
+      closeModal('menuModal');
     }
 
     let actionToastTimer = null;
@@ -2143,7 +2394,7 @@
           p.W += st[t].W; p.err += st[t].totalErrors; p.late += st[t].after15Errors;
           ERROR_CODES.forEach(c => { p.codes[c] += st[t][c]; });
         }
-        const nm = (t) => `<span class="${w === t ? 'win' : ''}">${escapeHtml(m.names[t])}</span>`;
+        const nm = (t) => `<span class="dot-${t.toLowerCase()}"></span><span class="${w === t ? 'win' : ''}">${escapeHtml(m.names[t])}</span>`;
         return `<tr>
           <td class="num">${i + 1}</td>
           <td class="num">${timeLabel(m.startedAt)}</td>
@@ -2310,6 +2561,34 @@
       if (seg) setTarget(+seg.dataset.target);
     });
     $('openReportTop').addEventListener('click', openReport);
+    $('codeCols').addEventListener('click', (e) => {
+      const b = e.target.closest('.code-btn');
+      if (b) codeEvent(b.dataset.side, b.dataset.reason);
+    });
+    $('undoMini').addEventListener('click', undo);
+    $('footNext').addEventListener('click', saveAndNext);
+    $('swapSides').addEventListener('click', () => { ui.flipped = !ui.flipped; saveSettings(); render(); showToast('Sides swapped / 左右を入れ替えました'); });
+    $('scoreStrip').addEventListener('click', (e) => {
+      if (e.target.closest('.strip-target')) { openNext(null); return; }
+      if (e.target.closest('.strip-side')) openNext(null);
+    });
+    bindHoldReset();
+    $('openMenu').addEventListener('click', openMenu);
+    $('closeMenu').addEventListener('click', closeMenu);
+    $('menuModal').addEventListener('click', (e) => {
+      if (e.target === $('menuModal')) { closeMenu(); return; }
+      const m = e.target.closest('[data-menu]');
+      if (m) {
+        const act = m.dataset.menu;
+        if (act === 'theme') { $('themeToggle').click(); render(); return; }
+        closeMenu();
+        if (act === 'stats') $('statsModal').classList.add('show');
+        if (act === 'print') window.print();
+        if (act === 'help') $('helpModal').classList.add('show');
+      }
+      const seg = e.target.closest('#modeSeg .seg');
+      if (seg) setMode(seg.dataset.mode);
+    });
     $('closeReport').addEventListener('click', () => closeModal('reportModal'));
     $('reportModal').addEventListener('click', (e) => {
       if (e.target === $('reportModal')) closeModal('reportModal');
