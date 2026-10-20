@@ -915,39 +915,97 @@ function rallyScoreUrl(a,b,c,d){
   return "../RallyScore/index.html?" + params.toString();
 }
 
-/** Build courts from playing players while loosely avoiding pair repeats */
-function buildCourts(playing, courtCount, usedPairs, pairCount){
-  let pool = shuffle(playing.slice());
-  const cells = [];
-  const matchData = [];
+/**
+ * Build all courts of one round together. Each court's 4 players are split into the
+ * pairing with the lowest cost, and players are swapped between courts until no swap helps:
+ *  - partnering again in the next round is heavily penalised, and soon after less so
+ *  - partners used often cost more, so every pair gets its turn
+ *  - facing the same opponents as last round costs a little
+ */
+function buildCourts(playing, courtCount, usedPairs, pairCount, mix){
+  mix = mix || { round: 0, pairLast: new Map(), oppCount: new Map(), oppLast: new Map() };
+  const round = mix.round;
+  const nCourts = Math.min(courtCount, Math.floor(playing.length / 4));
 
-  for(let c=0;c<courtCount;c++){
-    let cell="—";
-    let compact = null;
-    if(pool.length>=4){
-      let best=null;
-      const tries = Math.min(80, pool.length*4);
-      for(let t=0;t<tries;t++){
-        const tmp = shuffle(pool.slice());
-        const a = tmp[0], b = tmp[1], c1 = tmp[2], d = tmp[3];
-        const k1 = pairKey(a,b), k2 = pairKey(c1,d);
-        const score = (usedPairs.has(k1)?1:0) + (usedPairs.has(k2)?1:0);
-        if(!best || score < best.score){
-          best={score, a:a,b:b,c1:c1,d:d};
-          if(score===0) break;
+  function partnerCost(x, y){
+    const k = pairKey(x, y);
+    const cnt = pairCount.get(k) || 0;
+    const last = mix.pairLast.get(k);
+    let cost = cnt * cnt * 10;
+    if(last !== undefined){
+      const gap = round - last;
+      if(gap <= 1) cost += 1000;
+      else if(gap === 2) cost += 150;
+      else if(gap === 3) cost += 40;
+    }
+    return cost;
+  }
+  function oppCost(x, y){
+    const k = pairKey(x, y);
+    return (mix.oppCount.get(k) || 0) * 2 + (mix.oppLast.get(k) === round - 1 ? 15 : 0);
+  }
+  function bestSplit(g){
+    let best = null;
+    for(const o of [[0,1,2,3],[0,2,1,3],[0,3,1,2]]){
+      const a = g[o[0]], b = g[o[1]], c1 = g[o[2]], d = g[o[3]];
+      const cost = partnerCost(a,b) + partnerCost(c1,d)
+                 + oppCost(a,c1) + oppCost(a,d) + oppCost(b,c1) + oppCost(b,d);
+      if(!best || cost < best.cost) best = { cost, a, b, c1, d };
+    }
+    return best;
+  }
+  function splitAt(order, g){ return bestSplit(order.slice(g*4, g*4+4)); }
+
+  // Hill-climb from several random starts; a swap only re-scores the courts it touches.
+  let best = null, bestOrder = playing.slice();
+  for(let t=0; t<6 && nCourts>0; t++){
+    const order = shuffle(playing.slice());
+    const matches = [];
+    let total = 0;
+    for(let g=0; g<nCourts; g++){ matches.push(splitAt(order, g)); total += matches[g].cost; }
+    let improved = true;
+    for(let guard=0; improved && guard<30; guard++){
+      improved = false;
+      for(let i=0; i<nCourts*4; i++){
+        for(let j=i+1; j<order.length; j++){
+          const gi = Math.floor(i/4), gj = Math.floor(j/4);
+          if(gi === gj) continue;
+          [order[i], order[j]] = [order[j], order[i]];
+          const mi = splitAt(order, gi);
+          const mj = gj < nCourts ? splitAt(order, gj) : null;
+          const delta = mi.cost - matches[gi].cost + (mj ? mj.cost - matches[gj].cost : 0);
+          if(delta < 0){
+            matches[gi] = mi;
+            if(mj) matches[gj] = mj;
+            total += delta;
+            improved = true;
+          }else{
+            [order[i], order[j]] = [order[j], order[i]];
+          }
         }
       }
-      const a=best.a, b=best.b, c1=best.c1, d=best.d;
-      [a,b,c1,d].forEach(p=>{
-        const idx = pool.indexOf(p);
-        if(idx>=0) pool.splice(idx,1);
-      });
-      const p1 = pairKey(a,b);
-      const p2 = pairKey(c1,d);
-      usedPairs.add(p1);
-      usedPairs.add(p2);
-      pairCount.set(p1,(pairCount.get(p1)||0)+1);
-      pairCount.set(p2,(pairCount.get(p2)||0)+1);
+    }
+    if(!best || total < best.total){ best = { total, matches: matches.slice() }; bestOrder = order.slice(); }
+    if(best.total === 0) break;
+  }
+
+  const cells = [];
+  const matchData = [];
+  for(let c=0;c<courtCount;c++){
+    let cell = "—";
+    let compact = null;
+    if(c < nCourts){
+      const { a, b, c1, d } = best.matches[c];
+      for(const k of [pairKey(a,b), pairKey(c1,d)]){
+        usedPairs.add(k);
+        pairCount.set(k, (pairCount.get(k)||0)+1);
+        mix.pairLast.set(k, round);
+      }
+      for(const x of [a,b]) for(const y of [c1,d]){
+        const k = pairKey(x, y);
+        mix.oppCount.set(k, (mix.oppCount.get(k)||0)+1);
+        mix.oppLast.set(k, round);
+      }
 
       const numMap = getPlayerNumberMap();
       const rsUrl = rallyScoreUrl(a,b,c1,d);
@@ -961,7 +1019,7 @@ function buildCourts(playing, courtCount, usedPairs, pairCount){
     cells.push(cell);
     matchData.push(compact);
   }
-  return {cells: cells, leftover: pool, matchData: matchData};
+  return {cells: cells, leftover: bestOrder.slice(nCourts*4), matchData: matchData};
 }
 
 function buildAuditText(params){
@@ -1176,6 +1234,7 @@ function generateNew(){
 
   const usedPairs=new Set();
   const pairCount=new Map();
+  const mix = { round: 0, pairLast: new Map(), oppCount: new Map(), oppLast: new Map() };
   const lastRest = new Map();
   const restCount = new Map();
   players.forEach(p=>restCount.set(p,0));
@@ -1198,7 +1257,8 @@ function generateNew(){
     }
 
     const playing = players.filter(p=>!resters.has(p));
-    const built = buildCourts(playing, courtCount, usedPairs, pairCount);
+    mix.round = r;
+    const built = buildCourts(playing, courtCount, usedPairs, pairCount, mix);
     const cells = built.cells;
     const leftover = built.leftover;
     matchData.push(built.matchData);
