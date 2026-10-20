@@ -1111,6 +1111,9 @@
     .rep-table td.zero { color: #c7ccd4; }
     .rep-table td.fscore { font-weight: 850; white-space: nowrap; }
     .rep-table td.codes { white-space: nowrap; }
+    .rep-table td.time { white-space: nowrap; line-height: 1.25; }
+    .rep-table.matches th { white-space: nowrap; }
+    .rep-table td.time small { font-size: 10px; }
     .rep-table .win { font-weight: 850; }
     .rep-table .tag { font-size: 10px; color: #92400e; background: #fef3c7; border-radius: 6px; padding: 1px 5px; }
     .rep-table .del { padding: 4px 9px; border-radius: 8px; background: rgba(239,68,68,.1); color: #b91c1c; font-size: 14px; }
@@ -1321,7 +1324,7 @@
     <header>
       <div class="brand">
         <h1>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.2.0</span></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.2.1</span></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1768,7 +1771,7 @@
       if (!state.rallies.length) { clearCurrent(); return; }
       const ok = confirm('Reset this game? It is saved to today\'s list first.\n今日の記録に保存してからリセットします。');
       if (!ok) return;
-      const m = archiveCurrent();
+      const m = archiveCurrent('reset');
       clearCurrent();
       if (m) showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
     }
@@ -2097,14 +2100,26 @@
       saveRoster();
     }
 
-    /** Move the current match into the log. Returns the saved match, or null when empty. */
-    function archiveCurrent() {
+    /**
+     * Move the current match into the log. Returns the saved match, or null when empty.
+     * Timing for analysis: the match starts at its first point and ends when it is saved
+     * (Save & next, Reset, or starting a new match from Players). When it is saved by
+     * tapping the next match's first point, it ends at its own last point instead.
+     */
+    function archiveCurrent(endedBy) {
       if (!state.rallies.length) return null;
+      const now = new Date().toISOString();
+      const startedAt = state.startedAt || state.rallies[0].ts;
+      const lastPointAt = state.rallies[state.rallies.length - 1].ts;
+      const endedAt = endedBy === 'next-point' ? lastPointAt : now;
       const m = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-        savedAt: new Date().toISOString(),
-        startedAt: state.startedAt || state.rallies[0].ts,
-        endedAt: state.rallies[state.rallies.length - 1].ts,
+        savedAt: now,
+        startedAt,
+        endedAt,
+        lastPointAt,
+        endedBy,
+        durationSec: Math.max(0, Math.round((Date.parse(endedAt) - Date.parse(startedAt)) / 1000)),
         names: { A: teamName('A'), B: teamName('B') },
         score: { A: state.score.A, B: state.score.B },
         rallies: state.rallies.slice(),
@@ -2168,7 +2183,7 @@
     }
 
     function autoStartNext() {
-      const m = archiveCurrent();
+      const m = archiveCurrent('next-point');
       if (!m) return;
       const next = predictNext();
       state.score = { A: 0, B: 0 };
@@ -2179,7 +2194,7 @@
     }
 
     function saveAndNext() {
-      const m = archiveCurrent();
+      const m = archiveCurrent('save-next');
       if (m) {
         clearCurrent();
         showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
@@ -2231,7 +2246,7 @@
 
     function startNext() {
       let m = null;
-      if (state.rallies.length) m = archiveCurrent();
+      if (state.rallies.length) m = archiveCurrent('players');
       state.score = { A: 0, B: 0 };
       state.rallies = [];
       state.startedAt = null;
@@ -2349,7 +2364,7 @@
         timer = window.setTimeout(() => {
           cancel();
           if (!state.rallies.length) { clearCurrent(); return; }
-          const m = archiveCurrent();
+          const m = archiveCurrent('reset');
           clearCurrent();
           if (m) showActionToast(`Saved #${matchNumber(m)} & reset / 保存してリセット`, () => restoreMatch(m));
         }, 800);
@@ -2496,16 +2511,33 @@
         <div class="adv-note muted">記録データから自動で選んだコメントです（ミスの種類・終盤のミス・決定打の割合・接戦・試合ごとの推移）。</div>`;
     }
 
+    /** Start, end and length of a match. Older saves have no durationSec: they ended at their last point. */
+    function matchTiming(m) {
+      const start = m.startedAt;
+      const end = m.inProgress ? m.rallies[m.rallies.length - 1].ts : (m.endedAt || m.lastPointAt || m.savedAt);
+      const sec = Number.isFinite(m.durationSec) ? m.durationSec : Math.max(0, Math.round((Date.parse(end) - Date.parse(start)) / 1000));
+      return { start, end, sec };
+    }
+    function fmtDuration(sec) {
+      if (!sec) return '0分';
+      if (sec < 60) return '<1分';
+      const min = Math.round(sec / 60);
+      return min >= 60 ? `${Math.floor(min / 60)}時間${min % 60}分` : `${min}分`;
+    }
+
     function buildReport(day) {
       const matches = reportMatches(day);
       if (!matches.length) return '<div class="report-empty">No matches on this day. / この日の記録はありません。</div>';
       const players = new Map();
       const row = (name) => {
-        if (!players.has(name)) players.set(name, { games: 0, won: 0, lost: 0, pf: 0, pa: 0, W: 0, err: 0, late: 0, codes: { N: 0, O: 0, S: 0, F: 0, R: 0, U: 0 }, perMatch: [], closeLost: 0, closeWon: 0 });
+        if (!players.has(name)) players.set(name, { games: 0, won: 0, lost: 0, pf: 0, pa: 0, W: 0, err: 0, late: 0, codes: { N: 0, O: 0, S: 0, F: 0, R: 0, U: 0 }, perMatch: [], closeLost: 0, closeWon: 0, sec: 0 });
         return players.get(name);
       };
+      let daySec = 0;
       const matchRows = matches.map((m, i) => {
         const st = computeStats(m.rallies, m.target);
+        const timing = matchTiming(m);
+        daySec += timing.sec;
         const w = gameWinner(m.score, m.target);
         for (const t of ['A', 'B']) {
           const p = row(m.names[t]);
@@ -2513,6 +2545,7 @@
           if (w === t) p.won += 1; else if (w) p.lost += 1;
           p.pf += m.score[t]; p.pa += m.score[opponentOf(t)];
           p.W += st[t].W; p.err += st[t].totalErrors; p.late += st[t].after15Errors;
+          p.sec += timing.sec;
           ERROR_CODES.forEach(c => { p.codes[c] += st[t][c]; });
           if (!m.inProgress) p.perMatch.push({ err: st[t].totalErrors, rallies: m.rallies.length });
           if (w && Math.abs(m.score.A - m.score.B) <= 2) { if (w === t) p.closeWon += 1; else p.closeLost += 1; }
@@ -2520,7 +2553,7 @@
         const nm = (t) => `<span class="dot-${t.toLowerCase()}"></span><span class="${w === t ? 'win' : ''}">${escapeHtml(m.names[t])}</span>`;
         return `<tr>
           <td class="num">${i + 1}</td>
-          <td class="num">${timeLabel(m.startedAt)}</td>
+          <td class="num time">${timeLabel(m.startedAt)}–${m.inProgress ? '' : timeLabel(timing.end)}<br><small class="muted">${fmtDuration(timing.sec)}${m.inProgress ? ' 記録中' : ''}</small></td>
           <td>${nm('A')} <span class="muted">vs</span> ${nm('B')}${m.inProgress ? ' <span class="tag">in progress / 記録中</span>' : (w ? '' : ' <span class="tag">unfinished / 途中</span>')}</td>
           <td class="num fscore">${m.score.A}-${m.score.B}<span class="muted"> /${m.target}</span></td>
           <td class="codes">${st.A.totalErrors} <span class="muted">${codeCounts(st.A)}</span></td>
@@ -2543,6 +2576,7 @@
           ${ERROR_CODES.map(c => `<td class="num${p.codes[c] ? '' : ' zero'}">${p.codes[c]}</td>`).join('')}
           <td class="num">${p.W}</td>
           <td class="num">${p.late}</td>
+          <td class="num">${fmtDuration(p.sec)}</td>
           <td>${top ? `${REASONS[top].label}` : '—'}</td>
         </tr>`;
       }).join('');
@@ -2553,17 +2587,17 @@
       return `
         <div class="rep-head">
           <div><div class="rep-title">ErrorZero · Daily report <span class="muted">今日の記録</span></div>
-          <div class="muted">${dayLabel}${locations ? ' · ' + escapeHtml(locations) : ''} · ${matches.length} match${matches.length === 1 ? '' : 'es'}</div></div>
+          <div class="muted">${dayLabel}${locations ? ' · ' + escapeHtml(locations) : ''} · ${matches.length} match${matches.length === 1 ? '' : 'es'} · ${fmtDuration(daySec)} <span class="muted">試合時間の合計</span></div></div>
           <div class="muted rep-gen">Printed ${formatLocalDateTime()}</div>
         </div>
         <h3>Players <span class="muted">選手ごと</span></h3>
         <table class="rep-table players">
-          <thead><tr><th>Player</th><th>Games<br><small>試合</small></th><th>W-L<br><small>勝敗</small></th><th>Pts<br><small>得失点</small></th><th>Errors<br><small>ミス</small></th>${ERROR_CODES.map(c => `<th title="${REASONS[c].label}">${c}</th>`).join('')}<th>Win<br><small>決定打</small></th><th>Late<br><small>終盤</small></th><th>Most<br><small>最多</small></th></tr></thead>
+          <thead><tr><th>Player</th><th>Games<br><small>試合</small></th><th>W-L<br><small>勝敗</small></th><th>Pts<br><small>得失点</small></th><th>Errors<br><small>ミス</small></th>${ERROR_CODES.map(c => `<th title="${REASONS[c].label}">${c}</th>`).join('')}<th>Win<br><small>決定打</small></th><th>Late<br><small>終盤</small></th><th>Time<br><small>時間</small></th><th>Most<br><small>最多</small></th></tr></thead>
           <tbody>${playerRows}</tbody>
         </table>
         <h3>Matches <span class="muted">試合ごと</span></h3>
         <table class="rep-table matches">
-          <thead><tr><th>#</th><th>Time</th><th>Match <small>対戦</small></th><th>Score</th><th>A errors <small>ミス</small></th><th>B errors <small>ミス</small></th><th>Win A/B</th><th>Progress <small>推移</small></th><th class="no-print"></th></tr></thead>
+          <thead><tr><th>#</th><th>Time <small>時間</small></th><th>Match <small>対戦</small></th><th>Score</th><th>A errors <small>ミス</small></th><th>B errors <small>ミス</small></th><th>Win A/B</th><th>Progress <small>推移</small></th><th class="no-print"></th></tr></thead>
           <tbody>${matchRows}</tbody>
         </table>
         ${buildAdviceSection(players)}
