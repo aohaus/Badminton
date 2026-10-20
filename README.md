@@ -6,7 +6,7 @@ https://aohaus.github.io/Badminton/
 
 | アプリ | URL | 移行元 | バージョン |
 |---|---|---|---|
-| PairPlay | [/Badminton/PairPlay/](https://aohaus.github.io/Badminton/PairPlay/) | aohaus/PairPlay | 最新 index.html |
+| PairPlay | [/Badminton/PairPlay/](https://aohaus.github.io/Badminton/PairPlay/) | aohaus/PairPlay | v1.5.0 |
 | RallyScore | [/Badminton/RallyScore/](https://aohaus.github.io/Badminton/RallyScore/) | aohaus/RallyScore | v2.1.3 |
 | ErrorZero | [/Badminton/ErrorZero/](https://aohaus.github.io/Badminton/ErrorZero/) | aohaus/ErrorZero | v1.0.4 |
 | Shatomin | [/Badminton/Shatomin/](https://aohaus.github.io/Badminton/Shatomin/) | aohaus/Shatomin | v1.0.5 |
@@ -15,7 +15,7 @@ https://aohaus.github.io/Badminton/
 
 | アプリ | URL | 内容 |
 |---|---|---|
-| PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | v1.5.0（英日併記・吹き出しヒント） |
+| PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | 次の開発用（現在は v1.5.0 と同じ内容） |
 
 開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。
 
