@@ -1767,7 +1767,7 @@
       if (!state.rallies.length) { clearCurrent(); return; }
       const ok = confirm('Reset this game? It is saved to today\'s list first.\n今日の記録に保存してからリセットします。');
       if (!ok) return;
-      const m = archiveCurrent();
+      const m = archiveCurrent('reset');
       clearCurrent();
       if (m) showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
     }
@@ -2096,14 +2096,26 @@
       saveRoster();
     }
 
-    /** Move the current match into the log. Returns the saved match, or null when empty. */
-    function archiveCurrent() {
+    /**
+     * Move the current match into the log. Returns the saved match, or null when empty.
+     * Timing for analysis: the match starts at its first point and ends when it is saved
+     * (Save & next, Reset, or starting a new match from Players). When it is saved by
+     * tapping the next match's first point, it ends at its own last point instead.
+     */
+    function archiveCurrent(endedBy) {
       if (!state.rallies.length) return null;
+      const now = new Date().toISOString();
+      const startedAt = state.startedAt || state.rallies[0].ts;
+      const lastPointAt = state.rallies[state.rallies.length - 1].ts;
+      const endedAt = endedBy === 'next-point' ? lastPointAt : now;
       const m = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-        savedAt: new Date().toISOString(),
-        startedAt: state.startedAt || state.rallies[0].ts,
-        endedAt: state.rallies[state.rallies.length - 1].ts,
+        savedAt: now,
+        startedAt,
+        endedAt,
+        lastPointAt,
+        endedBy,
+        durationSec: Math.max(0, Math.round((Date.parse(endedAt) - Date.parse(startedAt)) / 1000)),
         names: { A: teamName('A'), B: teamName('B') },
         score: { A: state.score.A, B: state.score.B },
         rallies: state.rallies.slice(),
@@ -2167,7 +2179,7 @@
     }
 
     function autoStartNext() {
-      const m = archiveCurrent();
+      const m = archiveCurrent('next-point');
       if (!m) return;
       const next = predictNext();
       state.score = { A: 0, B: 0 };
@@ -2178,7 +2190,7 @@
     }
 
     function saveAndNext() {
-      const m = archiveCurrent();
+      const m = archiveCurrent('save-next');
       if (m) {
         clearCurrent();
         showActionToast(`Saved #${matchNumber(m)} / 保存しました`, () => restoreMatch(m));
@@ -2230,7 +2242,7 @@
 
     function startNext() {
       let m = null;
-      if (state.rallies.length) m = archiveCurrent();
+      if (state.rallies.length) m = archiveCurrent('players');
       state.score = { A: 0, B: 0 };
       state.rallies = [];
       state.startedAt = null;
@@ -2348,7 +2360,7 @@
         timer = window.setTimeout(() => {
           cancel();
           if (!state.rallies.length) { clearCurrent(); return; }
-          const m = archiveCurrent();
+          const m = archiveCurrent('reset');
           clearCurrent();
           if (m) showActionToast(`Saved #${matchNumber(m)} & reset / 保存してリセット`, () => restoreMatch(m));
         }, 800);
