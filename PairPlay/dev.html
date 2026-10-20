@@ -551,6 +551,7 @@ td{
         Load players list <span class="jb">選手リスト読込</span>
         <input id="filePlayersLoad" type="file" accept=".txt,text/plain,.csv,text/csv,.html,text/html" style="display:none">
       </label>
+      <button class="secondary" type="button" id="btnSavedRoster">Saved roster <span class="jb">登録名簿</span></button>
       <button class="secondary" type="button" id="btnUseSamplePlayers">Use P1-P24 <span class="jb">サンプル</span></button>
       <button class="secondary" type="button" id="btnAll">Select all <span class="jb">全選択</span></button>
       <button class="secondary" type="button" id="btnNone">Clear checks <span class="jb">全解除</span></button>
@@ -680,6 +681,26 @@ td{
   </div>
 </div>
 
+<div id="rosterModal" class="modalOverlay" aria-hidden="true">
+  <form class="modalCard" role="dialog" aria-modal="true" aria-labelledby="rosterTitle" id="rosterForm">
+    <h3 id="rosterTitle">Saved roster <span class="jb">登録名簿</span></h3>
+    <div class="small">Enter the password to load the saved roster. Names are stored encrypted.<br>パスワードを入力すると登録名簿を読み込みます（名前は暗号化して保存しています）。</div>
+    <div id="rosterPickWrap" style="margin-top:12px;display:none">
+      <label for="rosterPick">Roster / 名簿</label>
+      <select id="rosterPick" style="width:100%;background:#0b1220;border:1px solid #1f2937;color:var(--ink);padding:10px;border-radius:10px;font-size:16px"></select>
+    </div>
+    <div style="margin-top:12px">
+      <label for="rosterPassword">Password / パスワード</label>
+      <input id="rosterPassword" type="password" autocomplete="current-password" autocapitalize="characters" spellcheck="false">
+    </div>
+    <div id="rosterError" class="warn" aria-live="polite"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+      <button class="secondary" type="button" id="btnRosterCancel">Cancel <span class="jb">キャンセル</span></button>
+      <button type="submit" id="btnRosterOpen">Load <span class="jb">読み込む</span></button>
+    </div>
+  </form>
+</div>
+
 <div id="helpModal" class="modalOverlay" aria-hidden="true">
   <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
     <h3 id="helpTitle">PairPlay Help <span class="jb">使い方</span></h3>
@@ -719,7 +740,7 @@ td{
 </div>
 
 <script>
-/** --- Roster (added ハリイ) --- */
+/** --- Roster --- */
 let PLAYERS = [];
 
 let generateCount = 0;
@@ -3019,12 +3040,81 @@ function markWizardGenerated(){
 }
 
 
+/* --- Saved rosters: names are AES-GCM encrypted, key from PBKDF2(password) --- */
+const SAVED_ROSTERS = [{"label": "Regular / いつもの名簿", "iter": 250000, "salt": "OI0/76w//oFoo04R6Rigxg==", "iv": "UbIClM3fT4x7ednx", "data": "IWdiP3qIuFQBhCWLQiaDdrES5Yxiz/A0KxYacZbat3EGJFr+RTxwMpRXdnxZm7N+SEBcGGng8KMkP9pD0GYk5+zTUzKTVinPiBfx1lt0kD9l83LBUPWwQj7VnIKPLFi24qU5U0ee+O6MHaR9L4H1REYnZrgPfjVcBj9DsEfslJruBR3up+UA5R8tgKjLqSUIy36SrAsgHVlzY7iB6leOaAmusXGWtepaJ/s9jjVuBgvDaD2vji+iXQnU9QghhsKw5wXbw/JwnqSkmuIiY4SxgLc49mNZHcwyiwFGf+PoIi/5LbXNHbWTG+XOgDfoAURU7t+IJrpbGTwd6OB3hbcZhESbtFw8RUeXw7qFp5xiOcnZamJuNWywHII3eXwzm0s="}];
+
+function b64ToBytes(b64){
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function decryptRoster(entry, password){
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: b64ToBytes(entry.salt), iterations: entry.iter, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64ToBytes(entry.iv) }, key, b64ToBytes(entry.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+function openRosterModal(){
+  const m = document.getElementById("rosterModal");
+  const pick = document.getElementById("rosterPick");
+  if(!m || !pick) return;
+  pick.innerHTML = "";
+  SAVED_ROSTERS.forEach(function(r, i){
+    const o = document.createElement("option");
+    o.value = String(i);
+    o.textContent = r.label;
+    pick.appendChild(o);
+  });
+  document.getElementById("rosterPickWrap").style.display = SAVED_ROSTERS.length > 1 ? "" : "none";
+  document.getElementById("rosterError").textContent = "";
+  const pw = document.getElementById("rosterPassword");
+  pw.value = "";
+  if(coachStep) hideCoach();
+  m.style.display = "flex";
+  m.setAttribute("aria-hidden","false");
+  pw.focus();
+}
+function closeRosterModal(){
+  const m = document.getElementById("rosterModal");
+  if(m){ m.style.display = "none"; m.setAttribute("aria-hidden","true"); }
+}
+
+async function submitRoster(e){
+  e.preventDefault();
+  const err = document.getElementById("rosterError");
+  const btn = document.getElementById("btnRosterOpen");
+  const entry = SAVED_ROSTERS[parseInt(document.getElementById("rosterPick").value || "0", 10)];
+  const pw = document.getElementById("rosterPassword").value.trim().toUpperCase();
+  if(!entry || !pw) return;
+  if(!(window.crypto && crypto.subtle)){
+    err.textContent = "This browser cannot decrypt (needs HTTPS). / このブラウザでは復号できません（HTTPSが必要です）。";
+    return;
+  }
+  btn.disabled = true;
+  err.textContent = "";
+  try{
+    const names = await decryptRoster(entry, pw);
+    closeRosterModal();
+    setPlayersRoster(names);
+  }catch(ex){
+    err.textContent = "Wrong password. / パスワードが違います。";
+  }finally{
+    btn.disabled = false;
+  }
+}
+
 /* --- Coach-mark tips: shown once per step, re-open with Help --- */
 const TIPS_KEY = "pairplay.tipsSeen.v1";
 const COACH_TIPS = {
   1: { target: "#loadPlayersLabel",
-       en: "Welcome! Load your players list (.txt / .csv / .html), or try “Use P1-P24”. Then check today’s players.",
-       ja: "ようこそ！選手リスト（.txt / .csv / .html）を読み込むか、「Use P1-P24」で試せます。今日の参加者にチェックを入れてください。" },
+       en: "Welcome! Load your players list (.txt / .csv / .html), open the saved roster, or try “Use P1-P24”. Then check today’s players.",
+       ja: "ようこそ！選手リスト（.txt / .csv / .html）の読み込み、「登録名簿」、または「Use P1-P24」で始めます。今日の参加者にチェックを入れてください。" },
   2: { target: "#rounds",
        en: "Set matches and courts. The defaults work for most sessions.",
        ja: "試合数とコート数を設定します。通常は初期値のままでOKです。" },
@@ -3154,6 +3244,15 @@ function initWizard(){
       }
     });
   }
+
+  const savedBtn = document.getElementById("btnSavedRoster");
+  if(savedBtn) savedBtn.addEventListener("click", openRosterModal);
+  const rosterForm = document.getElementById("rosterForm");
+  if(rosterForm) rosterForm.addEventListener("submit", submitRoster);
+  const rosterCancel = document.getElementById("btnRosterCancel");
+  if(rosterCancel) rosterCancel.addEventListener("click", closeRosterModal);
+  const rosterModal = document.getElementById("rosterModal");
+  if(rosterModal) rosterModal.addEventListener("click", function(e){ if(e.target === rosterModal) closeRosterModal(); });
 
   const sampleBtn = document.getElementById("btnUseSamplePlayers");
   if(sampleBtn) sampleBtn.addEventListener("click", useSamplePlayers);
