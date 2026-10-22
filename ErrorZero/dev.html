@@ -1141,6 +1141,9 @@
 
     /* --- Coder layout: names come from the Players sheet, every control fits the first phone screen --- */
     .setup[hidden] { display: none !important; }
+    .hub-link { display: inline-flex; vertical-align: -0.08em; margin-right: .3em; }
+    .hub-link img { width: .82em; height: .82em; border-radius: .2em; display: block; }
+    .menu-hub { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: var(--ink); border-radius: 16px; padding: 13px 15px; font-weight: 800; font-size: 15px; }
     .wf { margin: 2px 0 12px; }
     .wf-title { font-size: 11px; font-weight: 850; color: var(--muted); margin-bottom: 5px; }
     .wf-title small, .wf-legend small { font-weight: 700; opacity: .85; }
@@ -1322,7 +1325,7 @@
   <div class="app">
     <header>
       <div class="brand">
-        <h1>ErrorZero Badminton</h1>
+        <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
         <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.2.1</a></p>
       </div>
       <div class="header-right">
@@ -1573,6 +1576,7 @@
         <button class="btn-ghost" data-menu="stats">Stats <small>分析</small></button>
         <button class="btn-ghost" data-menu="print">Print <small>印刷</small></button>
         <button class="btn-ghost" data-menu="help">Help <small>ヘルプ</small></button>
+        <a class="btn-ghost menu-hub" href="../">⌂ Badminton Apps <small>アプリ一覧</small></a>
         <button class="btn-ghost" data-menu="theme" id="menuTheme">Night <small>夜間</small></button>
       </div>
       <div class="menu-row">

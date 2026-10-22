@@ -63,6 +63,12 @@
       align-items: center;
     }
 
+    .hub-back {
+      display: inline-flex; align-items: center; gap: 6px; margin: 0 0 10px 4px;
+      color: var(--green-dark); font-weight: 700; font-size: 13px; text-decoration: none;
+    }
+    .hub-back small { color: inherit; opacity: .75; font-weight: 600; }
+
     .badge {
       display: inline-flex;
       width: fit-content;
@@ -344,6 +350,7 @@
 </head>
 <body>
   <main class="app">
+    <a class="hub-back" href="../" aria-label="Badminton Apps">‹ Badminton Apps <small>アプリ一覧</small></a>
     <section class="hero">
       <div>
         <div class="badge">🏸 Badminton Rule Buddy</div>

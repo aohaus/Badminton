@@ -23,6 +23,17 @@ https://aohaus.github.io/Badminton/
 
 各アプリは 1 ファイル完結の HTML で、ビルドは不要です。旧バージョン（`v1.x.x.html` など）は移行元リポジトリに残しています。
 
+## ポータルへの戻り方（各アプリ共通）
+
+各アプリの画面レイアウトを崩さないよう、既存のヘッダーやメニューにポータル（`../`）へのリンクを置いています。
+
+| アプリ | 戻り方 |
+|---|---|
+| PairPlay | 左上の「Badminton Apps」 |
+| RallyScore | 下中央の「⋯」→「⌂ Badminton Apps」 |
+| ErrorZero | タイトル左のアイコン、または「⋯」→「⌂ Badminton Apps」 |
+| Shatomin | 上部の「‹ Badminton Apps」 |
+
 ## 構成
 
 ```

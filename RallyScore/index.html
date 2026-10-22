@@ -302,6 +302,7 @@
     user-select:none;
   }
   .sheetRow:first-child{ border-top:none; }
+  a.sheetRow{ color: inherit; text-decoration: none; }
   .sheetRow:active{ background: rgba(255,255,255,.06); }
   .sheetIcon{
     width: 28px;
@@ -924,6 +925,10 @@ body.ppLinked .pairplayReadonlyNote{display:block}
   <div class="overlay" id="overlay"></div>
   <div class="sheet" id="sheet">
     <div class="sheetCard">
+      <a class="sheetRow sheetHub" id="sheetHub" href="../">
+        <div class="sheetIcon">⌂</div>
+        Badminton Apps <span class="sheetHint">アプリ一覧</span>
+      </a>
       <div class="sheetRow" id="sheetSettings">
         <div class="sheetIcon">☰</div>
         Settings
