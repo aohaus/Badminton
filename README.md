@@ -18,6 +18,7 @@ https://aohaus.github.io/Badminton/
 | PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | 次の開発用（現在は v1.5.0 と同じ内容） |
 | ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | 次の開発用（現在は v1.2.1 と同じ内容） |
 | ErrorZero | [/Badminton/ErrorZero/dev-v1.1.0.html](https://aohaus.github.io/Badminton/ErrorZero/dev-v1.1.0.html) | v1.1.0 の保存版（戻す場合はこれを dev.html にコピー。Git ではコミット `1264eef` の状態） |
+| Tactics Lab（仮） | [/Badminton/Tactics/](https://aohaus.github.io/Badminton/Tactics/) | 5つ目のアプリ（ジュニア向け戦術シミュレーション）。名称決定までポータル未掲載 |
 
 開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。
 

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tactics Lab (仮) | Badminton</title>
+<meta name="description" content="ジュニア向けバドミントン戦術シミュレーション。ラリーを見て判断し、戦術の理由を英語と日本語で学ぶ。">
+<meta name="theme-color" content="#dcefe2">
+<link rel="icon" type="image/svg+xml" href="../icons/badminton-icon.svg">
+<!-- tailwind:start  Tailwind CSS v3.4.16, compiled from the classes in this file so it works offline.
+     Rebuild after changing classes: npx tailwindcss@3.4.16 --content Tactics/index.html -i in.css -o out.css --minify
+     (in.css = @tailwind base; @tailwind components; @tailwind utilities;) and paste out.css below. -->
+<style>*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0}.inset-x-0{left:0;right:0}.inset-x-4{left:1rem;right:1rem}.inset-x-6{left:1.5rem;right:1.5rem}.bottom-0{bottom:0}.bottom-6{bottom:1.5rem}.left-3{left:.75rem}.top-1\/2{top:50%}.top-3{top:.75rem}.z-40{z-index:40}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1\.5{margin-bottom:.375rem}.mr-1{margin-right:.25rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-2\.5{height:.625rem}.h-9{height:2.25rem}.max-h-\[88vh\]{max-height:88vh}.min-h-\[3\.25rem\]{min-height:3.25rem}.min-h-screen{min-height:100vh}.w-2\.5{width:.625rem}.w-9{width:2.25rem}.w-full{width:100%}.min-w-0{min-width:0}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-none{flex:none}.-translate-y-1\/2{--tw-translate-y:-50%}.-translate-y-1\/2,.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-wrap{flex-wrap:wrap}.place-items-center{place-items:center}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-t-3xl{border-top-left-radius:1.5rem;border-top-right-radius:1.5rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138/var(--tw-border-opacity,1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208/var(--tw-border-opacity,1))}.border-emerald-600{--tw-border-opacity:1;border-color:rgb(5 150 105/var(--tw-border-opacity,1))}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246/var(--tw-border-opacity,1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199/var(--tw-bg-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11/var(--tw-bg-opacity,1))}.bg-amber-500\/95{background-color:rgba(245,158,11,.95)}.bg-black\/30{background-color:rgba(0,0,0,.3)}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245/var(--tw-bg-opacity,1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.bg-emerald-600\/95{background-color:rgba(5,150,105,.95)}.bg-emerald-700{--tw-bg-opacity:1;background-color:rgb(4 120 87/var(--tw-bg-opacity,1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251/var(--tw-bg-opacity,1))}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39/var(--tw-bg-opacity,1))}.bg-gray-900\/85{background-color:rgba(17,24,39,.85)}.bg-rose-500{--tw-bg-opacity:1;background-color:rgb(244 63 94/var(--tw-bg-opacity,1))}.bg-rose-500\/95{background-color:rgba(244,63,94,.95)}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/50{background-color:hsla(0,0%,100%,.5)}.bg-white\/70{background-color:hsla(0,0%,100%,.7)}.bg-white\/80{background-color:hsla(0,0%,100%,.8)}.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.pb-10{padding-bottom:2.5rem}.pb-2{padding-bottom:.5rem}.pt-4{padding-top:1rem}.text-left{text-align:left}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-semibold{font-weight:600}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-.025em}.tracking-widest{letter-spacing:.1em}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70/var(--tw-text-opacity,1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175/var(--tw-text-opacity,1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128/var(--tw-text-opacity,1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-700{--tw-text-opacity:1;color:rgb(3 105 161/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.decoration-dotted{text-decoration-style:dotted}.opacity-75{opacity:.75}.opacity-80{opacity:.8}.opacity-85{opacity:.85}.opacity-90{opacity:.9}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-2xl,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-md,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.ease-out{transition-timing-function:cubic-bezier(0,0,.2,1)}.hover\:shadow-lg:hover{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.hover\:shadow-lg:hover,.hover\:shadow-md:hover{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.active\:scale-\[\.99\]:active{--tw-scale-x:.99;--tw-scale-y:.99;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}</style>
+<!-- tailwind:end -->
+<style>
+  :root { --court:#2f8f5b; --court-dark:#1f6b43; --line:#ffffff; --me:#2563eb; --opp:#ef4444; --ink:#1d1d1f; }
+  html { background:#f4f7f5; }
+  body { background:linear-gradient(180deg,#d6ecdd 0%,#eef6f0 280px,#f4f7f5 620px) no-repeat,#f4f7f5; color:var(--ink);
+         font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;
+         -webkit-tap-highlight-color:transparent; }
+  .court-svg { width:100%; height:auto; max-height:58vh; display:block; margin:0 auto; touch-action:manipulation; }
+  .choice-arrow { cursor:pointer; }
+  .choice-arrow:hover path, .choice-arrow:focus path { stroke-width:5; }
+  .pulse-ring { animation:ring 1.4s ease-out infinite; transform-origin:center; transform-box:fill-box; }
+  @keyframes ring { 0% { opacity:.8; transform:scale(.6); } 100% { opacity:0; transform:scale(1.6); } }
+  .space-glow { animation:glow 1.6s ease-in-out infinite; }
+  @keyframes glow { 0%,100% { opacity:.35; } 50% { opacity:.7; } }
+  .sheet { transform:translateY(100%); transition:transform .28s ease; }
+  .sheet.open { transform:translateY(0); }
+  .term { cursor:pointer; }
+  .fade-in { animation:fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  .ja { font-size:.86em; color:#4b5563; }
+  button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline:3px solid rgba(47,143,91,.5); outline-offset:2px; }
+</style>
+</head>
+<body class="min-h-screen">
+<div id="app" class="max-w-xl mx-auto px-4 pb-10">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between pt-4 pb-2">
+    <a href="../" class="text-sm font-bold text-emerald-800">‹ Badminton Apps <span class="text-xs opacity-75">アプリ一覧</span></a>
+    <div class="flex items-center gap-2">
+      <button id="speedBtn" class="text-xs font-bold px-3 py-1.5 rounded-full bg-white shadow-sm">Speed 1x</button>
+      <span id="starTotal" class="text-xs font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800">⭐ 0</span>
+    </div>
+  </header>
+
+  <!-- Home -->
+  <section id="home" class="fade-in">
+    <div class="mt-2">
+      <div class="text-xs font-bold tracking-widest text-emerald-700">TACTICS LAB <span class="font-semibold text-gray-500">（仮）</span></div>
+      <h1 class="text-4xl font-extrabold tracking-tight leading-none mt-2">Watch. Think.<br>Win the space.</h1>
+      <p class="mt-3 text-gray-700">Watch the rally, stop at the key moment, and choose the smart shot.</p>
+      <p class="ja">ラリーを見て、大事な場面で「どこに打つ？」を選ぼう。なぜそれが良いのかも学べるよ。</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 mt-5">
+      <button data-start="singles" class="text-left p-4 rounded-3xl bg-white shadow-md hover:shadow-lg transition">
+        <div class="text-xs font-bold tracking-widest text-blue-600">SINGLES <span class="text-gray-500 font-semibold">シングルス</span></div>
+        <div class="text-lg font-extrabold mt-1">Four corners & open space</div>
+        <div class="ja">4すみ・あいているスペースをねらう</div>
+        <div class="text-xs text-gray-500 mt-2" data-count="singles"></div>
+      </button>
+      <button data-start="doubles" class="text-left p-4 rounded-3xl bg-white shadow-md hover:shadow-lg transition">
+        <div class="text-xs font-bold tracking-widest text-rose-600">DOUBLES <span class="text-gray-500 font-semibold">ダブルス</span></div>
+        <div class="text-lg font-extrabold mt-1">Top & Back, Side by Side</div>
+        <div class="ja">こうげきの形・まもりの形とローテーション</div>
+        <div class="text-xs text-gray-500 mt-2" data-count="doubles"></div>
+      </button>
+      <button data-start="all" class="p-4 rounded-full bg-emerald-700 text-white font-bold shadow-lg">Play all <span class="text-sm opacity-90">ぜんぶ挑戦</span></button>
+      <button id="openWords" class="p-3 rounded-full bg-white text-emerald-800 font-bold shadow-sm">📘 Word Book <span class="text-sm opacity-80">ことばノート</span></button>
+    </div>
+
+    <div class="mt-6 p-4 rounded-2xl bg-white/70 text-xs text-gray-600 leading-relaxed">
+      <b>How to play / あそびかた</b><br>
+      1. Watch the rally on the court. <span class="ja">コートのラリーを見る。</span><br>
+      2. When it stops, tap A, B or C (or the arrow). <span class="ja">止まったら A・B・C（または矢印）をタップ。</span><br>
+      3. Read “Why?” after each point. <span class="ja">1ポイントごとに「なぜ？」を読もう。</span>
+    </div>
+    <p class="mt-4 text-[11px] text-gray-500 leading-relaxed">
+      The tactics here summarise principles commonly taught in coaching (including BWF and Japan Badminton Association coaching) for juniors. They are not quotations from official manuals.
+      <span class="ja">内容は、BWF や日本バドミントン協会の指導でも一般的に教えられる戦術の原則を、子ども向けにまとめたものです（教本からの引用ではありません）。</span>
+    </p>
+  </section>
+
+  <!-- Game -->
+  <section id="game" class="hidden">
+    <div class="flex items-center justify-between mt-1">
+      <div id="scnTag" class="text-xs font-bold tracking-widest text-emerald-700"></div>
+      <div id="scnProgress" class="text-xs font-bold text-gray-500"></div>
+    </div>
+    <h2 id="scnTitle" class="text-2xl font-extrabold tracking-tight mt-1 leading-tight"></h2>
+    <div id="scnTitleJa" class="ja"></div>
+
+    <div class="mt-3 rounded-3xl bg-white shadow-md p-2 relative">
+      <svg id="court" class="court-svg" viewBox="0 0 300 611" aria-label="Badminton court"></svg>
+      <div id="shotChip" class="absolute top-3 left-3 px-3 py-1 rounded-full bg-gray-900/85 text-white text-sm font-bold hidden"></div>
+      <div id="resultBanner" class="absolute inset-x-6 top-1/2 -translate-y-1/2 text-center py-3 rounded-2xl text-white text-xl font-extrabold shadow-xl hidden"></div>
+    </div>
+
+    <div id="caption" class="mt-3 p-3 rounded-2xl bg-white/80 text-sm min-h-[3.25rem]"></div>
+
+    <div id="question" class="hidden mt-3 fade-in">
+      <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200">
+        <div class="text-xs font-bold text-amber-700">YOUR CHOICE · どうする？</div>
+        <div id="qText" class="font-bold mt-1"></div>
+        <div id="qTextJa" class="ja"></div>
+      </div>
+      <div id="options" class="grid gap-2 mt-2"></div>
+    </div>
+
+    <div class="flex gap-2 mt-3">
+      <button id="replayBtn" class="flex-1 py-3 rounded-full bg-white font-bold shadow-sm">↺ Replay <span class="text-xs opacity-75">もう一度見る</span></button>
+      <button id="quitBtn" class="py-3 px-5 rounded-full bg-white font-bold shadow-sm">Menu</button>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <section id="summary" class="hidden fade-in"></section>
+</div>
+
+<!-- Debrief sheet -->
+<div id="debriefWrap" class="fixed inset-0 z-40 hidden">
+  <div class="absolute inset-0 bg-black/30"></div>
+  <div id="debrief" class="sheet absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto bg-white rounded-t-3xl shadow-2xl">
+    <div class="max-w-xl mx-auto p-5" id="debriefBody"></div>
+  </div>
+</div>
+
+<!-- Word popover -->
+<div id="wordPop" class="fixed inset-x-4 bottom-6 z-50 max-w-md mx-auto hidden">
+  <div class="p-4 rounded-2xl bg-gray-900 text-white shadow-2xl">
+    <div class="flex justify-between items-start gap-3">
+      <div><div id="wpTerm" class="text-lg font-extrabold"></div><div id="wpJa" class="text-sm opacity-80"></div></div>
+      <button id="wpClose" class="text-sm font-bold opacity-80">✕</button>
+    </div>
+    <div id="wpEn" class="text-sm mt-2"></div>
+    <div id="wpJaDef" class="text-sm opacity-85 mt-1"></div>
+  </div>
+</div>
+
+<script>
+/* ===================== Court geometry (meters -> SVG) ===================== */
+// Court: 6.1 m wide, 13.4 m long. y = 0 is the opponent's back line (top), 13.4 is ours (bottom).
+const S = 42.62, OX = 20, OY = 20;
+const px = (x) => OX + x * S, py = (y) => OY + y * S;
+const NET = 6.7;
+const BASE = { me: [3.05, 10.1], opp: [3.05, 3.3] };
+// Named spots (from the coach's point of view on our side)
+const OPP = { BL: [0.9, 1.0], BR: [5.2, 1.0], BC: [3.05, 1.0], FL: [1.0, 5.4], FR: [5.1, 5.4], ML: [0.9, 3.4], MR: [5.2, 3.4], MID: [3.05, 3.4] };
+const ME = { BL: [0.9, 12.4], BR: [5.2, 12.4], BC: [3.05, 12.4], FL: [1.0, 8.0], FR: [5.1, 8.0], ML: [0.9, 10.0], MR: [5.2, 10.0], MID: [3.05, 10.0] };
+
+/* ===================== Shot physics (height only for drawing) ===================== */
+const SHOT = {
+  serve:  { en: 'High serve', ja: 'ロングサーブ', dur: 1300, h0: 1.0, h1: 0.4, peak: 5.0, color: '#0ea5e9' },
+  clear:  { en: 'Clear', ja: 'クリア', dur: 1300, h0: 2.5, h1: 0.4, peak: 4.0, color: '#0ea5e9' },
+  lob:    { en: 'Lob (Lift)', ja: 'ロブ', dur: 1300, h0: 0.5, h1: 0.4, peak: 4.5, color: '#0ea5e9' },
+  drop:   { en: 'Drop', ja: 'ドロップ', dur: 950, h0: 2.5, h1: 0.3, peak: 0.6, color: '#a855f7' },
+  smash:  { en: 'Smash', ja: 'スマッシュ', dur: 480, h0: 2.7, h1: 0.2, peak: 0, color: '#f97316' },
+  net:    { en: 'Net shot', ja: 'ヘアピン（ネット）', dur: 800, h0: 0.5, h1: 0.3, peak: 0.6, color: '#14b8a6' },
+  drive:  { en: 'Drive', ja: 'ドライブ', dur: 620, h0: 1.4, h1: 0.9, peak: 0.2, color: '#eab308' },
+  push:   { en: 'Push', ja: 'プッシュ', dur: 520, h0: 1.6, h1: 0.4, peak: 0, color: '#f97316' },
+  kill:   { en: 'Net kill', ja: 'プッシュ（決め）', dur: 420, h0: 1.6, h1: 0.1, peak: 0, color: '#f97316' },
+  shortlift: { en: 'Short lift', ja: '短いロブ', dur: 1000, h0: 0.5, h1: 1.2, peak: 2.6, color: '#0ea5e9' },
+  into_net: { en: 'Into the net', ja: 'ネットにかかる', dur: 500, h0: 0.4, h1: 0.6, peak: 0.3, color: '#9ca3af' },
+  out:    { en: 'Out', ja: 'アウト', dur: 900, h0: 2.5, h1: 0.2, peak: 1.2, color: '#9ca3af' },
+  move:   { en: 'Move', ja: '移動', dur: 900 }
+};
+
+/* ===================== Words (glossary) ===================== */
+const WORDS = {
+  'Clear': ['クリア', 'A high, deep shot to the back of the court.', 'コートのおくまで高く深く打つショット。'],
+  'Drop': ['ドロップ', 'A soft shot from the back that falls just over the net.', 'うしろから、ネットのすぐ前に落とすやわらかいショット。'],
+  'Smash': ['スマッシュ', 'A fast, steep shot hit downwards to win the point.', '上から下へ速く打ちこむ、決めるためのショット。'],
+  'Net shot': ['ヘアピン（ネット）', 'A gentle shot from the net that falls close to the net on the other side.', 'ネット前から、相手のネット近くにそっと落とすショット。'],
+  'Lob': ['ロブ（リフト）', 'A shot from low near the net, lifted high to the back.', 'ネット前の低い位置から、高くおくへ上げるショット。'],
+  'Drive': ['ドライブ', 'A fast, flat shot that travels just above the net.', 'ネットすれすれを速く平らに飛ぶショット。'],
+  'Push': ['プッシュ', 'A short, fast shot pushed down from near the net.', 'ネット近くから、前に押して下へ打つショット。'],
+  'Base position': ['ベースポジション', 'The home spot near the middle of your court where you can reach every corner.', 'どのすみにも行ける、コートの真ん中あたりの「ホーム」の位置。'],
+  'Four corners': ['4すみ（フォーコーナー）', 'The front-left, front-right, back-left and back-right of the court.', 'コートの前の左右・うしろの左右の4つのすみ。'],
+  'Open space': ['オープンスペース', 'The part of the court that the opponent cannot reach in time.', '相手が間に合わない、あいている場所。'],
+  'Wrong-footing': ['逆をつく', 'Hitting to where the opponent just left, so they must stop and turn back.', '相手が動き出した反対（今いた場所）に打つこと。'],
+  'Rear court': ['リアコート（うしろ）', 'The back part of the court.', 'コートのうしろの部分。'],
+  'Front court': ['フロントコート（前）', 'The part of the court near the net.', 'コートのネットに近い部分。'],
+  'Short lift': ['短いロブ', 'A lift that does not reach the back. A chance to attack!', 'おくまで届かないロブ。こうげきのチャンス！'],
+  'Top & Back': ['トップ・アンド・バック', 'Doubles attack: one player at the front, one at the back.', 'ダブルスのこうげきの形。1人が前、1人がうしろ。'],
+  'Side by side': ['サイド・バイ・サイド', 'Doubles defence: both players side by side, each covering half.', 'ダブルスのまもりの形。2人が横にならび、半分ずつ守る。'],
+  'Rotation': ['ローテーション', 'Partners switching between attack and defence formations.', 'こうげき・まもりに合わせて2人の位置を入れかえること。'],
+  'Middle': ['センター（2人の間）', 'The gap between two doubles players.', 'ダブルスの2人のあいだ。'],
+  'Time': ['時間をつくる', 'A high shot gives you time to get back to your base position.', '高い球を打つと、ベースポジションにもどる時間ができる。']
+};
+
+/* ===================== Scenarios ===================== */
+// Each step: hitter, shot type, target [x,y] (meters), and where every player ends up.
+// Options at the decision: grade best / ok / poor, the shot, what happens next, and why.
+const SCENARIOS = [
+  {
+    id: 's1', mode: 'singles', level: 1,
+    title: 'Four corners', titleJa: '4すみを使おう',
+    intro: 'Your clear pushed the opponent into the back-left corner.', introJa: 'あなたのクリアで、相手は左うしろのすみまで下がったよ。',
+    start: { me: [3.05, 10.4], opp: [3.6, 4.8] },
+    steps: [
+      { by: 'opp', type: 'serve', to: [3.05, 12.3], pos: { me: [3.05, 12.3], opp: BASE.opp } },
+      { by: 'me', type: 'clear', to: OPP.BL, pos: { me: BASE.me, opp: OPP.BL } },
+      { by: 'opp', type: 'clear', to: ME.BR, pos: { me: ME.BR, opp: [1.6, 2.2] } }
+    ],
+    question: 'The opponent is still in the back-left corner. Where is the open space?',
+    questionJa: '相手はまだ左うしろにいる。あいているスペースはどこ？',
+    space: { at: OPP.FR, r: 1.3 },
+    options: [
+      { key: 'A', type: 'drop', to: OPP.FR, grade: 'best',
+        label: 'Drop to the front-right (far corner)', labelJa: '右前（いちばん遠いすみ）にドロップ',
+        steps: [
+          { by: 'opp', type: 'shortlift', to: [3.4, 9.4], pos: { opp: [4.6, 4.8], me: [3.4, 9.4] }, label: 'Late! Weak lift', labelJa: '間に合わず、甘いロブ' },
+          { by: 'me', type: 'smash', to: OPP.ML, pos: { me: BASE.me, opp: [3.8, 4.0] } }
+        ], result: 'win',
+        why: 'The far corner made the opponent run the longest way. They arrived late and gave you a short lift.',
+        whyJa: 'いちばん遠いすみに打ったので、相手は長い距離を走った。おくれて、甘いロブを上げてしまった。' },
+      { key: 'B', type: 'drop', to: OPP.FL, grade: 'ok',
+        label: 'Drop to the front-left (straight)', labelJa: '左前にストレートのドロップ',
+        steps: [
+          { by: 'opp', type: 'lob', to: ME.BL, pos: { opp: BASE.opp, me: ME.BL } },
+          { by: 'me', type: 'clear', to: OPP.BR, pos: { me: BASE.me, opp: OPP.BR } },
+          { by: 'opp', type: 'out', to: [3.0, 13.9], pos: { opp: BASE.opp } }
+        ], result: 'win',
+        why: 'A good shot, but the straight drop is closer to the opponent. They reached it in time and the rally went on.',
+        whyJa: '悪くないショット。でもストレートは相手に近いので間に合われて、ラリーが続いた。' },
+      { key: 'C', type: 'clear', to: OPP.BL, grade: 'poor',
+        label: 'Clear to the back-left again', labelJa: 'もう一度 左うしろにクリア',
+        steps: [
+          { by: 'opp', type: 'smash', to: ME.MR, pos: { opp: [1.8, 2.6], me: [4.2, 10.6] } }
+        ], result: 'lose',
+        why: 'The opponent was already standing there, so they had time to attack you.',
+        whyJa: '相手がもうそこにいたので、じゅうぶんな時間があり、こうげきされた。' }
+    ],
+    principle: {
+      en: 'Move the opponent away from the base position — then hit to the open space, often the opposite (diagonal) corner.',
+      ja: '相手をベースポジションから遠ざけ、あいているスペース（多くは対角のすみ）をねらう。',
+      tag: 'Singles tactics · シングルス戦術'
+    },
+    look: 'Before you hit, look where the opponent is. The open space is usually the corner farthest from them.',
+    lookJa: '打つ前に相手の位置を見よう。いちばん遠いすみが、あいているスペースになりやすい。',
+    words: ['Four corners', 'Base position', 'Open space', 'Drop', 'Clear']
+  },
+  {
+    id: 's2', mode: 'singles', level: 1,
+    title: 'Short lift = attack!', titleJa: '短いロブはチャンス！',
+    intro: 'You dropped to the net. The opponent lifts… but not very deep.', introJa: 'ネット前にドロップ。相手はロブを上げたけど、あまりおくまで届かない…',
+    start: { me: [3.05, 10.4], opp: [3.05, 3.4] },
+    steps: [
+      { by: 'me', type: 'drop', to: OPP.FL, pos: { me: BASE.me, opp: OPP.FL } },
+      { by: 'opp', type: 'shortlift', to: [3.5, 9.6], pos: { me: [3.5, 9.6], opp: [3.2, 4.2] } }
+    ],
+    question: 'The lift only reached your mid-court. What now?',
+    questionJa: 'ロブはコートの真ん中までしか来なかった。どうする？',
+    space: { at: OPP.MR, r: 1.1 },
+    options: [
+      { key: 'A', type: 'smash', to: OPP.MR, grade: 'best',
+        label: 'Smash down, away from the opponent', labelJa: '相手から遠い方へスマッシュ',
+        steps: [ { by: 'opp', type: 'into_net', to: [4.6, 6.5], pos: { opp: [4.3, 3.8] }, label: 'Too fast to return', labelJa: '速くて返せない' } ], result: 'win',
+        why: 'A short lift is high and close to the net — the best chance to hit down hard.',
+        whyJa: '短いロブはネットに近くて高い。上から強く打ちこむ一番のチャンス。' },
+      { key: 'B', type: 'drop', to: OPP.FR, grade: 'ok',
+        label: 'Drop again', labelJa: 'もう一度ドロップ',
+        steps: [
+          { by: 'opp', type: 'net', to: ME.FL, pos: { opp: [4.6, 5.0], me: ME.FL } },
+          { by: 'me', type: 'lob', to: OPP.BL, pos: { me: BASE.me, opp: OPP.BL } },
+          { by: 'opp', type: 'clear', to: ME.BC, pos: { opp: BASE.opp, me: ME.BC } }
+        ], result: 'neutral',
+        why: 'Not wrong, but you gave away the chance. The rally became even again.',
+        whyJa: 'まちがいではないけれど、チャンスをのがした。ラリーは五分五分にもどった。' },
+      { key: 'C', type: 'clear', to: OPP.BC, grade: 'poor',
+        label: 'Clear to the back', labelJa: 'うしろへクリア',
+        steps: [ { by: 'opp', type: 'smash', to: ME.ML, pos: { opp: [3.1, 1.6], me: [2.4, 10.3] } } ], result: 'lose',
+        why: 'A clear gives the opponent time to get back and attack. You were the one who should attack!',
+        whyJa: 'クリアは相手にもどる時間をあたえ、逆にこうげきされた。こうげきするのはあなたの番だった！' }
+    ],
+    principle: {
+      en: 'When you get a short, high shuttle, attack: hit downwards (smash or push) to make the opponent defend.',
+      ja: '短くて高い球が来たら、こうげき。上から下へ打って（スマッシュ・プッシュ）相手に守らせる。',
+      tag: 'Singles tactics · シングルス戦術'
+    },
+    look: 'Ask: “Can I hit this downwards?” If yes, attack!',
+    lookJa: '「下に向かって打てる？」と自分に聞こう。できるなら、こうげき！',
+    words: ['Short lift', 'Smash', 'Drop']
+  },
+  {
+    id: 's3', mode: 'singles', level: 2,
+    title: 'Under pressure? Buy time', titleJa: 'ピンチのときは時間をつくる',
+    intro: 'The opponent pushed you deep into your back-left corner. You are late and off balance.', introJa: '左うしろのおくまで追いこまれた。おくれていて、体勢がくずれている。',
+    start: { me: [3.05, 8.6], opp: [3.05, 5.0] },
+    steps: [
+      { by: 'opp', type: 'push', to: ME.BL, pos: { me: [1.1, 12.5], opp: [3.2, 5.2] }, label: 'Fast push to the corner', labelJa: 'すみへ速いプッシュ' }
+    ],
+    question: 'You are stretched in the corner. Which shot helps you most?',
+    questionJa: 'すみで体がのびきっている。一番助かるショットは？',
+    space: { at: [3.05, 10.1], r: 0.9, label: 'Base' },
+    options: [
+      { key: 'A', type: 'clear', to: OPP.BC, grade: 'best',
+        label: 'High, deep clear to the middle-back', labelJa: '高く深いクリア（うしろの真ん中）',
+        steps: [
+          { by: 'me', type: 'move', pos: { me: BASE.me } },
+          { by: 'opp', type: 'clear', to: ME.BR, pos: { opp: BASE.opp, me: ME.BR } },
+          { by: 'me', type: 'drop', to: OPP.FL, pos: { me: BASE.me, opp: OPP.FL } },
+          { by: 'opp', type: 'into_net', to: [1.4, 6.6], pos: { opp: [1.4, 5.6] } }
+        ], result: 'win',
+        why: 'The high clear gave you time to return to your base. From there you could play your own game again.',
+        whyJa: '高いクリアでベースポジションにもどる時間ができた。そこから自分のペースにもどせた。' },
+      { key: 'B', type: 'drop', to: OPP.FR, grade: 'poor',
+        label: 'Attacking cross drop', labelJa: 'クロスのドロップでこうげき',
+        steps: [ { by: 'opp', type: 'kill', to: ME.FL, pos: { opp: [4.4, 5.6], me: [1.6, 11.6] }, label: 'Floated — easy kill', labelJa: '浮いた球を決められた' } ], result: 'lose',
+        why: 'From an off-balance position the drop was weak and floated. The opponent was waiting at the net.',
+        whyJa: 'くずれた体勢からのドロップは弱く浮いてしまい、ネット前で待っていた相手に決められた。' },
+      { key: 'C', type: 'drive', to: OPP.MR, grade: 'ok',
+        label: 'Flat drive cross-court', labelJa: 'クロスへ平らなドライブ',
+        steps: [
+          { by: 'opp', type: 'push', to: ME.FL, pos: { opp: OPP.MR, me: [1.6, 9.0] } },
+          { by: 'me', type: 'lob', to: OPP.BL, pos: { me: BASE.me, opp: OPP.BL } },
+          { by: 'opp', type: 'clear', to: ME.BC, pos: { opp: BASE.opp, me: ME.BC } }
+        ], result: 'neutral',
+        why: 'A flat drive comes back fast. You were still not ready, and you had to keep defending.',
+        whyJa: 'ドライブは速く返ってくるので、まだ準備ができておらず、守り続けることになった。' }
+    ],
+    principle: {
+      en: 'When you are under pressure, play a high, deep shot to buy time and get back to your base position.',
+      ja: 'ピンチのときは高く深い球で時間をつくり、ベースポジションにもどる。',
+      tag: 'Singles tactics · シングルス戦術'
+    },
+    look: 'Off balance? Hit high. Ready and balanced? Then you can attack.',
+    lookJa: '体勢がくずれていたら高く。準備ができていたら、こうげきしてよい。',
+    words: ['Time', 'Clear', 'Base position', 'Drive']
+  },
+  {
+    id: 's4', mode: 'singles', level: 2,
+    title: 'Low at the net: lift it', titleJa: 'ネット前で低いときはロブ',
+    intro: 'The opponent played a tight net shot. You arrive late — the shuttle is already below the net tape.', introJa: '相手のきびしいヘアピン。おくれてとどいたときには、シャトルはネットより下にある。',
+    start: { me: [3.05, 10.1], opp: [2.6, 5.2] },
+    steps: [
+      { by: 'opp', type: 'net', to: [4.4, 7.2], pos: { me: [4.4, 7.6], opp: [3.4, 5.1] }, label: 'Tight net shot', labelJa: 'きびしいヘアピン' }
+    ],
+    question: 'You are late and the shuttle is low. What is the safe, smart shot?',
+    questionJa: 'おくれていて、シャトルは低い。安全でかしこいショットは？',
+    space: { at: OPP.BL, r: 1.1 },
+    options: [
+      { key: 'A', type: 'lob', to: OPP.BL, grade: 'best',
+        label: 'High lob to the back corner', labelJa: 'うしろのすみへ高いロブ',
+        steps: [
+          { by: 'me', type: 'move', pos: { me: BASE.me } },
+          { by: 'opp', type: 'clear', to: ME.BR, pos: { opp: BASE.opp, me: ME.BR } },
+          { by: 'me', type: 'drop', to: OPP.FL, pos: { me: BASE.me, opp: OPP.FL } },
+          { by: 'opp', type: 'shortlift', to: [2.6, 9.6], pos: { opp: [2.4, 4.6], me: [2.6, 9.6] } },
+          { by: 'me', type: 'smash', to: OPP.MR, pos: { me: BASE.me, opp: [3.4, 4.0] } }
+        ], result: 'win',
+        why: 'The high lob sent the opponent to the back and gave you time to recover. Later you got your chance to attack.',
+        whyJa: '高いロブで相手をうしろへ動かし、もどる時間ができた。そのあと、こうげきのチャンスが来た。' },
+      { key: 'B', type: 'into_net', to: [4.2, 6.75], grade: 'poor',
+        label: 'Try a net kill', labelJa: 'プッシュで決めにいく',
+        steps: [], result: 'lose',
+        why: 'You cannot hit down when the shuttle is below the net. It went into the net.',
+        whyJa: 'シャトルがネットより下だと、下に向かって打てない。ネットにかかってしまった。' },
+      { key: 'C', type: 'net', to: OPP.FR, grade: 'ok',
+        label: 'Net shot back', labelJa: 'ヘアピンで返す',
+        steps: [ { by: 'opp', type: 'push', to: ME.ML, pos: { opp: [4.6, 5.6], me: [2.4, 9.4] } }, { by: 'me', type: 'lob', to: OPP.BL, pos: { me: BASE.me, opp: OPP.BL } } ], result: 'neutral',
+        why: 'From late and low, the net shot rose a little. The opponent pushed and you had to defend.',
+        whyJa: 'おくれた低い位置からのヘアピンは少し浮き、プッシュされて守ることになった。' }
+    ],
+    principle: {
+      en: 'If you are late at the net and the shuttle is low, lift it high and deep to recover. Attack only when you take the shuttle high and early.',
+      ja: 'ネット前でおくれて低いときは、高く深いロブで立て直す。こうげきは、高い位置で早くとれたときに。',
+      tag: 'Singles tactics · シングルス戦術'
+    },
+    look: 'Check the height: above the net → attack, below the net → lift.',
+    lookJa: '高さをチェック：ネットより上 → こうげき、ネットより下 → ロブ。',
+    words: ['Lob', 'Net shot', 'Front court', 'Rear court']
+  },
+  {
+    id: 's5', mode: 'singles', level: 3,
+    title: 'Wrong-foot them', titleJa: '相手の逆をつこう',
+    intro: 'The opponent is rushing from the front-left back to the middle, expecting a cross-court shot.', introJa: '相手は左前から真ん中へいそいでもどっている。クロスに来ると思っているよ。',
+    start: { me: [3.05, 10.1], opp: [3.05, 3.4] },
+    steps: [
+      { by: 'me', type: 'drop', to: OPP.FL, pos: { me: BASE.me, opp: OPP.FL } },
+      { by: 'opp', type: 'lob', to: ME.BC, pos: { me: ME.BC, opp: [2.4, 4.4] }, label: 'Already moving right', labelJa: 'もう右へ動き出している' }
+    ],
+    question: 'The opponent is moving fast toward the right side. Where will they struggle most?',
+    questionJa: '相手は右側へ速く動いている。一番こまるのはどこ？',
+    space: { at: OPP.FL, r: 1.0 },
+    options: [
+      { key: 'A', type: 'drop', to: OPP.FL, grade: 'best',
+        label: 'Drop back to the front-left (where they came from)', labelJa: 'さっきいた左前にもう一度ドロップ',
+        steps: [ { by: 'opp', type: 'into_net', to: [1.6, 6.6], pos: { opp: [1.8, 5.2] }, label: 'Had to stop and turn back', labelJa: '止まって戻るのに間に合わない' } ], result: 'win',
+        why: 'The opponent was running the other way. Stopping and turning back takes extra time — they could not reach it well.',
+        whyJa: '相手は反対へ走っていた。止まって向きを変えるのに時間がかかり、うまくとれなかった。' },
+      { key: 'B', type: 'drop', to: OPP.FR, grade: 'ok',
+        label: 'Cross drop to the front-right', labelJa: '右前へクロスのドロップ',
+        steps: [ { by: 'opp', type: 'net', to: ME.FL, pos: { opp: OPP.FR, me: ME.FL } }, { by: 'me', type: 'lob', to: OPP.BR, pos: { me: BASE.me, opp: OPP.BR } } ], result: 'neutral',
+        why: 'Usually good, but here the opponent was expecting it and was already moving that way.',
+        whyJa: 'ふだんは良い選択。でも今回は相手が読んでいて、もうそちらへ動いていた。' },
+      { key: 'C', type: 'clear', to: OPP.MID, grade: 'poor',
+        label: 'Clear to the middle', labelJa: '真ん中にクリア',
+        steps: [ { by: 'opp', type: 'smash', to: ME.MR, pos: { opp: [3.05, 2.6], me: [3.6, 10.4] } } ], result: 'lose',
+        why: 'The middle is where the opponent wanted to be. It was an easy shuttle for them.',
+        whyJa: '真ん中は相手がもどりたかった場所。相手にとって楽な球になった。' }
+    ],
+    principle: {
+      en: 'Watch which way the opponent is moving. Hitting behind them (wrong-footing) can be better than hitting to the open space they expect.',
+      ja: '相手が動く方向を見る。相手が読んでいる空きスペースより、動いた逆（うしろ側）に打つほうが効くことがある。',
+      tag: 'Singles tactics · シングルス戦術'
+    },
+    look: 'Not just “where is the space?” but also “which way are they going?”',
+    lookJa: '「どこがあいている？」だけでなく「相手はどっちへ動いている？」も見よう。',
+    words: ['Wrong-footing', 'Open space', 'Drop']
+  },
+  {
+    id: 'd1', mode: 'doubles', level: 1,
+    title: 'They lifted — attack with Top & Back', titleJa: 'ロブが来たらトップ・アンド・バック',
+    intro: 'You and your partner were side by side. The opponents just lifted high to your back court.', introJa: 'あなたとパートナーは横にならんでいた。相手が高いロブをうしろへ上げてきた。',
+    doubles: true,
+    start: { me: [1.6, 10.2], p: [4.5, 10.2], opp: [1.8, 4.0], o2: [4.3, 5.4] },
+    steps: [
+      { by: 'o2', type: 'lob', to: [2.2, 12.2], pos: { me: [2.2, 12.2], p: [4.5, 10.2], opp: [1.6, 3.6], o2: [4.5, 3.6] }, label: 'High lift', labelJa: '高いロブ' }
+    ],
+    question: 'You are going back to hit the shuttle. Where should your partner go?',
+    questionJa: 'あなたはうしろで打つ。パートナーはどこへ行く？',
+    space: { at: [3.05, 8.2], r: 1.0, label: 'Front' },
+    formation: true,
+    options: [
+      { key: 'A', grade: 'best', label: 'Partner moves to the front (Top & Back)', labelJa: 'パートナーは前へ（トップ・アンド・バック）',
+        ghost: { p: [3.05, 8.2] },
+        steps: [
+          { by: 'me', type: 'smash', to: [2.0, 3.8], pos: { me: [2.4, 11.4], p: [3.05, 8.2], opp: [1.9, 3.8], o2: [4.4, 3.8] } },
+          { by: 'opp', type: 'net', to: [3.2, 7.6], pos: { p: [3.2, 7.6], opp: [2.2, 4.4] }, label: 'Weak block', labelJa: '弱いレシーブ' },
+          { by: 'p', type: 'kill', to: [4.6, 5.6], pos: { p: [3.2, 7.8], opp: [2.4, 4.6], o2: [4.0, 4.2] } }
+        ], result: 'win',
+        why: 'You smashed from the back and your partner covered the front. The weak return was killed at the net.',
+        whyJa: 'あなたがうしろからスマッシュ、パートナーが前をカバー。弱い返球をネット前で決めた。' },
+      { key: 'B', grade: 'poor', label: 'Partner stays side by side', labelJa: 'パートナーは横にならんだまま',
+        ghost: { p: [4.5, 10.2] },
+        steps: [
+          { by: 'me', type: 'smash', to: [2.0, 3.8], pos: { me: [2.4, 11.4], p: [4.5, 10.2], opp: [1.9, 3.8], o2: [4.4, 3.8] } },
+          { by: 'opp', type: 'net', to: [3.2, 7.4], pos: { me: [2.8, 9.6], p: [4.2, 9.4], opp: [2.2, 4.4] }, label: 'Front is empty', labelJa: '前ががら空き' },
+          { by: 'me', type: 'lob', to: [3.0, 1.2], pos: { me: [3.0, 8.2], p: [4.4, 10.2], opp: [3.0, 1.4], o2: [4.4, 4.2] } },
+          { by: 'opp', type: 'smash', to: [4.7, 11.6], pos: { opp: [3.0, 1.6], me: [2.6, 9.6], p: [4.4, 10.4] } }
+        ], result: 'lose',
+        why: 'Nobody covered the front. The opponents blocked to the net and took the attack away from you.',
+        whyJa: '前にだれもいなかった。ネット前に落とされ、こうげきの流れを相手にとられた。' },
+      { key: 'C', grade: 'poor', label: 'Partner also goes back', labelJa: 'パートナーもうしろへ',
+        ghost: { p: [4.2, 12.2] },
+        steps: [
+          { by: 'me', type: 'smash', to: [2.0, 3.8], pos: { me: [2.4, 11.6], p: [4.2, 12.0], opp: [1.9, 3.8], o2: [4.4, 3.8] } },
+          { by: 'opp', type: 'net', to: [3.5, 7.2], pos: { opp: [2.2, 4.4] }, label: 'Too far to reach', labelJa: '遠くて届かない' }
+        ], result: 'lose',
+        why: 'Both players were at the back, so the net was empty. A simple block won the point.',
+        whyJa: '2人ともうしろにいたので、ネット前がだれもいない。かんたんな返球で点をとられた。' }
+    ],
+    principle: {
+      en: 'Doubles: when your side gets a lift, change to Top & Back — the back player attacks, the front player covers the net.',
+      ja: 'ダブルス：ロブが来たらトップ・アンド・バックへ。うしろの人がこうげき、前の人がネット前をカバー。',
+      tag: 'Doubles tactics · ダブルス戦術'
+    },
+    look: 'Shuttle going up on the other side? Think “attack”: one back, one front.',
+    lookJa: '相手コートから球が上がったら「こうげき」：1人うしろ、1人前。',
+    words: ['Top & Back', 'Rotation', 'Smash', 'Front court']
+  },
+  {
+    id: 'd2', mode: 'doubles', level: 1,
+    title: 'You lifted — defend side by side', titleJa: 'ロブを上げたらサイド・バイ・サイド',
+    intro: 'You were attacking front and back, but your partner had to lift the shuttle high.', introJa: '前うしろでこうげきしていたけど、パートナーがロブを上げることになった。',
+    doubles: true,
+    start: { me: [3.05, 11.6], p: [3.05, 8.0], opp: [2.2, 4.4], o2: [4.2, 3.2] },
+    steps: [
+      { by: 'opp', type: 'net', to: [2.4, 7.4], pos: { p: [2.4, 7.4], me: [3.05, 11.0] } },
+      { by: 'p', type: 'lob', to: [3.6, 1.0], pos: { p: [2.6, 8.0], opp: [3.6, 1.2], o2: [3.0, 4.2] }, label: 'Partner lifts', labelJa: 'パートナーがロブ' }
+    ],
+    question: 'The opponents will smash. Where should you two stand?',
+    questionJa: '相手はスマッシュを打ってくる。2人はどこに立つ？',
+    space: { at: [3.05, 10.2], r: 1.4, label: 'Defend' },
+    formation: true,
+    options: [
+      { key: 'A', grade: 'best', label: 'Side by side — each covers half', labelJa: '横にならぶ（サイド・バイ・サイド）',
+        ghost: { me: [4.4, 10.2], p: [1.7, 10.2] },
+        steps: [
+          { by: 'me', type: 'move', pos: { me: [4.4, 10.2], p: [1.7, 10.2] } },
+          { by: 'opp', type: 'smash', to: [4.5, 10.4], pos: { opp: [3.6, 1.6] } },
+          { by: 'me', type: 'drive', to: [1.0, 5.2], pos: { me: [4.3, 9.8], opp: [3.2, 3.2], o2: [3.4, 4.4] }, label: 'Counter drive', labelJa: 'カウンターのドライブ' },
+          { by: 'o2', type: 'out', to: [-0.4, 6.0], pos: { o2: [2.6, 4.8] } }
+        ], result: 'win',
+        why: 'Side by side, you each covered half of the court. You were ready for the smash and could counter-attack.',
+        whyJa: '横にならぶと、2人で半分ずつ守れる。スマッシュに準備できて、返すことができた。' },
+      { key: 'B', grade: 'poor', label: 'Stay front and back', labelJa: '前とうしろのまま',
+        ghost: { me: [3.05, 11.2], p: [2.6, 8.0] },
+        steps: [
+          { by: 'opp', type: 'smash', to: [5.0, 9.6], pos: { opp: [3.6, 1.6], me: [3.6, 11.0], p: [3.0, 8.2] } }
+        ], result: 'lose',
+        why: 'In front and back, the sides were open. The smash went where nobody could reach.',
+        whyJa: '前うしろのままだと横があいている。だれも届かない所へスマッシュされた。' },
+      { key: 'C', grade: 'poor', label: 'Partner rushes to the net', labelJa: 'パートナーがネットへつめる',
+        ghost: { p: [3.05, 7.2], me: [3.05, 11.0] },
+        steps: [
+          { by: 'opp', type: 'smash', to: [4.9, 10.8], pos: { opp: [3.6, 1.6], p: [3.05, 7.2], me: [3.4, 11.0] } }
+        ], result: 'lose',
+        why: 'Being close to the net while the opponent smashes leaves too little time, and the back player cannot cover both sides.',
+        whyJa: '相手がスマッシュするときにネット近くにいると時間がなく、うしろの1人では両サイドを守れない。' }
+    ],
+    principle: {
+      en: 'Doubles: when your side lifts, change to Side by Side to defend — each player covers their half.',
+      ja: 'ダブルス：自分たちがロブを上げたら、サイド・バイ・サイドで守る。1人が半分ずつ。',
+      tag: 'Doubles tactics · ダブルス戦術'
+    },
+    look: 'Your shot going up? Think “defend”: stand side by side, racket ready.',
+    lookJa: '自分たちの球が上がったら「まもり」：横にならんで、ラケットを準備。',
+    words: ['Side by side', 'Rotation', 'Lob', 'Drive']
+  },
+  {
+    id: 'd3', mode: 'doubles', level: 2,
+    title: 'Smash to the middle', titleJa: '2人のあいだをねらう',
+    intro: 'You are attacking Top & Back. The opponents defend side by side.', introJa: 'トップ・アンド・バックでこうげき中。相手は横にならんで守っている。',
+    doubles: true,
+    start: { me: [3.05, 11.0], p: [3.05, 8.2], opp: [1.6, 3.4], o2: [4.5, 3.4] },
+    steps: [
+      { by: 'opp', type: 'lob', to: [3.0, 12.2], pos: { me: [3.0, 12.2], p: [3.05, 8.2], opp: [1.6, 3.4], o2: [4.5, 3.4] } }
+    ],
+    question: 'Where is the best target for your smash?',
+    questionJa: 'スマッシュのねらいはどこが一番いい？',
+    space: { at: [3.05, 3.6], r: 0.8, label: 'Middle' },
+    options: [
+      { key: 'A', type: 'smash', to: [3.05, 3.8], grade: 'best', label: 'Down the middle, between them', labelJa: '2人のあいだ（センター）',
+        steps: [ { by: 'opp', type: 'out', to: [2.2, -0.6], pos: { opp: [2.3, 3.6], o2: [3.8, 3.6] }, label: '“Yours!” “Mine!”', labelJa: '「どっち？」' } ], result: 'win',
+        why: 'Between the two players, they can hesitate or clash — and their return has less angle.',
+        whyJa: '2人のあいだだと、どちらがとるか迷いやすい。返球の角度もつけにくい。' },
+      { key: 'B', type: 'smash', to: [1.6, 3.6], grade: 'ok', label: 'At one player’s body', labelJa: '1人の体（ボディ）をねらう',
+        steps: [ { by: 'opp', type: 'net', to: [2.6, 7.6], pos: { opp: [1.7, 3.8], p: [2.6, 7.8] }, label: 'Cramped return', labelJa: 'つまった返球' }, { by: 'p', type: 'kill', to: [4.0, 4.8], pos: { p: [2.7, 8.0] } } ], result: 'win',
+        why: 'Also a good target — the body is hard to defend. The middle is usually the safest first choice.',
+        whyJa: 'これも良いねらい。体の正面は返しにくい。まず選ぶなら、多くの場合センターが安全。' },
+      { key: 'C', type: 'smash', to: [5.75, 3.9], grade: 'poor', label: 'Wide to the sideline', labelJa: 'サイドラインぎりぎり',
+        steps: [ { by: 'o2', type: 'drive', to: [0.8, 9.4], pos: { o2: [5.3, 3.8], me: [2.4, 11.6], p: [3.1, 8.2] }, label: 'Cross-court counter', labelJa: 'クロスにカウンター' } ], result: 'lose',
+        why: 'From the back, a wide smash travels far and opens a cross-court angle for the defender.',
+        whyJa: 'うしろからの外側へのスマッシュは遠く、守る人にクロスの角度をあたえてしまう。' }
+    ],
+    principle: {
+      en: 'Doubles attack: smash down the middle or at the body. It causes confusion and reduces the angles of the return.',
+      ja: 'ダブルスのこうげき：センター（2人のあいだ）や体をねらう。迷いが生まれ、返球の角度もせまくなる。',
+      tag: 'Doubles tactics · ダブルス戦術'
+    },
+    look: 'Look for the gap between the two defenders.',
+    lookJa: '守っている2人のあいだのすき間を見つけよう。',
+    words: ['Middle', 'Smash', 'Top & Back', 'Side by side']
+  }
+];
+
+/* ===================== State ===================== */
+const GRADE = { best: { stars: 2, en: 'Best choice!', ja: 'ベスト！', cls: 'bg-emerald-600' },
+                ok: { stars: 1, en: 'Good — but there was a better one', ja: 'いいね。でももっと良い選択があったよ', cls: 'bg-amber-500' },
+                poor: { stars: 0, en: 'Not this time', ja: '今回はざんねん', cls: 'bg-rose-500' } };
+const STORE = 'tacticslab.progress.v1';
+let progress = (() => { try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { return {}; } })();
+progress.best = progress.best || {}; progress.words = progress.words || [];
+const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch (e) {} };
+
+let queue = [], qi = 0, scn = null, run = 0, speed = 1, sessionResults = [];
+const positions = {};   // current player positions (meters)
+const $ = (id) => document.getElementById(id);
+
+/* ===================== Court drawing ===================== */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+let layers = {};
+function drawCourt() {
+  const svg = $('court');
+  svg.innerHTML = '';
+  const defs = el('defs', {}, svg);
+  ['#ffffff', '#f97316', '#0ea5e9', '#a855f7', '#14b8a6', '#eab308', '#9ca3af', '#22c55e', '#2563eb', '#ef4444', '#f59e0b'].forEach((c) => {
+    const m = el('marker', { id: 'ah' + c.slice(1), viewBox: '0 0 10 10', refX: 7, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto-start-reverse' }, defs);
+    el('path', { d: 'M0,0 L10,5 L0,10 z', fill: c }, m);
+  });
+  el('rect', { x: 0, y: 0, width: 300, height: 611, rx: 18, fill: '#dfeee4' }, svg);
+  el('rect', { x: px(0), y: py(0), width: 6.1 * S, height: 13.4 * S, fill: 'var(--court)' }, svg);
+  el('rect', { x: px(0), y: py(0), width: 6.1 * S, height: NET * S, fill: 'var(--court-dark)', opacity: .35 }, svg);
+  const line = (x1, y1, x2, y2, w = 2) => el('line', { x1: px(x1), y1: py(y1), x2: px(x2), y2: py(y2), stroke: 'var(--line)', 'stroke-width': w, opacity: .9 }, svg);
+  line(0, 0, 6.1, 0); line(0, 13.4, 6.1, 13.4); line(0, 0, 0, 13.4); line(6.1, 0, 6.1, 13.4);
+  line(0.46, 0, 0.46, 13.4); line(5.64, 0, 5.64, 13.4);
+  line(0, 0.76, 6.1, 0.76); line(0, 12.64, 6.1, 12.64);
+  line(0, NET - 1.98, 6.1, NET - 1.98); line(0, NET + 1.98, 6.1, NET + 1.98);
+  line(3.05, 0, 3.05, NET - 1.98); line(3.05, NET + 1.98, 3.05, 13.4);
+  el('line', { x1: px(-0.3), y1: py(NET), x2: px(6.4), y2: py(NET), stroke: '#111827', 'stroke-width': 4 }, svg);
+  el('line', { x1: px(-0.3), y1: py(NET) - 2, x2: px(6.4), y2: py(NET) - 2, stroke: '#ffffff', 'stroke-width': 1.5 }, svg);
+  const lab = (t, y) => { const tx = el('text', { x: 150, y, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 800, fill: '#1f6b43', opacity: .8 }, svg); tx.textContent = t; };
+  lab('OPPONENT · 相手', 12); lab('YOU · あなた', 606);
+  layers = { space: el('g', {}, svg), trails: el('g', {}, svg), arrows: el('g', {}, svg), players: el('g', {}, svg), shuttle: el('g', {}, svg) };
+}
+
+const PLAYER_STYLE = {
+  me: { fill: '#2563eb', label: 'YOU' }, p: { fill: '#60a5fa', label: 'P' },
+  opp: { fill: '#ef4444', label: 'OPP' }, o2: { fill: '#f87171', label: 'O2' }
+};
+const playerEls = {};
+function placePlayers(pos) {
+  layers.players.innerHTML = '';
+  for (const k of Object.keys(pos)) {
+    const st = PLAYER_STYLE[k];
+    const g = el('g', {}, layers.players);
+    el('circle', { r: 13, fill: st.fill, stroke: '#fff', 'stroke-width': 2.5 }, g);
+    const t = el('text', { 'text-anchor': 'middle', y: 3.5, 'font-size': st.label.length > 2 ? 7.5 : 9, 'font-weight': 900, fill: '#fff' }, g);
+    t.textContent = st.label;
+    playerEls[k] = g;
+    positions[k] = pos[k].slice();
+    setPlayer(k, pos[k]);
+  }
+}
+function setPlayer(k, p) {
+  positions[k] = p.slice();
+  if (playerEls[k]) playerEls[k].setAttribute('transform', `translate(${px(p[0])},${py(p[1])})`);
+}
+
+let shuttleG = null;
+function drawShuttle(x, y, h) {
+  if (!shuttleG) {
+    shuttleG = el('g', {}, layers.shuttle);
+    el('ellipse', { class: 'sh-shadow', rx: 5, ry: 2.5, fill: '#000', opacity: .25 }, shuttleG);
+    const body = el('g', { class: 'sh-body' }, shuttleG);
+    el('path', { d: 'M-5,-6 L5,-6 L2.5,3 L-2.5,3 Z', fill: '#ffffff', stroke: '#9ca3af', 'stroke-width': .8 }, body);
+    el('circle', { cy: 4.5, r: 3, fill: '#f8fafc', stroke: '#9ca3af', 'stroke-width': .8 }, body);
+  }
+  const sx = px(x), sy = py(y);
+  shuttleG.querySelector('.sh-shadow').setAttribute('transform', `translate(${sx},${sy})`);
+  const lift = h * 9, scale = 1 + h * 0.12;
+  shuttleG.querySelector('.sh-body').setAttribute('transform', `translate(${sx},${sy - lift}) scale(${scale})`);
+}
+function hideShuttle() { if (shuttleG) { shuttleG.remove(); shuttleG = null; } }
+
+function addTrail(from, to, type, faded) {
+  const c = SHOT[type] && SHOT[type].color || '#ffffff';
+  const [x1, y1, x2, y2] = [px(from[0]), py(from[1]), px(to[0]), py(to[1])];
+  const mx = (x1 + x2) / 2 + (y2 - y1) * 0.08, my = (y1 + y2) / 2 - (x2 - x1) * 0.08;
+  [...layers.trails.children].forEach((t) => t.setAttribute('opacity', '0.28'));
+  const g = el('g', { opacity: faded ? .28 : .95 }, layers.trails);
+  el('path', { d: `M${x1},${y1} Q${mx},${my} ${x2},${y2}`, fill: 'none', stroke: c, 'stroke-width': 3, 'stroke-dasharray': type === 'smash' || type === 'kill' || type === 'push' ? '0' : '6 5', 'marker-end': `url(#ah${c.slice(1)})` }, g);
+  if (SHOT[type] && SHOT[type].en) {
+    const t = el('text', { x: mx, y: my - 5, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 900, fill: '#fff', stroke: c, 'stroke-width': 3, 'paint-order': 'stroke' }, g);
+    t.textContent = SHOT[type].en;
+  }
+}
+
+function showSpace(space, color = '#22c55e') {
+  layers.space.innerHTML = '';
+  if (!space) return;
+  el('circle', { cx: px(space.at[0]), cy: py(space.at[1]), r: space.r * S, fill: color, opacity: .45, class: 'space-glow' }, layers.space);
+  const t = el('text', { x: px(space.at[0]), y: py(space.at[1]) + 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: '#fff', stroke: '#166534', 'stroke-width': 3, 'paint-order': 'stroke' }, layers.space);
+  t.textContent = space.label || 'SPACE';
+}
+
+/* ===================== Animation ===================== */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms / speed));
+function hitterPos(by) { return positions[by] || positions.me; }
+
+function animateStep(step, myRun) {
+  return new Promise((resolve) => {
+    const sh = SHOT[step.type] || SHOT.move;
+    const dur = (sh.dur || 900) / speed;
+    const from = hitterPos(step.by).slice();
+    const to = step.to;
+    const startPos = {}; for (const k in positions) startPos[k] = positions[k].slice();
+    const endPos = Object.assign({}, step.pos || {});
+    if (to && step.type !== 'move') {
+      if (step.type !== 'out' && step.type !== 'into_net') addTrail(from, to, step.type);
+      else addTrail(from, to, step.type);
+      showChip(step);
+    }
+    const t0 = performance.now();
+    const ease = (t) => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    function frame(now) {
+      if (myRun !== run) return resolve(false);
+      const t = Math.min(1, (now - t0) / dur);
+      if (to && step.type !== 'move') {
+        const h = sh.h0 * (1 - t) + sh.h1 * t + sh.peak * 4 * t * (1 - t);
+        drawShuttle(from[0] + (to[0] - from[0]) * t, from[1] + (to[1] - from[1]) * t, h);
+      }
+      const e = ease(t);
+      for (const k in endPos) {
+        if (!startPos[k]) continue;
+        setPlayer(k, [startPos[k][0] + (endPos[k][0] - startPos[k][0]) * e, startPos[k][1] + (endPos[k][1] - startPos[k][1]) * e]);
+        positions[k] = [startPos[k][0] + (endPos[k][0] - startPos[k][0]) * e, startPos[k][1] + (endPos[k][1] - startPos[k][1]) * e];
+      }
+      if (t < 1) requestAnimationFrame(frame); else resolve(true);
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+function showChip(step) {
+  const sh = SHOT[step.type];
+  const chip = $('shotChip');
+  const who = { me: 'You', p: 'Partner', opp: 'Opponent', o2: 'Opponent' }[step.by] || '';
+  chip.textContent = `${who}: ${sh.en} · ${sh.ja}`;
+  chip.classList.remove('hidden');
+  const cap = $('caption');
+  const extra = step.label ? `<div class="mt-1 font-bold">${step.label} <span class="ja">${step.labelJa || ''}</span></div>` : '';
+  cap.innerHTML = `<span class="inline-block w-2.5 h-2.5 rounded-full mr-1" style="background:${sh.color}"></span><b>${who}</b> plays a <b class="term underline decoration-dotted" data-word="${wordFor(step.type)}">${sh.en}</b> <span class="ja">（${sh.ja}）</span>${extra}`;
+}
+function wordFor(type) {
+  return { clear: 'Clear', drop: 'Drop', smash: 'Smash', net: 'Net shot', lob: 'Lob', drive: 'Drive', push: 'Push', kill: 'Push', shortlift: 'Short lift', serve: 'Clear' }[type] || '';
+}
+
+async function playSteps(steps, myRun) {
+  for (const s of steps) {
+    const ok = await animateStep(s, myRun);
+    if (!ok) return false;
+    await sleep(s.type === 'move' ? 120 : 260);
+  }
+  return true;
+}
+
+/* ===================== Game flow ===================== */
+function startQueue(mode) {
+  queue = SCENARIOS.filter((s) => mode === 'all' || s.mode === mode);
+  qi = 0; sessionResults = [];
+  show('game');
+  loadScenario();
+}
+
+function show(id) {
+  ['home', 'game', 'summary'].forEach((s) => $(s).classList.toggle('hidden', s !== id));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function loadScenario() {
+  scn = queue[qi];
+  const myRun = ++run;
+  $('scnTag').textContent = `${scn.mode === 'singles' ? 'SINGLES · シングルス' : 'DOUBLES · ダブルス'} · LEVEL ${scn.level}`;
+  $('scnProgress').textContent = `${qi + 1} / ${queue.length}`;
+  $('scnTitle').textContent = scn.title;
+  $('scnTitleJa').textContent = scn.titleJa;
+  $('question').classList.add('hidden');
+  $('resultBanner').classList.add('hidden');
+  $('shotChip').classList.add('hidden');
+  $('caption').innerHTML = `${scn.intro}<div class="ja">${scn.introJa}</div>`;
+  drawCourt(); hideShuttle();
+  placePlayers(scn.start);
+  await sleep(900);
+  if (myRun !== run) return;
+  const ok = await playSteps(scn.steps, myRun);
+  if (!ok) return;
+  askQuestion(myRun);
+}
+
+function askQuestion(myRun) {
+  $('shotChip').classList.add('hidden');
+  $('qText').textContent = scn.question;
+  $('qTextJa').textContent = scn.questionJa;
+  const box = $('options');
+  const colors = { A: '#2563eb', B: '#f59e0b', C: '#ef4444' };
+  box.innerHTML = scn.options.map((o) => `
+    <button data-opt="${o.key}" class="text-left flex items-center gap-3 p-3 rounded-2xl bg-white shadow-sm hover:shadow-md active:scale-[.99] transition">
+      <span class="flex-none w-9 h-9 rounded-full grid place-items-center text-white font-extrabold" style="background:${colors[o.key]}">${o.key}</span>
+      <span class="min-w-0"><span class="block font-bold leading-snug">${o.label}</span><span class="block ja">${o.labelJa}</span>
+      ${o.type ? `<span class="inline-block mt-1 text-[11px] font-bold px-2 py-0.5 rounded-full text-white" style="background:${SHOT[o.type].color}">${SHOT[o.type].en} · ${SHOT[o.type].ja}</span>` : ''}</span>
+    </button>`).join('');
+  // option arrows / ghost positions on the court
+  layers.arrows.innerHTML = '';
+  scn.options.forEach((o) => {
+    const g = el('g', { class: 'choice-arrow', tabindex: 0, 'data-opt': o.key }, layers.arrows);
+    const c = colors[o.key];
+    if (o.to) {
+      const f = positions.me, [x1, y1, x2, y2] = [px(f[0]), py(f[1]), px(o.to[0]), py(o.to[1])];
+      el('path', { d: `M${x1},${y1} L${x2},${y2}`, stroke: c, 'stroke-width': 3.5, 'stroke-dasharray': '7 5', fill: 'none', 'marker-end': `url(#ah${c.slice(1)})` }, g);
+      el('circle', { cx: x2, cy: y2, r: 14, fill: c, class: 'pulse-ring' }, g);
+      el('circle', { cx: x2, cy: y2, r: 11, fill: c, stroke: '#fff', 'stroke-width': 2 }, g);
+      const t = el('text', { x: x2, y: y2 + 4, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 900, fill: '#fff' }, g); t.textContent = o.key;
+    } else if (o.ghost) {
+      for (const k in o.ghost) {
+        const f = positions[k], gpos = o.ghost[k];
+        const [x1, y1, x2, y2] = [px(f[0]), py(f[1]), px(gpos[0]), py(gpos[1])];
+        const stays = Math.hypot(x2 - x1, y2 - y1) <= 4;
+        if (!stays) {
+          el('path', { d: `M${x1},${y1} L${x2},${y2}`, stroke: c, 'stroke-width': 3, 'stroke-dasharray': '5 4', fill: 'none', 'marker-end': `url(#ah${c.slice(1)})` }, g);
+          el('circle', { cx: x2, cy: y2, r: 12, fill: c, opacity: .35, stroke: c, 'stroke-width': 2 }, g);
+        } else {
+          el('circle', { cx: x2, cy: y2, r: 19, fill: 'none', stroke: c, 'stroke-width': 3, 'stroke-dasharray': '4 3' }, g);   // "stays here"
+        }
+        const lx = stays ? x2 + 20 : x2, ly = stays ? y2 - 14 : y2 + 4;
+        const t = el('text', { x: lx, y: ly, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: '#fff', stroke: c, 'stroke-width': 3.5, 'paint-order': 'stroke' }, g); t.textContent = o.key;
+      }
+    }
+  });
+  $('question').classList.remove('hidden');
+  $('caption').innerHTML = `<b>Pause!</b> Look at the court. <span class="ja">止まったよ。コートをよく見よう。</span>`;
+  // On phones the choices sit below the court: bring them into view.
+  const q = $('question');
+  if (q.getBoundingClientRect().bottom > window.innerHeight) q.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+async function choose(key) {
+  if (!scn) return;
+  const opt = scn.options.find((o) => o.key === key);
+  if (!opt) return;
+  const myRun = ++run;
+  $('question').classList.add('hidden');
+  layers.arrows.innerHTML = '';
+  const steps = [];
+  if (opt.type) steps.push({ by: 'me', type: opt.type, to: opt.to, pos: opt.type === 'into_net' ? {} : { me: scn.doubles ? positions.me : BASE.me } });
+  steps.push(...opt.steps);
+  const ok = await playSteps(steps, myRun);
+  if (!ok) return;
+  hideShuttle();
+  const win = opt.result === 'win', neutral = opt.result === 'neutral';
+  const banner = $('resultBanner');
+  banner.className = `absolute inset-x-6 top-1/2 -translate-y-1/2 text-center py-3 rounded-2xl text-white text-xl font-extrabold shadow-xl fade-in ${win ? 'bg-emerald-600/95' : neutral ? 'bg-amber-500/95' : 'bg-rose-500/95'}`;
+  banner.innerHTML = win ? 'Point! <span class="text-base">ポイント！</span>' : neutral ? 'Rally goes on… <span class="text-base">ラリーは続く</span>' : 'Opponent’s point <span class="text-base">相手のポイント</span>';
+  await sleep(1300);
+  if (myRun !== run) return;
+  banner.classList.add('hidden');
+  record(opt);
+  openDebrief(opt);
+}
+
+function record(opt) {
+  const stars = GRADE[opt.grade].stars;
+  progress.best[scn.id] = Math.max(progress.best[scn.id] || 0, stars);
+  scn.words.forEach((w) => { if (!progress.words.includes(w)) progress.words.push(w); });
+  saveProgress();
+  sessionResults.push({ id: scn.id, title: scn.title, titleJa: scn.titleJa, grade: opt.grade });
+  updateStars();
+}
+
+/* ===================== Debrief ===================== */
+function openDebrief(opt) {
+  const best = scn.options.find((o) => o.grade === 'best');
+  const g = GRADE[opt.grade];
+  const starStr = '⭐'.repeat(g.stars) + '☆'.repeat(2 - g.stars);
+  const wordChips = scn.words.map((w) => `<button class="term px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-sm font-bold" data-word="${w}">${w} <span class="font-semibold opacity-75">${WORDS[w][0]}</span></button>`).join('');
+  $('debriefBody').innerHTML = `
+    <div class="flex items-center justify-between">
+      <div class="text-xs font-bold tracking-widest text-gray-500">DEBRIEF · ふりかえり</div>
+      <div class="text-lg">${starStr}</div>
+    </div>
+    <div class="mt-2 inline-block px-3 py-1 rounded-full text-white text-sm font-bold ${g.cls}">${g.en} <span class="opacity-90">${g.ja}</span></div>
+    <div class="mt-3 p-3 rounded-2xl bg-gray-50">
+      <div class="text-xs font-bold text-gray-500">YOUR CHOICE · あなたの選択 — ${opt.key}</div>
+      <div class="font-bold mt-1">${opt.label}</div>
+      <div class="text-sm mt-1">${opt.why}</div>
+      <div class="ja mt-0.5">${opt.whyJa}</div>
+    </div>
+    ${opt.grade !== 'best' ? `
+    <div class="mt-3 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+      <div class="text-xs font-bold text-emerald-700">BEST CHOICE · ベストの選択 — ${best.key}</div>
+      <div class="font-bold mt-1">${best.label}</div><div class="ja">${best.labelJa}</div>
+      <div class="text-sm mt-1">${best.why}</div><div class="ja mt-0.5">${best.whyJa}</div>
+    </div>` : ''}
+    <div class="mt-3 p-4 rounded-2xl bg-gray-900 text-white">
+      <div class="text-[11px] font-bold tracking-widest text-emerald-300">${scn.principle.tag}</div>
+      <div class="font-extrabold mt-1 leading-snug">${scn.principle.en}</div>
+      <div class="text-sm mt-1 opacity-85">${scn.principle.ja}</div>
+    </div>
+    <div class="mt-3 p-3 rounded-2xl bg-sky-50">
+      <div class="text-xs font-bold text-sky-700">👀 LOOK FOR · 見るポイント</div>
+      <div class="text-sm mt-1">${scn.look}</div><div class="ja">${scn.lookJa}</div>
+    </div>
+    <div class="mt-3">
+      <div class="text-xs font-bold text-gray-500 mb-1.5">WORDS · ことば（タップで意味）</div>
+      <div class="flex flex-wrap gap-2">${wordChips}</div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-4">
+      <button id="watchBest" class="py-3 rounded-full bg-white border-2 border-emerald-600 text-emerald-700 font-bold">▶ Watch best <span class="text-xs">ベストを見る</span></button>
+      <button id="nextBtn" class="py-3 rounded-full bg-emerald-600 text-white font-bold">${qi + 1 < queue.length ? 'Next ›' : 'Finish ›'} <span class="text-xs">${qi + 1 < queue.length ? '次へ' : 'おわり'}</span></button>
+    </div>`;
+  $('debriefWrap').classList.remove('hidden');
+  requestAnimationFrame(() => $('debrief').classList.add('open'));
+  $('watchBest').onclick = () => { closeDebrief(); watchBest(); };
+  $('nextBtn').onclick = () => { closeDebrief(); next(); };
+}
+function closeDebrief() {
+  $('debrief').classList.remove('open');
+  setTimeout(() => $('debriefWrap').classList.add('hidden'), 260);
+}
+
+async function watchBest() {
+  const myRun = ++run;
+  drawCourt(); hideShuttle(); placePlayers(scn.start);
+  $('caption').innerHTML = `<b>Watch the best play</b> <span class="ja">ベストのプレーを見よう</span>`;
+  showSpace(scn.space);
+  if (!(await playSteps(scn.steps, myRun))) return;
+  await sleep(600);
+  const best = scn.options.find((o) => o.grade === 'best');
+  const steps = [];
+  if (best.type) steps.push({ by: 'me', type: best.type, to: best.to, pos: { me: scn.doubles ? positions.me : BASE.me } });
+  steps.push(...best.steps);
+  if (!(await playSteps(steps, myRun))) return;
+  hideShuttle();
+  $('caption').innerHTML = `${scn.principle.en}<div class="ja">${scn.principle.ja}</div>
+    <button id="nextAfterWatch" class="mt-2 px-4 py-2 rounded-full bg-emerald-600 text-white text-sm font-bold">${qi + 1 < queue.length ? 'Next ›' : 'Finish ›'}</button>`;
+  $('nextAfterWatch').onclick = next;
+}
+
+function next() {
+  qi += 1;
+  if (qi < queue.length) loadScenario(); else showSummary();
+}
+
+/* ===================== Summary & words ===================== */
+function showSummary() {
+  run++;
+  const got = sessionResults.reduce((s, r) => s + GRADE[r.grade].stars, 0), max = sessionResults.length * 2;
+  const rows = sessionResults.map((r) => `<div class="flex items-center justify-between py-2 border-b border-gray-100">
+      <div><div class="font-bold">${r.title}</div><div class="ja">${r.titleJa}</div></div>
+      <div class="text-sm">${'⭐'.repeat(GRADE[r.grade].stars)}${'☆'.repeat(2 - GRADE[r.grade].stars)}</div></div>`).join('');
+  $('summary').innerHTML = `
+    <div class="mt-4 text-xs font-bold tracking-widest text-emerald-700">RESULT · けっか</div>
+    <h2 class="text-4xl font-extrabold tracking-tight mt-1">${got} / ${max} ⭐</h2>
+    <p class="text-gray-700 mt-1">${got === max ? 'Perfect tactician!' : got >= max * 0.6 ? 'Great thinking!' : 'Keep watching for the space!'}
+      <span class="ja">${got === max ? 'かんぺき！戦術マスター！' : got >= max * 0.6 ? 'よく考えられたね！' : 'あいているスペースをさがし続けよう！'}</span></p>
+    <div class="mt-4 p-4 rounded-3xl bg-white shadow-md">${rows}</div>
+    <div class="grid grid-cols-2 gap-2 mt-4">
+      <button id="againBtn" class="py-3 rounded-full bg-white font-bold shadow-sm">↺ Try again <span class="text-xs">もう一度</span></button>
+      <button id="homeBtn" class="py-3 rounded-full bg-emerald-600 text-white font-bold">Menu <span class="text-xs">メニュー</span></button>
+    </div>`;
+  show('summary');
+  $('againBtn').onclick = () => { qi = 0; sessionResults = []; show('game'); loadScenario(); };
+  $('homeBtn').onclick = goHome;
+}
+
+function goHome() { run++; hideShuttle(); refreshHome(); show('home'); }
+
+function openWordBook() {
+  const learned = progress.words;
+  const items = Object.keys(WORDS).map((w) => {
+    const has = learned.includes(w);
+    return `<button class="term text-left p-3 rounded-2xl ${has ? 'bg-white shadow-sm' : 'bg-white/50 text-gray-400'}" data-word="${w}">
+      <div class="font-extrabold">${has ? '' : '🔒 '}${w}</div><div class="text-xs">${WORDS[w][0]}</div></button>`;
+  }).join('');
+  $('debriefBody').innerHTML = `
+    <div class="flex items-center justify-between"><div class="text-xs font-bold tracking-widest text-gray-500">WORD BOOK · ことばノート</div>
+    <div class="text-sm font-bold">${learned.length} / ${Object.keys(WORDS).length}</div></div>
+    <p class="ja mt-1">シナリオをクリアすると、ことばが追加されるよ。タップで意味を見よう。</p>
+    <div class="grid grid-cols-2 gap-2 mt-3">${items}</div>
+    <button id="closeWords" class="mt-4 w-full py-3 rounded-full bg-emerald-600 text-white font-bold">Close <span class="text-xs">とじる</span></button>`;
+  $('debriefWrap').classList.remove('hidden');
+  requestAnimationFrame(() => $('debrief').classList.add('open'));
+  $('closeWords').onclick = closeDebrief;
+}
+
+function showWord(w) {
+  const d = WORDS[w];
+  if (!d) return;
+  $('wpTerm').textContent = w; $('wpJa').textContent = d[0]; $('wpEn').textContent = d[1]; $('wpJaDef').textContent = d[2];
+  $('wordPop').classList.remove('hidden');
+}
+
+function updateStars() {
+  const total = Object.values(progress.best).reduce((s, v) => s + v, 0);
+  $('starTotal').textContent = `⭐ ${total} / ${SCENARIOS.length * 2}`;
+}
+function refreshHome() {
+  for (const mode of ['singles', 'doubles']) {
+    const list = SCENARIOS.filter((s) => s.mode === mode);
+    const stars = list.reduce((s, x) => s + (progress.best[x.id] || 0), 0);
+    document.querySelector(`[data-count="${mode}"]`).textContent = `${list.length} scenarios · ${stars}/${list.length * 2} ⭐`;
+  }
+  updateStars();
+}
+
+/* ===================== Events ===================== */
+document.addEventListener('click', (e) => {
+  const st = e.target.closest('[data-start]'); if (st) { startQueue(st.dataset.start); return; }
+  const op = e.target.closest('[data-opt]'); if (op && !$('question').classList.contains('hidden')) { choose(op.dataset.opt); return; }
+  const w = e.target.closest('[data-word]'); if (w && w.dataset.word) { showWord(w.dataset.word); return; }
+});
+document.addEventListener('keydown', (e) => {
+  if (!$('question').classList.contains('hidden') && ['a', 'b', 'c'].includes(e.key.toLowerCase())) choose(e.key.toUpperCase());
+  if (e.key === 'Enter' && e.target.closest && e.target.closest('.choice-arrow')) choose(e.target.closest('.choice-arrow').dataset.opt);
+});
+$('wpClose').onclick = () => $('wordPop').classList.add('hidden');
+$('replayBtn').onclick = () => loadScenario();
+$('quitBtn').onclick = goHome;
+$('openWords').onclick = openWordBook;
+$('debriefWrap').addEventListener('click', (e) => { if (e.target === $('debriefWrap').firstElementChild) closeDebrief(); });
+$('speedBtn').onclick = () => { speed = speed === 1 ? 0.5 : 1; $('speedBtn').textContent = `Speed ${speed === 1 ? '1x' : '0.5x'}`; };
+
+drawCourt();
+refreshHome();
+</script>
+</body>
+</html>
