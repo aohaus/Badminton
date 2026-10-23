@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tactics Lab (仮) | Badminton</title>
+<title>TacticsLab | Badminton</title>
 <meta name="description" content="ジュニア向けバドミントン戦術シミュレーション。ラリーを見て判断し、戦術の理由を英語と日本語で学ぶ。">
 <meta name="theme-color" content="#dcefe2">
-<link rel="icon" type="image/svg+xml" href="../icons/badminton-icon.svg">
+<link rel="icon" type="image/svg+xml" href="../icons/tacticslab-icon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/tacticslab-icon-180.png">
+<meta name="apple-mobile-web-app-title" content="TacticsLab">
 <!-- tailwind:start  Tailwind CSS v3.4.16, compiled from the classes in this file so it works offline.
      Rebuild after changing classes: npx tailwindcss@3.4.16 --content Tactics/index.html -i in.css -o out.css --minify
      (in.css = @tailwind base; @tailwind components; @tailwind utilities;) and paste out.css below. -->
@@ -49,7 +51,7 @@
   <!-- Home -->
   <section id="home" class="fade-in">
     <div class="mt-2">
-      <div class="text-xs font-bold tracking-widest text-emerald-700">TACTICS LAB <span class="font-semibold text-gray-500">（仮）</span></div>
+      <div class="text-xs font-bold tracking-widest text-emerald-700">TACTICSLAB <span class="font-semibold text-gray-500">v1.0.0</span></div>
       <h1 class="text-4xl font-extrabold tracking-tight leading-none mt-2">Watch. Think.<br>Win the space.</h1>
       <p class="mt-3 text-gray-700">Watch the rally, stop at the key moment, and choose the smart shot.</p>
       <p class="ja">ラリーを見て、大事な場面で「どこに打つ？」を選ぼう。なぜそれが良いのかも学べるよ。</p>
@@ -553,7 +555,7 @@ const SCENARIOS = [
 const GRADE = { best: { stars: 2, en: 'Best choice!', ja: 'ベスト！', cls: 'bg-emerald-600' },
                 ok: { stars: 1, en: 'Good — but there was a better one', ja: 'いいね。でももっと良い選択があったよ', cls: 'bg-amber-500' },
                 poor: { stars: 0, en: 'Not this time', ja: '今回はざんねん', cls: 'bg-rose-500' } };
-const STORE = 'tacticslab.progress.v1';
+const STORE = 'tacticslab.progress.v1';   // kept from the working title so saved stars carry over
 let progress = (() => { try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { return {}; } })();
 progress.best = progress.best || {}; progress.words = progress.words || [];
 const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch (e) {} };

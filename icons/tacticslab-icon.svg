@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <rect x="150" y="140" width="724" height="720" rx="170" fill="url(#bg)"/>
+  <!-- half court seen from above -->
+  <g fill="none" stroke="#ffffff" stroke-width="12" stroke-linejoin="round">
+    <rect x="300" y="240" width="424" height="330" rx="6"/>
+    <path d="M330 240 V570 M694 240 V570 M300 290 H724 M512 290 V470 M300 470 H724"/>
+  </g>
+  <line x1="270" y1="570" x2="754" y2="570" stroke="#7c2d12" stroke-width="16" stroke-linecap="round"/>
+  <!-- player and the open corner -->
+  <circle cx="380" cy="320" r="30" fill="#7c2d12"/>
+  <circle cx="650" cy="520" r="46" fill="none" stroke="#fef3c7" stroke-width="12" stroke-dasharray="14 12"/>
+  <circle cx="650" cy="520" r="16" fill="#fef3c7"/>
+  <!-- the shot: curved arrow into the far corner -->
+  <path d="M430 620 Q520 400 612 498" fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-dasharray="1 34"/>
+  <path d="M592 470 L640 512 L580 520 Z" fill="#ffffff"/>
+  <text x="512" y="770" text-anchor="middle" font-family="Inter" font-weight="900" font-size="132" letter-spacing="2" fill="#ffffff">TACTICS</text>
+</svg>

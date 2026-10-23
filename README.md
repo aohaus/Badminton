@@ -10,6 +10,7 @@ https://aohaus.github.io/Badminton/
 | RallyScore | [/Badminton/RallyScore/](https://aohaus.github.io/Badminton/RallyScore/) | aohaus/RallyScore | v2.1.3 |
 | ErrorZero | [/Badminton/ErrorZero/](https://aohaus.github.io/Badminton/ErrorZero/) | aohaus/ErrorZero | v1.2.1（前の安定版は `ErrorZero/v1.0.4.html`） |
 | Shatomin | [/Badminton/Shatomin/](https://aohaus.github.io/Badminton/Shatomin/) | aohaus/Shatomin | v1.0.5 |
+| TacticsLab | [/Badminton/TacticsLab/](https://aohaus.github.io/Badminton/TacticsLab/) | （新規） | v1.0.0 |
 
 ## 開発版
 
@@ -18,7 +19,6 @@ https://aohaus.github.io/Badminton/
 | PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | 次の開発用（現在は v1.5.0 と同じ内容） |
 | ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | 次の開発用（現在は v1.2.1 と同じ内容） |
 | ErrorZero | [/Badminton/ErrorZero/dev-v1.1.0.html](https://aohaus.github.io/Badminton/ErrorZero/dev-v1.1.0.html) | v1.1.0 の保存版（戻す場合はこれを dev.html にコピー。Git ではコミット `1264eef` の状態） |
-| Tactics Lab（仮） | [/Badminton/Tactics/](https://aohaus.github.io/Badminton/Tactics/) | 5つ目のアプリ（ジュニア向け戦術シミュレーション）。名称決定までポータル未掲載 |
 
 開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。
 
@@ -34,6 +34,7 @@ https://aohaus.github.io/Badminton/
 | RallyScore | 下中央の「⋯」→「⌂ Badminton Apps」 |
 | ErrorZero | タイトル左のアイコン、または「⋯」→「⌂ Badminton Apps」 |
 | Shatomin | 上部の「‹ Badminton Apps」 |
+| TacticsLab | 左上の「‹ Badminton Apps」 |
 
 ## 構成
 
@@ -44,6 +45,7 @@ ErrorZero/          ErrorZero
 RallyScore/         RallyScore
 PairPlay/           PairPlay（「Open in RallyScore」で ../RallyScore/ に対戦カードを渡す）
 Shatomin/           Shatomin（docs/ にルール・FAQ・免責のメモ）
+TacticsLab/         TacticsLab（単一HTML。Tailwind はファイル内にコンパイル済みで埋め込み）
 migration/          旧 URL に置く転送ページ（このサイト自体では使わない）
 ```
 
