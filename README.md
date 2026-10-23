@@ -10,7 +10,7 @@ https://aohaus.github.io/Badminton/
 | RallyScore | [/Badminton/RallyScore/](https://aohaus.github.io/Badminton/RallyScore/) | aohaus/RallyScore | v2.1.3 |
 | ErrorZero | [/Badminton/ErrorZero/](https://aohaus.github.io/Badminton/ErrorZero/) | aohaus/ErrorZero | v1.2.1（前の安定版は `ErrorZero/v1.0.4.html`） |
 | Shatomin | [/Badminton/Shatomin/](https://aohaus.github.io/Badminton/Shatomin/) | aohaus/Shatomin | v1.0.5 |
-| TacticsLab | [/Badminton/TacticsLab/](https://aohaus.github.io/Badminton/TacticsLab/) | （新規） | v1.0.0 |
+| TacticsLab | [/Badminton/TacticsLab/](https://aohaus.github.io/Badminton/TacticsLab/) | （新規） | v1.0.1 |
 
 ## 開発版
 
