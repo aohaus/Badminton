@@ -17,7 +17,7 @@ https://aohaus.github.io/Badminton/
 | アプリ | URL | 内容 |
 |---|---|---|
 | PairPlay | [/Badminton/PairPlay/dev.html](https://aohaus.github.io/Badminton/PairPlay/dev.html) | 次の開発用（現在は v1.5.0 と同じ内容） |
-| ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | 次の開発用（現在は v1.2.1 と同じ内容） |
+| ErrorZero | [/Badminton/ErrorZero/dev.html](https://aohaus.github.io/Badminton/ErrorZero/dev.html) | v1.3.0（試合中の選手変更・コーチフィードバック英日併記・書き出し／読み込み） |
 | ErrorZero | [/Badminton/ErrorZero/dev-v1.1.0.html](https://aohaus.github.io/Badminton/ErrorZero/dev-v1.1.0.html) | v1.1.0 の保存版（戻す場合はこれを dev.html にコピー。Git ではコミット `1264eef` の状態） |
 
 開発版で確認できたら `dev.html` の内容を `index.html` に反映して安定版にします。
