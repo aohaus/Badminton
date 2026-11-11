@@ -1133,7 +1133,7 @@
       body.print-report #reportModal.modal-backdrop { display: block !important; position: static; background: none; padding: 0; }
       body.print-report .report-modal { width: auto; max-height: none; overflow: visible; box-shadow: none; padding: 0; border-radius: 0; }
       body.print-report .no-print { display: none !important; }
-      body.print-report .report { padding: 0; font-size: 11px; }
+      body.print-report .report { padding: 0; }
       body.print-report { background: #fff !important; }
       .gameover, .next-btn, .match-bar { display: none !important; }
     }
@@ -1141,10 +1141,10 @@
 
     /* --- Coder layout: names come from the Players sheet, every control fits the first phone screen --- */
     .setup[hidden] { display: none !important; }
+    .ver-badge { font-size: 11px; font-weight: 850; color: #1e40af; background: #dbeafe; border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
     .hub-link { display: inline-flex; vertical-align: -0.08em; margin-right: .3em; }
     .hub-link img { width: .82em; height: .82em; border-radius: .2em; display: block; }
     .menu-hub { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: var(--ink); border-radius: 16px; padding: 13px 15px; font-weight: 800; font-size: 15px; }
-    .ver-badge { font-size: 11px; font-weight: 850; color: #1e40af; background: #dbeafe; border-radius: 999px; padding: 2px 8px; margin-left: 4px; }
     .wf { margin: 2px 0 12px; }
     .wf-title { font-size: 11px; font-weight: 850; color: var(--muted); margin-bottom: 5px; }
     .wf-title small, .wf-legend small { font-weight: 700; opacity: .85; }
@@ -1259,7 +1259,17 @@
     .code-btn.unk b { font-size: 12px; color: var(--muted); }
     .code-btn:active { transform: scale(.96); }
     body.game-over .code-col { opacity: .38; }
-    .code-foot { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; margin-top: 10px; }
+    .code-foot { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; margin-top: 10px; }
+    .foot-players { padding: 6px 12px; font-size: 18px; display: flex; flex-direction: column; align-items: center; line-height: 1.05; }
+    .foot-players small { font-size: 10px; margin: 2px 0 0; }
+    .target-seg[hidden] { display: none; }
+    @media (max-width: 400px) {
+      .code-foot { gap: 6px; }
+      .foot-next small, .foot-reset small { display: none; }
+      .foot-players { padding: 6px 10px; }
+      .foot-players small { display: none; }
+    }
+    .next-note { margin-top: 10px; padding: 9px 12px; border-radius: 12px; background: rgba(50,103,255,.08); color: var(--ink); font-size: 13px; font-weight: 700; }
     .foot-next { padding: 12px; font-size: 14px; }
     body.game-over .foot-next { grid-column: 1 / -1; order: -1; padding: 18px; font-size: 18px; animation: ezPulse 1.4s ease-in-out infinite; }
     .foot-swap { padding: 10px 16px; font-size: 18px; }
@@ -1314,12 +1324,18 @@
     .adv-player { break-inside: avoid; border: 1px solid #e5e9f0; border-radius: 10px; padding: 7px 9px; }
     .adv-name { font-weight: 900; font-size: 12.5px; margin-bottom: 3px; }
     .adv-list { margin: 0; padding-left: 16px; display: grid; gap: 3px; }
-    .adv-list li { font-size: 11px; line-height: 1.5; color: #1f2937; }
+    .adv-list li { font-size: 11px; line-height: 1.45; color: #1f2937; }
+    .adv-ja { display: block; color: #4b5563; font-size: 10.5px; margin-top: 1px; }
     .adv-mark { display: inline-block; font-size: 9.5px; font-weight: 900; border-radius: 5px; padding: 0 5px; margin-right: 5px; }
     .adv-good .adv-mark { background: #dcfce7; color: #166534; }
     .adv-fix .adv-mark { background: #fee2e2; color: #991b1b; }
     .adv-note { font-size: 10px; margin-top: 4px; }
-    @media print { body.print-report .adv-list li { font-size: 10px; } }
+    /* Print sizes live on .as-print so the page can be measured with them before printing */
+    .report.as-print { font-size: 11px; }
+    .report.as-print .adv-list li { font-size: 9.5px; line-height: 1.35; }
+    .report.as-print .adv-ja { font-size: 9px; }
+    .report.as-print td.time br { display: none; }
+    .report.as-print td.time small { margin-left: 4px; }
   </style>
 </head>
 <body>
@@ -1327,7 +1343,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.2.1</span></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.3.1</span></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1410,6 +1426,7 @@
         </div>
         <div class="code-foot">
           <button type="button" class="btn-blue foot-next" id="footNext"><span id="footNextText">Save &amp; next <small>保存して次へ</small></span></button>
+          <button type="button" class="btn-ghost foot-players" id="footPlayers" title="Change players / 選手を変更">👥<small>選手</small></button>
           <button type="button" class="btn-ghost foot-swap" id="swapSides" title="Swap sides / 左右入れ替え">⇄</button>
           <button type="button" class="btn-red foot-reset" id="holdReset" title="Hold to reset / 長押しでリセット"><span class="hold-fill"></span><span class="hold-text">Reset <small>長押し</small></span></button>
         </div>
@@ -1580,6 +1597,14 @@
         <a class="btn-ghost menu-hub" href="../">⌂ Badminton Apps <small>アプリ一覧</small></a>
         <button class="btn-ghost" data-menu="theme" id="menuTheme">Night <small>夜間</small></button>
       </div>
+      <div class="menu-row"><span class="seg-label">Data <small>データ</small></span></div>
+      <div class="menu-grid">
+        <button class="btn-ghost" data-menu="export">⬇ Export backup <small>書き出し（JSON）</small></button>
+        <button class="btn-ghost" data-menu="import">⬆ Import <small>読み込み</small></button>
+        <button class="btn-ghost" data-menu="csv" style="grid-column:1 / -1">⬇ Export for Excel <small>表計算用（CSV）</small></button>
+        <button class="btn-ghost" data-menu="restore" style="grid-column:1 / -1">↺ Restore auto-backup <small>更新前の自動バックアップから戻す</small></button>
+      </div>
+      <input type="file" id="importFile" accept=".json,application/json" hidden />
       <div class="menu-row">
         <span class="seg-label">Input <small>入力方式</small></span>
         <div class="target-seg" id="modeSeg">
@@ -1613,9 +1638,10 @@
         <button type="button" class="seg" data-target="21">21</button>
       </div>
       <div class="next-preview" id="nextPreview"></div>
+      <div class="next-note" id="nextNote" hidden>The score and rallies stay. Names and game length change for the whole match.<br><span class="muted">スコアと記録はそのまま。名前と点数（11/15/21）だけが変わります（この試合全体）。</span></div>
       <div class="next-actions">
-        <button type="button" class="btn-ghost" id="renameOnly">Rename only <small>名前だけ変更</small></button>
-        <button type="button" class="btn-blue" id="startNext">Start <small>開始</small></button>
+        <button type="button" class="btn-ghost" id="startNext">Start <small>開始</small></button>
+        <button type="button" class="btn-blue" id="renameOnly">Apply <small>変更する</small></button>
       </div>
     </div>
   </div>
@@ -1626,6 +1652,7 @@
         <h2>Today <small>今日の記録</small></h2>
         <div class="report-actions">
           <select id="reportDate" aria-label="Date"></select>
+          <button class="btn-ghost" id="csvReport">CSV <small>表計算用</small></button>
           <button class="btn-dark" id="printReport">Print A4 <small>印刷</small></button>
           <button class="btn-ghost" id="closeReport">Close</button>
         </div>
@@ -1717,7 +1744,7 @@
           $('teamAName').value = state.names.A || 'Team A';
           $('teamBName').value = state.names.B || 'Team B';
         }
-      } catch (e) {}
+      } catch (e) { keepUnreadable(STORAGE_KEY); }
     }
 
     function setPending(team) {
@@ -2084,8 +2111,51 @@
       return matchLog.filter(x => matchDate(x) === matchDate(m)).indexOf(m) + 1;
     }
 
+    /*
+     * Data safety across updates. Storage keys and record fields never change meaning between
+     * versions (new fields are only added), and before a new version first runs, the saved data is
+     * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
+     */
+    const APP_VERSION = '1.3.1';
+    const VERSION_KEY = 'errorzero_appver';
+    const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
+    function protectDataOnUpdate() {
+      try {
+        const prev = localStorage.getItem(VERSION_KEY);
+        if (prev === APP_VERSION) return;
+        const log = localStorage.getItem(LOG_KEY), cur = localStorage.getItem(STORAGE_KEY);
+        if (log || cur) {
+          localStorage.setItem(AUTO_BACKUP_KEY, JSON.stringify({
+            from: prev || 'up to 1.3.0', to: APP_VERSION, at: new Date().toISOString(),
+            matchlog: log, state: cur, roster: localStorage.getItem(ROSTER_KEY)
+          }));
+        }
+        localStorage.setItem(VERSION_KEY, APP_VERSION);
+      } catch (e) {}
+    }
+    /** Keep a copy of anything we cannot read instead of letting the next save overwrite it. */
+    function keepUnreadable(key) {
+      try { const raw = localStorage.getItem(key); if (raw) localStorage.setItem(`${key}__unreadable_${Date.now()}`, raw); } catch (e) {}
+    }
+    /** Merge the automatic pre-update copy back in: matches already here are left as they are. */
+    function restoreAutoBackup() {
+      let snap = null;
+      try { snap = JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY) || 'null'); } catch (e) {}
+      if (!snap || !snap.matchlog) { alert('No automatic backup found.\n自動バックアップはありません。'); return; }
+      let saved = [];
+      try { saved = JSON.parse(snap.matchlog) || []; } catch (e) {}
+      const have = new Set(matchLog.map(m => m.id));
+      const added = saved.filter(m => m && m.id && !have.has(m.id));
+      if (!confirm(`Restore ${added.length} match(es) from the backup taken on ${String(snap.at).slice(0, 10)}?\n${String(snap.at).slice(0, 10)} の自動バックアップから ${added.length} 試合を戻しますか？（今の記録は消えません）`)) return;
+      matchLog = matchLog.concat(added).sort((a, b) => Date.parse(a.endedAt || a.savedAt) - Date.parse(b.endedAt || b.savedAt));
+      saveLog();
+      render();
+      showToast(`Restored ${added.length} / ${added.length}試合を戻しました`);
+    }
+
     function loadExtras() {
-      try { matchLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]') || []; } catch (e) { matchLog = []; }
+      try { matchLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]') || []; } catch (e) { keepUnreadable(LOG_KEY); matchLog = []; }
+      if (!Array.isArray(matchLog)) { keepUnreadable(LOG_KEY); matchLog = []; }
       try { roster = JSON.parse(localStorage.getItem(ROSTER_KEY) || '[]') || []; } catch (e) { roster = []; }
       try {
         const st = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') || {};
@@ -2094,7 +2164,10 @@
         ui.flipped = !!st.flipped;
       } catch (e) {}
     }
-    function saveLog() { try { localStorage.setItem(LOG_KEY, JSON.stringify(matchLog)); } catch (e) {} }
+    function saveLog() {
+      try { localStorage.setItem(LOG_KEY, JSON.stringify(matchLog)); }
+      catch (e) { alert('Storage is full — please export a backup (⋯ menu).\n保存領域がいっぱいです。⋯ メニューからバックアップを書き出してください。'); }
+    }
     function saveRoster() { try { localStorage.setItem(ROSTER_KEY, JSON.stringify(roster)); } catch (e) {} }
     function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ target: state.target, mode: ui.mode, flipped: ui.flipped })); } catch (e) {} }
 
@@ -2132,7 +2205,6 @@
         location: ($('matchLocation').value || '').trim()
       };
       matchLog.push(m);
-      if (matchLog.length > 300) matchLog = matchLog.slice(-300);
       saveLog();
       rememberNames(m.names.A, m.names.B);
       return m;
@@ -2224,7 +2296,10 @@
       }
       const editing = !savedMatch && state.rallies.length > 0;
       $('nextTitle').innerHTML = editing ? 'Players <small>選手</small>' : 'Next match <small>次の試合</small>';
+      // During a match the main action keeps the score and only changes names; starting over is secondary.
       $('renameOnly').hidden = !editing;
+      $('nextNote').hidden = !editing;
+      $('startNext').className = editing ? 'btn-ghost' : 'btn-blue';
       $('startNext').innerHTML = editing ? 'Save &amp; start new <small>保存して新しい試合</small>' : 'Start <small>開始</small>';
       renderPicker();
       $('nextModal').classList.add('show');
@@ -2264,9 +2339,13 @@
     }
 
     function renameOnly() {
+      const before = `${teamName('A')} vs ${teamName('B')} /${state.target}`;
+      // Lessons often change the game length mid-game: apply it to the match in progress as well.
+      state.target = nextTarget;
+      saveSettings();
       setNames(pick.A || 'Team A', pick.B || 'Team B');
+      if (state.rallies.length) showToast(`${before} → ${teamName('A')} vs ${teamName('B')} /${state.target}`);
       rememberNames(pick.A, pick.B);
-      if (!state.rallies.length) { state.target = nextTarget; saveSettings(); save(); render(); }
       closeModal('nextModal');
     }
 
@@ -2391,6 +2470,77 @@
       closeModal('menuModal');
     }
 
+
+    /* ===== Export / import ===== */
+    const EXPORT_FORMAT = 'errorzero-backup';
+
+    function download(filename, text, type) {
+      const blob = new Blob([text], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    /** Everything needed to move to another device: saved matches, the match in progress, names and settings. */
+    function exportBackup() {
+      const data = {
+        format: EXPORT_FORMAT, version: 1, exportedAt: new Date().toISOString(),
+        matches: matchLog,
+        current: state.rallies.length ? { names: { ...state.names }, score: { ...state.score }, rallies: state.rallies, target: state.target, startedAt: state.startedAt } : null,
+        roster, settings: { target: state.target, mode: ui.mode, flipped: ui.flipped },
+        location: ($('matchLocation').value || '').trim()
+      };
+      download(`errorzero-${dateKey()}.json`, JSON.stringify(data, null, 1), 'application/json');
+      showToast(`Exported ${matchLog.length} matches / ${matchLog.length}試合を書き出しました`);
+    }
+
+    /** Merge a backup: matches already here (same id) are skipped, names are added; the match in progress is kept. */
+    function importBackup(text) {
+      let data;
+      try { data = JSON.parse(text); } catch (e) { alert('This file is not an ErrorZero backup.\nErrorZero のバックアップファイルではありません。'); return; }
+      if (!data || data.format !== EXPORT_FORMAT || !Array.isArray(data.matches)) { alert('This file is not an ErrorZero backup.\nErrorZero のバックアップファイルではありません。'); return; }
+      const have = new Set(matchLog.map(m => m.id));
+      const valid = (m) => m && m.id && m.names && m.score && Array.isArray(m.rallies) && m.rallies.length && GAME_CAPS[m.target];
+      const incoming = data.matches.filter(valid);
+      const added = incoming.filter(m => !have.has(m.id));
+      matchLog = matchLog.concat(added).sort((a, b) => Date.parse(a.endedAt || a.savedAt) - Date.parse(b.endedAt || b.savedAt));
+      saveLog();
+      if (Array.isArray(data.roster)) rememberNames(...data.roster.slice().reverse());
+      let restored = false;
+      if (data.current && !state.rallies.length && Array.isArray(data.current.rallies) && data.current.rallies.length) {
+        state.score = { ...data.current.score }; state.rallies = data.current.rallies.slice();
+        state.target = GAME_CAPS[data.current.target] ? data.current.target : state.target; state.startedAt = data.current.startedAt || null;
+        setNames(data.current.names.A, data.current.names.B);
+        restored = true;
+      }
+      render();
+      const skipped = incoming.length - added.length;
+      showToast(`Imported ${added.length}${skipped ? `, skipped ${skipped}` : ''}${restored ? ' + match in progress' : ''} / 読み込み ${added.length}試合${skipped ? `（重複${skipped}はスキップ）` : ''}`);
+    }
+
+    function csvCell(v) {
+      const t = String(v == null ? '' : v);
+      return /[",\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
+    }
+    /** One row per match for spreadsheets (UTF-8 with BOM so Excel shows Japanese names). */
+    function exportCsv(day) {
+      const list = day ? reportMatches(day).filter(m => !m.inProgress) : matchLog;
+      const head = ['date', 'start', 'end', 'minutes', 'player_A', 'player_B', 'score_A', 'score_B', 'game_to', 'winner', 'ended_by']
+        .concat(...['A', 'B'].map(t => [`${t}_errors`, ...ERROR_CODES.map(c => `${t}_${c}`), `${t}_winners`, `${t}_late_errors`]));
+      const rows = list.map(m => {
+        const st = computeStats(m.rallies, m.target);
+        const w = gameWinner(m.score, m.target);
+        const tm = matchTiming(m);
+        return [matchDate(m), timeLabel(m.startedAt), timeLabel(tm.end), Math.round(tm.sec / 60), m.names.A, m.names.B, m.score.A, m.score.B, m.target, w ? m.names[w] : '', m.endedBy || '']
+          .concat(...['A', 'B'].map(t => [st[t].totalErrors, ...ERROR_CODES.map(c => st[t][c]), st[t].W, st[t].after15Errors]));
+      });
+      const text = '﻿' + [head, ...rows].map(r => r.map(csvCell).join(',')).join('\r\n');
+      download(`errorzero-${day || 'all'}.csv`, text, 'text/csv');
+      showToast(`CSV: ${rows.length} matches / ${rows.length}試合`);
+    }
+
     let actionToastTimer = null;
     function showActionToast(text, onUndo) {
       const t = $('actionToast');
@@ -2433,16 +2583,28 @@
 
     /* ===== Coach feedback: up to 3 points per player, chosen by rules from the day's numbers ===== */
     const ERROR_ADVICE = {
-      N: 'ネットミスが最多（{n}本）。打点が落ちてから手先で打つとネットにかかります。前に一歩踏み込んで高い打点で触り、ドライブ・プッシュは白帯の上30〜50cmを通す意識で。',
-      O: 'アウトが最多（{n}本）。特にクリアとスマッシュの飛ばし過ぎに注意。狙いをサイドライン・バックラインの30cm内側に置き、終盤ほど安全な余白を取ること。',
-      S: 'サーブミスが最多（{n}本）。ラリーなしで相手に渡す最も惜しい失点です。構え→ひと呼吸→打つのルーティンを固定し、ショートサーブは白帯すれすれより確実に入れることを優先。',
-      R: 'レシーブミスが最多（{n}本）。構えが遅いと押し込まれます。相手が打つ瞬間に軽くスプリットステップ、ラケットは体の前に。まずは相手のいない所へ確実に返すことから。',
-      F: 'フォルト（反則）が最多（{n}本）。サーブの打点の高さ（床から115cm以下）、両足が床に着いているか、ネットタッチを練習で確認しておきましょう。',
-      U: '原因不明のミスが{n}本。記録者は「ネット・アウト・サーブ・レシーブ・反則」のどれかを選べるよう、見るポイントを事前に決めておくと分析の精度が上がります。'
+      N: { en: 'Net errors ({n}) — {rank}. Hitting late with just the hand puts it into the net. Step in, take it higher, and play drives and pushes 30–50 cm above the tape.',
+           ja: 'ネットミスが{rankJa}（{n}本）。打点が落ちてから手先で打つとネットにかかります。前に一歩踏み込んで高い打点で触り、ドライブ・プッシュは白帯の上30〜50cmを通す意識で。' },
+      O: { en: 'Outs ({n}) — {rank}. Watch over-hit clears and smashes. Aim 30 cm inside the side and back lines, and leave more margin late in the game.',
+           ja: 'アウトが{rankJa}（{n}本）。特にクリアとスマッシュの飛ばし過ぎに注意。狙いをサイドライン・バックラインの30cm内側に置き、終盤ほど安全な余白を取ること。' },
+      S: { en: 'Serve errors ({n}) — {rank}. These give points away without a rally. Fix a routine (set → breathe → serve) and put a short serve in safely rather than skimming the tape.',
+           ja: 'サーブミスが{rankJa}（{n}本）。ラリーなしで相手に渡す最も惜しい失点です。構え→ひと呼吸→打つのルーティンを固定し、ショートサーブは白帯すれすれより確実に入れることを優先。' },
+      R: { en: 'Return errors ({n}) — {rank}. A late ready position gets pushed back. Split step as the opponent hits, racket in front, and first just return it safely away from them.',
+           ja: 'レシーブミスが{rankJa}（{n}本）。構えが遅いと押し込まれます。相手が打つ瞬間に軽くスプリットステップ、ラケットは体の前に。まずは相手のいない所へ確実に返すことから。' },
+      F: { en: 'Faults ({n}) — {rank}. Check in practice: serve contact height (below 1.15 m from the floor), both feet on the floor, and no touching the net.',
+           ja: 'フォルト（反則）が{rankJa}（{n}本）。サーブの打点の高さ（床から115cm以下）、両足が床に着いているか、ネットタッチを練習で確認しておきましょう。' },
+      U: { en: '{n} errors had no reason recorded. If the scorer decides beforehand what to watch for (net, out, serve, return, fault), the analysis gets sharper.',
+           ja: '原因不明のミスが{n}本。記録者は「ネット・アウト・サーブ・レシーブ・反則」のどれかを選べるよう、見るポイントを事前に決めておくと分析の精度が上がります。' }
     };
+    function errorAdvice(code, n, rank) {
+      const t = ERROR_ADVICE[code];
+      const fill = (str) => str.replace('{n}', n).replace('{rank}', rank === 1 ? 'the most common' : 'the next most common').replace('{rankJa}', rank === 1 ? '最多' : '次に多い');
+      return { en: fill(t.en), ja: fill(t.ja) };
+    }
 
     function coachAdvice(p) {
-      const items = [];   // { kind: 'good' | 'fix', score, text }
+      const items = [];   // { kind: 'good' | 'fix', score, en, ja }
+      const add = (kind, score, text) => items.push({ kind, score, en: text.en, ja: text.ja });
       const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
       const ownShare = pct(p.W, p.pf);                 // points won by own shots
       const errShare = pct(p.err, p.pa);               // points lost by own mistakes
@@ -2450,47 +2612,47 @@
       // Most frequent error type, with a concrete fix
       let top = null;
       ERROR_CODES.forEach(c => { if (p.codes[c] && (!top || p.codes[c] > p.codes[top])) top = c; });
-      if (top && p.codes[top] >= 2) {
-        items.push({ kind: 'fix', score: 50 + p.codes[top] * 4 + (top === 'S' ? 10 : 0), text: ERROR_ADVICE[top].replace('{n}', p.codes[top]) });
-      }
+      if (top && p.codes[top] >= 2) add('fix', 50 + p.codes[top] * 4 + (top === 'S' ? 10 : 0), errorAdvice(top, p.codes[top], 1));
       // Second most frequent error type
       let second = null;
       ERROR_CODES.forEach(c => { if (c !== top && p.codes[c] && (!second || p.codes[c] > p.codes[second])) second = c; });
-      if (second && second !== 'S' && p.codes[second] >= 2) {
-        items.push({ kind: 'fix', score: 36 + p.codes[second] * 3, text: ERROR_ADVICE[second].replace('{n}', p.codes[second]).replace('が最多', 'が次に多い') });
-      }
+      if (second && second !== 'S' && p.codes[second] >= 2) add('fix', 36 + p.codes[second] * 3, errorAdvice(second, p.codes[second], 2));
       // Serve errors are free points even when they are not the most frequent
-      if (top !== 'S' && p.codes.S >= 2) {
-        items.push({ kind: 'fix', score: 45 + p.codes.S * 5, text: `サーブミスが${p.codes.S}本。ラリーをせずに渡す失点なので、まずここをゼロに。構え→ひと呼吸→打つのルーティンを固定しましょう。` });
-      }
+      if (top !== 'S' && p.codes.S >= 2) add('fix', 45 + p.codes.S * 5, {
+        en: `${p.codes.S} serve errors. These are points given away without a rally, so get them to zero first. Keep a fixed routine: set → breathe → serve.`,
+        ja: `サーブミスが${p.codes.S}本。ラリーをせずに渡す失点なので、まずここをゼロに。構え→ひと呼吸→打つのルーティンを固定しましょう。` });
       // Too many self-inflicted points
-      if (p.pa >= 6 && errShare >= 60) {
-        items.push({ kind: 'fix', score: 40 + errShare / 2, text: `失点の${errShare}%が自分のミス。相手に決められる前に自分で崩れています。無理な決め球を減らし、高く深いクリアで時間を作ってラリーを続けることを優先。` });
-      }
+      if (p.pa >= 6 && errShare >= 60) add('fix', 40 + errShare / 2, {
+        en: `${errShare}% of points lost were own errors — breaking down before the opponent wins it. Fewer forced winners; use high, deep clears to buy time and keep the rally going.`,
+        ja: `失点の${errShare}%が自分のミス。相手に決められる前に自分で崩れています。無理な決め球を減らし、高く深いクリアで時間を作ってラリーを続けることを優先。` });
       // Errors pile up late in the game
-      if (p.err >= 4 && p.late >= 3 && pct(p.late, p.err) >= 40) {
-        items.push({ kind: 'fix', score: 45 + pct(p.late, p.err) / 3, text: `ミスの${pct(p.late, p.err)}%（${p.late}/${p.err}本）が終盤に集中。点差を意識すると打ち急ぎます。終盤こそ同じリズムで、高く深い球から組み立て直しを。体力面ならフットワークの持久練習も。` });
-      }
+      if (p.err >= 4 && p.late >= 3 && pct(p.late, p.err) >= 40) add('fix', 45 + pct(p.late, p.err) / 3, {
+        en: `${pct(p.late, p.err)}% of errors (${p.late}/${p.err}) came late in the game. Thinking about the score makes you rush. Keep the same rhythm late on and rebuild with high, deep shots; for fitness, add footwork endurance work.`,
+        ja: `ミスの${pct(p.late, p.err)}%（${p.late}/${p.err}本）が終盤に集中。点差を意識すると打ち急ぎます。終盤こそ同じリズムで、高く深い球から組み立て直しを。体力面ならフットワークの持久練習も。` });
       // Close games
-      if (p.closeLost >= 1 && p.closeLost > p.closeWon) {
-        items.push({ kind: 'fix', score: 38 + p.closeLost * 6, text: `2点差以内の接戦を${p.closeLost}試合落としています。デュースや終盤の1点で使う「自分の勝負球」（例：ロングサーブ→攻撃、ネット前で待つ）を1つ決めておきましょう。` });
-      }
+      if (p.closeLost >= 1 && p.closeLost > p.closeWon) add('fix', 38 + p.closeLost * 6, {
+        en: `Lost ${p.closeLost} close game${p.closeLost > 1 ? 's' : ''} (by 2 points or fewer). Decide on one “go-to” play for deuce and the last points (e.g. long serve then attack, or waiting at the net).`,
+        ja: `2点差以内の接戦を${p.closeLost}試合落としています。デュースや終盤の1点で使う「自分の勝負球」（例：ロングサーブ→攻撃、ネット前で待つ）を1つ決めておきましょう。` });
       // Scoring depends on the opponent's mistakes
-      if (p.pf >= 6 && ownShare <= 30) {
-        items.push({ kind: 'fix', score: 35 + (30 - ownShare), text: `得点の${100 - ownShare}%が相手のミスによるもの。自分から決める形が少ないので、甘い球をスマッシュやプッシュで沈める「決めの1本」を練習で増やしましょう。` });
-      }
+      if (p.pf >= 6 && ownShare <= 30) add('fix', 35 + (30 - ownShare), {
+        en: `${100 - ownShare}% of points won came from the opponent’s errors. Few self-made winners — practise a “finishing shot”: put loose shuttles away with a smash or push.`,
+        ja: `得点の${100 - ownShare}%が相手のミスによるもの。自分から決める形が少ないので、甘い球をスマッシュやプッシュで沈める「決めの1本」を練習で増やしましょう。` });
       // Strengths
-      if (p.pf >= 6 && ownShare >= 50) {
-        items.push({ kind: 'good', score: 30 + ownShare / 4, text: `得点の${ownShare}%が自分のショット（決定打${p.W}本）。攻撃力は武器です。決めた形を練習で再現し、試合でも迷わず打ち切りましょう。` });
-      }
-      if (p.games >= 2 && p.err <= p.games * 3) {
-        items.push({ kind: 'good', score: 32, text: `1試合あたりのミスが${(p.err / p.games).toFixed(1)}本と少なく安定しています。この安定感を土台に、攻撃の割合を少しずつ増やしていきましょう。` });
-      }
+      if (p.pf >= 6 && ownShare >= 50) add('good', 30 + ownShare / 4, {
+        en: `${ownShare}% of points won were own shots (${p.W} winners). Attack is a strength — repeat those patterns in practice and commit to them in matches.`,
+        ja: `得点の${ownShare}%が自分のショット（決定打${p.W}本）。攻撃力は武器です。決めた形を練習で再現し、試合でも迷わず打ち切りましょう。` });
+      if (p.games >= 2 && p.err <= p.games * 3) add('good', 32, {
+        en: `Only ${(p.err / p.games).toFixed(1)} errors per game — steady. Build on that and slowly raise the share of attacking shots.`,
+        ja: `1試合あたりのミスが${(p.err / p.games).toFixed(1)}本と少なく安定しています。この安定感を土台に、攻撃の割合を少しずつ増やしていきましょう。` });
       const pm = p.perMatch;
       if (pm.length >= 2) {
         const first = pm[0].err, last = pm[pm.length - 1].err;
-        if (last <= first - 2) items.push({ kind: 'good', score: 34, text: `ミスが1試合目${first}本→最後${last}本と減っています。試合中に修正できている証拠。何を変えたかを言葉にして次回の最初から使いましょう。` });
-        else if (last >= first + 3) items.push({ kind: 'fix', score: 42, text: `ミスが1試合目${first}本→最後${last}本と増えています。集中か体力が落ちている可能性。試合間に水分補給と、次の試合の目標を1つだけ決めてから入りましょう。` });
+        if (last <= first - 2) add('good', 34, {
+          en: `Errors went from ${first} in the first game to ${last} in the last — adjusting during play. Put into words what you changed and use it from the start next time.`,
+          ja: `ミスが1試合目${first}本→最後${last}本と減っています。試合中に修正できている証拠。何を変えたかを言葉にして次回の最初から使いましょう。` });
+        else if (last >= first + 3) add('fix', 42, {
+          en: `Errors went up from ${first} in the first game to ${last} in the last — focus or energy may be dropping. Drink between games and go in with just one goal for the next game.`,
+          ja: `ミスが1試合目${first}本→最後${last}本と増えています。集中か体力が落ちている可能性。試合間に水分補給と、次の試合の目標を1つだけ決めてから入りましょう。` });
       }
 
       // Coach style: lead with one strength if there is one, then the most important fixes; max 3.
@@ -2500,19 +2662,19 @@
       if (good.length) picked.push(good[0]);
       for (const f of fix) { if (picked.length < 3) picked.push(f); }
       for (const g of good.slice(1)) { if (picked.length < 3) picked.push(g); }
-      if (!picked.length) picked.push({ kind: 'good', text: 'データがまだ少ないため、大きな傾向は見られません。次回も記録を続けましょう。' });
+      if (!picked.length) picked.push({ kind: 'good', en: 'Not enough data yet to see a clear pattern. Keep recording next time.', ja: 'データがまだ少ないため、大きな傾向は見られません。次回も記録を続けましょう。' });
       return picked;
     }
 
     function buildAdviceSection(players) {
       const blocks = [...players.entries()].map(([name, p]) => {
         const items = coachAdvice(p).map(x =>
-          `<li class="adv-${x.kind}"><span class="adv-mark">${x.kind === 'good' ? '✓ 強み' : '▲ 課題'}</span>${escapeHtml(x.text)}</li>`).join('');
+          `<li class="adv-${x.kind}"><span class="adv-mark">${x.kind === 'good' ? '✓ Strength 強み' : '▲ Work on 課題'}</span>${escapeHtml(x.en)}<span class="adv-ja">${escapeHtml(x.ja)}</span></li>`).join('');
         return `<div class="adv-player"><div class="adv-name">${escapeHtml(name)}</div><ol class="adv-list">${items}</ol></div>`;
       }).join('');
       return `<h3>Coach feedback <span class="muted">コーチからのフィードバック（各選手 最大3点）</span></h3>
         <div class="adv-grid">${blocks}</div>
-        <div class="adv-note muted">記録データから自動で選んだコメントです（ミスの種類・終盤のミス・決定打の割合・接戦・試合ごとの推移）。</div>`;
+        <div class="adv-note muted">Chosen automatically from the recorded data (error types, late errors, share of winners, close games, trend across games). 記録データから自動で選んだコメントです（ミスの種類・終盤のミス・決定打の割合・接戦・試合ごとの推移）。</div>`;
     }
 
     /** Start, end and length of a match. Older saves have no durationSec: they ended at their last point. */
@@ -2629,9 +2791,23 @@
       render();
     }
 
+    /** Shrink the report a little (down to 70 %) when it would run onto a second A4 page. */
+    function fitReportForPrint() {
+      const r = $('reportBody');
+      r.classList.add('as-print');
+      r.style.zoom = '';
+      const width = r.style.width;
+      r.style.width = '718px';                         // A4 portrait at 10 mm margins, in CSS px
+      const h = r.scrollHeight;
+      r.style.width = width;
+      const z = Math.max(0.7, Math.min(1, 950 / h));   // 950 of ~1047 px leaves room for page-break rounding
+      r.style.zoom = z < 1 ? z.toFixed(3) : '';
+    }
+
     function printReport() {
       document.body.classList.add('print-report');
-      const done = () => document.body.classList.remove('print-report');
+      fitReportForPrint();
+      const done = () => { document.body.classList.remove('print-report'); $('reportBody').classList.remove('as-print'); $('reportBody').style.zoom = ''; };
       window.addEventListener('afterprint', done, { once: true });
       window.print();
       window.setTimeout(done, 1500);
@@ -2729,6 +2905,13 @@
     });
     $('undoMini').addEventListener('click', undo);
     $('footNext').addEventListener('click', saveAndNext);
+    $('footPlayers').addEventListener('click', () => openNext(null));
+    $('importFile').addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) importBackup(await f.text());
+      e.target.value = '';
+    });
+    $('csvReport').addEventListener('click', () => exportCsv($('reportDate').value));
     $('swapSides').addEventListener('click', () => { ui.flipped = !ui.flipped; saveSettings(); render(); showToast('Sides swapped / 左右を入れ替えました'); });
     $('scoreStrip').addEventListener('click', (e) => {
       if (e.target.closest('.strip-target')) { openNext(null); return; }
@@ -2752,6 +2935,10 @@
         if (act === 'stats') $('statsModal').classList.add('show');
         if (act === 'print') window.print();
         if (act === 'help') $('helpModal').classList.add('show');
+        if (act === 'export') exportBackup();
+        if (act === 'csv') exportCsv(null);
+        if (act === 'import') $('importFile').click();
+        if (act === 'restore') restoreAutoBackup();
       }
       const seg = e.target.closest('#modeSeg .seg');
       if (seg) setMode(seg.dataset.mode);
@@ -2773,6 +2960,7 @@
     updateLocalDateTime();
     window.setInterval(updateLocalDateTime, 30000);
     loadMatchLocation();
+    protectDataOnUpdate();
     load();
     loadExtras();
     render();

@@ -1342,7 +1342,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.3.0</a></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.3.1</a></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1601,6 +1601,7 @@
         <button class="btn-ghost" data-menu="export">⬇ Export backup <small>書き出し（JSON）</small></button>
         <button class="btn-ghost" data-menu="import">⬆ Import <small>読み込み</small></button>
         <button class="btn-ghost" data-menu="csv" style="grid-column:1 / -1">⬇ Export for Excel <small>表計算用（CSV）</small></button>
+        <button class="btn-ghost" data-menu="restore" style="grid-column:1 / -1">↺ Restore auto-backup <small>更新前の自動バックアップから戻す</small></button>
       </div>
       <input type="file" id="importFile" accept=".json,application/json" hidden />
       <div class="menu-row">
@@ -1636,10 +1637,10 @@
         <button type="button" class="seg" data-target="21">21</button>
       </div>
       <div class="next-preview" id="nextPreview"></div>
-      <div class="next-note" id="nextNote" hidden>The score and rallies stay. Only the names change (for the whole match).<br><span class="muted">スコアと記録はそのまま。名前だけが変わります（この試合全体）。</span></div>
+      <div class="next-note" id="nextNote" hidden>The score and rallies stay. Names and game length change for the whole match.<br><span class="muted">スコアと記録はそのまま。名前と点数（11/15/21）だけが変わります（この試合全体）。</span></div>
       <div class="next-actions">
         <button type="button" class="btn-ghost" id="startNext">Start <small>開始</small></button>
-        <button type="button" class="btn-blue" id="renameOnly">Change players <small>選手を変更</small></button>
+        <button type="button" class="btn-blue" id="renameOnly">Apply <small>変更する</small></button>
       </div>
     </div>
   </div>
@@ -1742,7 +1743,7 @@
           $('teamAName').value = state.names.A || 'Team A';
           $('teamBName').value = state.names.B || 'Team B';
         }
-      } catch (e) {}
+      } catch (e) { keepUnreadable(STORAGE_KEY); }
     }
 
     function setPending(team) {
@@ -2109,8 +2110,51 @@
       return matchLog.filter(x => matchDate(x) === matchDate(m)).indexOf(m) + 1;
     }
 
+    /*
+     * Data safety across updates. Storage keys and record fields never change meaning between
+     * versions (new fields are only added), and before a new version first runs, the saved data is
+     * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
+     */
+    const APP_VERSION = '1.3.1';
+    const VERSION_KEY = 'errorzero_appver';
+    const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
+    function protectDataOnUpdate() {
+      try {
+        const prev = localStorage.getItem(VERSION_KEY);
+        if (prev === APP_VERSION) return;
+        const log = localStorage.getItem(LOG_KEY), cur = localStorage.getItem(STORAGE_KEY);
+        if (log || cur) {
+          localStorage.setItem(AUTO_BACKUP_KEY, JSON.stringify({
+            from: prev || 'up to 1.3.0', to: APP_VERSION, at: new Date().toISOString(),
+            matchlog: log, state: cur, roster: localStorage.getItem(ROSTER_KEY)
+          }));
+        }
+        localStorage.setItem(VERSION_KEY, APP_VERSION);
+      } catch (e) {}
+    }
+    /** Keep a copy of anything we cannot read instead of letting the next save overwrite it. */
+    function keepUnreadable(key) {
+      try { const raw = localStorage.getItem(key); if (raw) localStorage.setItem(`${key}__unreadable_${Date.now()}`, raw); } catch (e) {}
+    }
+    /** Merge the automatic pre-update copy back in: matches already here are left as they are. */
+    function restoreAutoBackup() {
+      let snap = null;
+      try { snap = JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY) || 'null'); } catch (e) {}
+      if (!snap || !snap.matchlog) { alert('No automatic backup found.\n自動バックアップはありません。'); return; }
+      let saved = [];
+      try { saved = JSON.parse(snap.matchlog) || []; } catch (e) {}
+      const have = new Set(matchLog.map(m => m.id));
+      const added = saved.filter(m => m && m.id && !have.has(m.id));
+      if (!confirm(`Restore ${added.length} match(es) from the backup taken on ${String(snap.at).slice(0, 10)}?\n${String(snap.at).slice(0, 10)} の自動バックアップから ${added.length} 試合を戻しますか？（今の記録は消えません）`)) return;
+      matchLog = matchLog.concat(added).sort((a, b) => Date.parse(a.endedAt || a.savedAt) - Date.parse(b.endedAt || b.savedAt));
+      saveLog();
+      render();
+      showToast(`Restored ${added.length} / ${added.length}試合を戻しました`);
+    }
+
     function loadExtras() {
-      try { matchLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]') || []; } catch (e) { matchLog = []; }
+      try { matchLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]') || []; } catch (e) { keepUnreadable(LOG_KEY); matchLog = []; }
+      if (!Array.isArray(matchLog)) { keepUnreadable(LOG_KEY); matchLog = []; }
       try { roster = JSON.parse(localStorage.getItem(ROSTER_KEY) || '[]') || []; } catch (e) { roster = []; }
       try {
         const st = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') || {};
@@ -2119,7 +2163,10 @@
         ui.flipped = !!st.flipped;
       } catch (e) {}
     }
-    function saveLog() { try { localStorage.setItem(LOG_KEY, JSON.stringify(matchLog)); } catch (e) {} }
+    function saveLog() {
+      try { localStorage.setItem(LOG_KEY, JSON.stringify(matchLog)); }
+      catch (e) { alert('Storage is full — please export a backup (⋯ menu).\n保存領域がいっぱいです。⋯ メニューからバックアップを書き出してください。'); }
+    }
     function saveRoster() { try { localStorage.setItem(ROSTER_KEY, JSON.stringify(roster)); } catch (e) {} }
     function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ target: state.target, mode: ui.mode, flipped: ui.flipped })); } catch (e) {} }
 
@@ -2157,7 +2204,6 @@
         location: ($('matchLocation').value || '').trim()
       };
       matchLog.push(m);
-      if (matchLog.length > 300) matchLog = matchLog.slice(-300);
       saveLog();
       rememberNames(m.names.A, m.names.B);
       return m;
@@ -2254,7 +2300,6 @@
       $('nextNote').hidden = !editing;
       $('startNext').className = editing ? 'btn-ghost' : 'btn-blue';
       $('startNext').innerHTML = editing ? 'Save &amp; start new <small>保存して新しい試合</small>' : 'Start <small>開始</small>';
-      $('nextTargetSeg').hidden = editing;
       renderPicker();
       $('nextModal').classList.add('show');
     }
@@ -2293,11 +2338,13 @@
     }
 
     function renameOnly() {
-      const before = `${teamName('A')} vs ${teamName('B')}`;
+      const before = `${teamName('A')} vs ${teamName('B')} /${state.target}`;
+      // Lessons often change the game length mid-game: apply it to the match in progress as well.
+      state.target = nextTarget;
+      saveSettings();
       setNames(pick.A || 'Team A', pick.B || 'Team B');
-      if (state.rallies.length) showToast(`${before} → ${teamName('A')} vs ${teamName('B')}`);
+      if (state.rallies.length) showToast(`${before} → ${teamName('A')} vs ${teamName('B')} /${state.target}`);
       rememberNames(pick.A, pick.B);
-      if (!state.rallies.length) { state.target = nextTarget; saveSettings(); save(); render(); }
       closeModal('nextModal');
     }
 
@@ -2890,6 +2937,7 @@
         if (act === 'export') exportBackup();
         if (act === 'csv') exportCsv(null);
         if (act === 'import') $('importFile').click();
+        if (act === 'restore') restoreAutoBackup();
       }
       const seg = e.target.closest('#modeSeg .seg');
       if (seg) setMode(seg.dataset.mode);
@@ -2911,6 +2959,7 @@
     updateLocalDateTime();
     window.setInterval(updateLocalDateTime, 30000);
     loadMatchLocation();
+    protectDataOnUpdate();
     load();
     loadExtras();
     render();
