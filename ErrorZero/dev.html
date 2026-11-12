@@ -1103,6 +1103,15 @@
     .report-actions { gap: 6px; min-width: 0; }
     .report-actions select { min-width: 0; width: 6.4em; padding: 8px 4px; font-size: 14px; }
     body.night .insight { color: #bfdbfe; }
+    /* Button size follows how often each reason happens: Net/Return > Serve/Out > Fault/Unknown */
+    .code-btn.err.big { min-height: 64px; }
+    .code-btn.err.big b { font-size: 18px; }
+    .code-btn.err:not(.big):not(.small) { min-height: 50px; }
+    .code-btn.small { min-height: 40px; padding: 3px 4px; gap: 0; }
+    .code-btn.small b { font-size: 12.5px; }
+    .code-btn.small small { font-size: 10px; }
+    .code-btn.unk.small { flex-direction: column; gap: 0; min-height: 40px; }
+    .code-btn.unk.small b { color: var(--muted); font-size: 12.5px; }
     /* Read-only information has no frame and softer text; only things you can press look like buttons. */
     .summary-card { background: transparent; border: none; padding: 4px 6px; }
     .summary-card .num { color: #4b5563; }
@@ -1398,7 +1407,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.3.3</a></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.3.4</a></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1455,28 +1464,32 @@
             <button class="code-btn win" data-side="A" data-reason="W"><b>Winner</b><small>ウィナー</small></button>
             <div class="code-row two">
               <button class="code-btn err big" data-side="A" data-reason="N"><b>Net</b><small>ネット</small></button>
-              <button class="code-btn err big" data-side="A" data-reason="O"><b>Out</b><small>アウト</small></button>
+              <button class="code-btn err big" data-side="A" data-reason="R"><b>Return</b><small>レシーブ</small></button>
             </div>
-            <div class="code-row three">
+            <div class="code-row two">
               <button class="code-btn err" data-side="A" data-reason="S"><b>Serve</b><small>サーブ</small></button>
-              <button class="code-btn err" data-side="A" data-reason="R"><b>Return</b><small>レシーブ</small></button>
-              <button class="code-btn err" data-side="A" data-reason="F"><b>Fault</b><small>反則</small></button>
+              <button class="code-btn err" data-side="A" data-reason="O"><b>Out</b><small>アウト</small></button>
             </div>
-            <button class="code-btn unk" data-side="A" data-reason="U"><b>Unknown</b> <small>不明</small></button>
+            <div class="code-row two">
+              <button class="code-btn err small" data-side="A" data-reason="F"><b>Fault</b><small>反則</small></button>
+              <button class="code-btn unk small" data-side="A" data-reason="U"><b>Unknown</b><small>不明</small></button>
+            </div>
           </div>
           <div class="code-col b" data-side="B">
             <div class="col-head"><span class="side-dot b"></span><span class="col-name" id="colNameB">Team B</span></div>
             <button class="code-btn win" data-side="B" data-reason="W"><b>Winner</b><small>ウィナー</small></button>
             <div class="code-row two">
               <button class="code-btn err big" data-side="B" data-reason="N"><b>Net</b><small>ネット</small></button>
-              <button class="code-btn err big" data-side="B" data-reason="O"><b>Out</b><small>アウト</small></button>
+              <button class="code-btn err big" data-side="B" data-reason="R"><b>Return</b><small>レシーブ</small></button>
             </div>
-            <div class="code-row three">
+            <div class="code-row two">
               <button class="code-btn err" data-side="B" data-reason="S"><b>Serve</b><small>サーブ</small></button>
-              <button class="code-btn err" data-side="B" data-reason="R"><b>Return</b><small>レシーブ</small></button>
-              <button class="code-btn err" data-side="B" data-reason="F"><b>Fault</b><small>反則</small></button>
+              <button class="code-btn err" data-side="B" data-reason="O"><b>Out</b><small>アウト</small></button>
             </div>
-            <button class="code-btn unk" data-side="B" data-reason="U"><b>Unknown</b> <small>不明</small></button>
+            <div class="code-row two">
+              <button class="code-btn err small" data-side="B" data-reason="F"><b>Fault</b><small>反則</small></button>
+              <button class="code-btn unk small" data-side="B" data-reason="U"><b>Unknown</b><small>不明</small></button>
+            </div>
           </div>
         </div>
         <div class="code-foot">
@@ -2171,7 +2184,7 @@
      * versions (new fields are only added), and before a new version first runs, the saved data is
      * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
      */
-    const APP_VERSION = '1.3.3';
+    const APP_VERSION = '1.3.4';
     const VERSION_KEY = 'errorzero_appver';
     const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
     function protectDataOnUpdate() {
