@@ -1094,7 +1094,23 @@
     .action-toast:not(.show) { pointer-events: none; }
     .action-toast button { background: #fff; color: #111827; padding: 8px 12px; border-radius: 999px; font-size: 13px; }
     .report-modal { width: min(980px, 100%); max-height: 92vh; }
-    .report-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .report-actions { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
+    .report-modal .modal-header { flex-wrap: nowrap; }
+    .report-modal .modal-header h2 { flex: none; font-size: 20px; line-height: 1.1; white-space: nowrap; }
+    .report-modal .modal-header h2 small { display: block; margin: 2px 0 0; font-size: 11px; }
+    .icon-btn { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; flex: none; border-radius: 12px; }
+    .icon-btn svg { width: 21px; height: 21px; }
+    .report-actions { gap: 6px; min-width: 0; }
+    .report-actions select { min-width: 0; width: 6.4em; padding: 8px 4px; font-size: 14px; }
+    body.night .insight { color: #bfdbfe; }
+    .report-actions select { flex: none; }
+    @media (max-width: 360px) {
+      #reportModal.modal-backdrop { padding: 8px; }
+      .report-modal { padding: 12px; }
+      .report-actions select { width: 5.4em; font-size: 13px; }
+      .icon-btn { width: 36px; height: 36px; }
+      .icon-btn svg { width: 19px; height: 19px; }
+    }
     .report-actions select { padding: 10px; border-radius: 12px; border: 1px solid var(--line); font: inherit; font-weight: 700; }
     .report { font-size: 12.5px; color: #111827; background: #fff; border-radius: 14px; padding: 12px; }
     .report .muted { color: #6b7280; }
@@ -1263,6 +1279,27 @@
     .foot-players { padding: 6px 12px; font-size: 18px; display: flex; flex-direction: column; align-items: center; line-height: 1.05; }
     .foot-players small { font-size: 10px; margin: 2px 0 0; }
     .target-seg[hidden] { display: none; }
+    /* Live Analysis stays two players side by side on a portrait phone, like landscape */
+    @media (max-width: 860px) { .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
+    @media (max-width: 560px) {
+      .summary-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 10px 0; }
+      .summary-card { padding: 8px; border-radius: 14px; }
+      .summary-card .num { font-size: 20px; }
+      .summary-card .txt { font-size: 10px; margin-top: 4px; }
+      .stat-box { padding: 9px 8px; border-radius: 14px; min-width: 0; }
+      .stat-head { margin-bottom: 6px; gap: 4px; }
+      .stat-head strong { font-size: 13px; max-width: none; min-width: 0; }
+      .stat-head span { font-size: 10.5px; white-space: nowrap; }
+      .bar-row { grid-template-columns: minmax(0, 50px) minmax(0, 1fr) 14px; gap: 5px; margin: 5px 0; font-size: 10.5px; }
+      .stat-label { overflow: hidden; text-overflow: ellipsis; }
+      .bar-track { height: 7px; }
+      .wf { margin: 0 0 8px; }
+      .wf-title { font-size: 10px; margin-bottom: 4px; }
+      .wf-bar { height: 10px; }
+      .wf-legend { font-size: 10.5px; gap: 2px 6px; }
+      .wf-legend small { display: none; }
+      .stat-box > div:last-child { font-size: 10.5px !important; }
+    }
     @media (max-width: 400px) {
       .code-foot { gap: 6px; }
       .foot-next small, .foot-reset small { display: none; }
@@ -1343,7 +1380,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.3.1</span></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.3.2</span></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1652,9 +1689,9 @@
         <h2>Today <small>今日の記録</small></h2>
         <div class="report-actions">
           <select id="reportDate" aria-label="Date"></select>
-          <button class="btn-ghost" id="csvReport">CSV <small>表計算用</small></button>
-          <button class="btn-dark" id="printReport">Print A4 <small>印刷</small></button>
-          <button class="btn-ghost" id="closeReport">Close</button>
+          <button class="btn-ghost icon-btn" id="csvReport" title="Export CSV / 表計算用に書き出し" aria-label="Export CSV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="btn-dark icon-btn" id="printReport" title="Print A4 / 印刷" aria-label="Print A4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a1 1 0 0 1-1 1h-2M7 14h10v6H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
+          <button class="btn-ghost icon-btn" id="closeReport" title="Close / 閉じる" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
         </div>
       </div>
       <div id="reportBody" class="report"></div>
@@ -2116,7 +2153,7 @@
      * versions (new fields are only added), and before a new version first runs, the saved data is
      * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
      */
-    const APP_VERSION = '1.3.1';
+    const APP_VERSION = '1.3.2';
     const VERSION_KEY = 'errorzero_appver';
     const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
     function protectDataOnUpdate() {
@@ -2775,7 +2812,9 @@
       if (state.rallies.length) days.push(dateKey());
       const unique = [...new Set(days)].sort().reverse();
       if (!unique.length) unique.push(dateKey());
-      $('reportDate').innerHTML = unique.map(d => `<option value="${d}">${d}</option>`).join('');
+      // Short labels (11/12, or 2025/11/12 for another year) keep the header on one row on small phones.
+      const thisYear = String(new Date().getFullYear());
+      $('reportDate').innerHTML = unique.map(d => { const [y, m, dd] = d.split('-'); return `<option value="${d}">${y === thisYear ? '' : y + '/'}${+m}/${+dd}</option>`; }).join('');
       renderReport();
       $('reportModal').classList.add('show');
     }
