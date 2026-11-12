@@ -1103,6 +1103,25 @@
     .report-actions { gap: 6px; min-width: 0; }
     .report-actions select { min-width: 0; width: 6.4em; padding: 8px 4px; font-size: 14px; }
     body.night .insight { color: #bfdbfe; }
+    /* Read-only information has no frame and softer text; only things you can press look like buttons. */
+    .summary-card { background: transparent; border: none; padding: 4px 6px; }
+    .summary-card .num { color: #4b5563; }
+    .stats-grid .stat-box { background: transparent; border: none; border-top: 1px solid var(--line); border-radius: 0; padding: 10px 2px 2px; }
+    .stat-head strong { color: #374151; }
+    .bar-row { color: #4b5563; }
+    .code-window .score-strip { background: transparent; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 4px 8px; }
+    .last-text { color: var(--muted); font-weight: 650; }
+    .col-head { color: var(--muted); }
+    .insight { background: transparent; border: none; border-left: 3px solid var(--line); border-radius: 0; color: var(--muted); padding: 4px 10px; }
+    .sheet, .progress-panel { border: 1px solid var(--line); }
+    .code-btn { box-shadow: 0 1px 0 rgba(15,23,42,.06), 0 3px 8px rgba(15,23,42,.10); }
+    .code-btn.err, .code-btn.unk { border-width: 1.5px; }
+    body.night .summary-card { background: transparent; border-color: transparent; }
+    body.night .summary-card .num { color: #cbd5e1; }
+    body.night .stats-grid .stat-box { background: transparent; border-color: transparent; border-top-color: var(--line); border-radius: 0; }
+    body.night .stat-head strong, body.night .bar-row { color: #cbd5e1; }
+    body.night .insight { background: transparent; color: #9ca3af; }
+    body.night .code-btn { box-shadow: 0 1px 0 rgba(255,255,255,.04), 0 3px 10px rgba(0,0,0,.45); }
     .report-actions select { flex: none; }
     @media (max-width: 360px) {
       #reportModal.modal-backdrop { padding: 8px; }
@@ -1380,7 +1399,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.3.2</span></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <span class="ver-badge">v1.3.3</span></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -2153,7 +2172,7 @@
      * versions (new fields are only added), and before a new version first runs, the saved data is
      * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
      */
-    const APP_VERSION = '1.3.2';
+    const APP_VERSION = '1.3.3';
     const VERSION_KEY = 'errorzero_appver';
     const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
     function protectDataOnUpdate() {
@@ -2843,13 +2862,40 @@
       r.style.zoom = z < 1 ? z.toFixed(3) : '';
     }
 
+    function endPrint() {
+      document.body.classList.remove('print-report');
+      $('reportBody').classList.remove('as-print');
+      $('reportBody').style.zoom = '';
+    }
+
+    // Opened from the home screen (standalone) iOS has no print; a separate page can use Share → Print.
+    function isStandalone() {
+      return navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+    }
+    function openPrintCopy() {
+      const css = [...document.querySelectorAll('style')].map(el => el.textContent).join('\n');
+      const zoom = $('reportBody').style.zoom;
+      const w = window.open('', '_blank');
+      if (!w) { alert('Allow pop-ups to print.\nポップアップを許可してください。'); return; }
+      w.document.open();
+      w.document.write(`<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ErrorZero report</title>
+<style>${css}</style>
+<style>body{background:#fff !important;margin:0;padding:12px} .print-bar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px}
+.print-bar button{padding:10px 16px;border-radius:12px;font-weight:800} .no-print{display:none !important}
+@page{size:A4 portrait;margin:10mm} @media print{.print-bar{display:none} body{padding:0}}</style></head>
+<body><div class="print-bar"><button class="btn-dark" onclick="window.print()">Print / 印刷</button><button class="btn-ghost" onclick="window.close()">Close / 閉じる</button></div>
+<div class="report as-print" style="zoom:${zoom || 1}">${$('reportBody').innerHTML}</div></body></html>`);
+      w.document.close();
+    }
+
     function printReport() {
       document.body.classList.add('print-report');
       fitReportForPrint();
-      const done = () => { document.body.classList.remove('print-report'); $('reportBody').classList.remove('as-print'); $('reportBody').style.zoom = ''; };
-      window.addEventListener('afterprint', done, { once: true });
+      if (isStandalone()) { openPrintCopy(); endPrint(); return; }
+      // iOS Safari builds the print preview after print() returns, so print mode stays on until
+      // printing really ends (afterprint) or the report is closed — never on a timer.
+      window.addEventListener('afterprint', endPrint, { once: true });
       window.print();
-      window.setTimeout(done, 1500);
     }
 
     function escapeHtml(str) {
@@ -2982,7 +3028,7 @@
       const seg = e.target.closest('#modeSeg .seg');
       if (seg) setMode(seg.dataset.mode);
     });
-    $('closeReport').addEventListener('click', () => closeModal('reportModal'));
+    $('closeReport').addEventListener('click', () => { endPrint(); closeModal('reportModal'); });
     $('reportModal').addEventListener('click', (e) => {
       if (e.target === $('reportModal')) closeModal('reportModal');
       const del = e.target.closest('.del');
