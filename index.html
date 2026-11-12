@@ -73,6 +73,11 @@ a:focus-visible{outline:3px solid rgba(47,143,91,.45); outline-offset:3px}
 .news li{display:flex; gap:10px}
 .news time{color:var(--muted); font-variant-numeric:tabular-nums; flex:none}
 .news b{font-weight:700}
+.update{margin-top:14px; text-align:center}
+.update .btn{border:none; cursor:pointer; font:inherit; font-weight:700}
+.update .btn:disabled{opacity:.6}
+.updateNote{margin:8px auto 0; max-width:30em; font-size:11.5px; color:var(--muted); line-height:1.5}
+.updateNote span{display:block}
 
 @media (max-width:380px){
   .tile{padding:14px; gap:6px}
@@ -168,6 +173,37 @@ a:focus-visible{outline:3px solid rgba(47,143,91,.45); outline-offset:3px}
       <li><time datetime="2026-10-20">10/20</time><span><b>PairPlay v1.5.0</b> — 英日併記・登録名簿・連続ペアの解消・スマホ向けA4表示</span></li>
     </ul>
   </section>
+
+  <div class="update">
+    <button type="button" id="updateBtn" class="btn secondary">↻ Update to latest <small>最新版に更新</small></button>
+    <p id="updateNote" class="updateNote">Apps saved to the home screen can show an older version. Tap to reload all apps. <span>ホーム画面から開くと古い版が表示されることがあります。押すと全アプリを最新版に読み直します（記録は消えません）。</span></p>
+  </div>
 </main>
+<script>
+// Manual update: re-download every app page past the browser cache, then reload this page.
+// Saved records live in the browser's storage, not in these files, so they are not touched.
+(function () {
+  var PAGES = ['./', 'PairPlay/', 'RallyScore/', 'ErrorZero/', 'Shatomin/', 'TacticsLab/', 'manifest.webmanifest'];
+  var btn = document.getElementById('updateBtn'), note = document.getElementById('updateNote');
+  var KEY = 'portal.lastUpdate';
+  try {
+    var last = localStorage.getItem(KEY);
+    if (last) note.insertAdjacentHTML('beforeend', '<br><span>Last updated 最終更新: ' + new Date(last).toLocaleString() + '</span>');
+  } catch (e) {}
+  btn.addEventListener('click', function () {
+    btn.disabled = true;
+    btn.innerHTML = 'Updating… <small>更新中</small>';
+    var jobs = PAGES.map(function (u) { return fetch(u, { cache: 'reload' }).catch(function () {}); });
+    var clearCaches = (window.caches && caches.keys) ? caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }).catch(function () {}) : Promise.resolve();
+    Promise.all(jobs.concat([clearCaches])).then(function () {
+      try { localStorage.setItem(KEY, new Date().toISOString()); } catch (e) {}
+      var url = location.pathname + '?v=' + Date.now() + location.hash;
+      location.replace(url);
+    });
+  });
+  // Drop the cache-busting parameter from the address bar after the reload.
+  if (/[?&]v=\d+/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash);
+})();
+</script>
 </body>
 </html>
