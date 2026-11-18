@@ -1495,6 +1495,22 @@
     body.night .out-card .progress-chart circle:nth-of-type(2) { fill: #8b8f96; }
     body.night .out-card .legend-swatch { background: #e5e7eb; }
     body.night .out-card .legend-swatch.b { background: repeating-linear-gradient(90deg, #8b8f96 0 6px, transparent 6px 10px); }
+    /* v1.5: match numbers and per-match analysis */
+    .match-no-tag { font-size: .55em; font-weight: 800; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; vertical-align: .25em; margin-left: 4px; }
+    .match-no { min-width: 30px; height: 30px; padding: 0 6px; border-radius: 9px; border: 1.5px solid #2f8f5b; background: #ecfdf3; color: #166534; font-weight: 900; font-size: 13px; cursor: pointer; }
+    .match-no:active { transform: scale(.95); }
+    .match-modal { width: min(760px, 100%); max-height: 92vh; }
+    #matchModal { z-index: 25; }
+    .match-modal .modal-header { align-items: flex-start; }
+    .mm-title { flex: 1 1 auto; min-width: 0; }
+    .match-modal .report-actions { flex: none; }
+    .match-modal .icon-btn { width: 38px; height: 38px; }
+    .mm-title h2 { margin: 0; font-size: 20px; }
+    .mm-title .muted { font-size: 13px; margin-top: 2px; }
+    .mm-card { margin-top: 10px; padding: 12px; }
+    .mm-card .section-title h2 small { font-size: .6em; color: var(--muted); }
+    #matchModal .icon-btn { font-size: 22px; font-weight: 700; }
+    @media print { .match-no { border: none; background: none; color: inherit; padding: 0; min-width: 0; height: auto; } }
   </style>
 </head>
 <body>
@@ -1502,7 +1518,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.4.1</a></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.5.0</a></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1655,7 +1671,7 @@
 
       <section class="card out-card">
         <div class="section-title">
-          <h2>Live Analysis</h2>
+          <h2>Live Analysis <span class="match-no-tag" id="matchNoTag"></span></h2>
           <span id="rallyCount">0 rallies</span>
         </div>
 
@@ -1806,6 +1822,23 @@
         <button type="button" class="btn-ghost" id="startNext">Start <small>開始</small></button>
         <button type="button" class="btn-blue" id="renameOnly">Apply <small>変更する</small></button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="matchModal">
+    <div class="modal match-modal">
+      <div class="modal-header">
+        <div class="mm-title">
+          <h2 id="mmTitle">Match</h2>
+          <div class="muted" id="mmSub"></div>
+        </div>
+        <div class="report-actions">
+          <button class="btn-ghost icon-btn" id="mmPrev" title="Previous / 前の試合" aria-label="Previous match">‹</button>
+          <button class="btn-ghost icon-btn" id="mmNext" title="Next / 次の試合" aria-label="Next match">›</button>
+          <button class="btn-ghost icon-btn" id="mmClose" title="Back to the report / 一覧に戻る" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <div id="mmBody"></div>
     </div>
   </div>
 
@@ -2279,7 +2312,7 @@
      * versions (new fields are only added), and before a new version first runs, the saved data is
      * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
      */
-    const APP_VERSION = '1.4.1';
+    const APP_VERSION = '1.5.0';
     const VERSION_KEY = 'errorzero_appver';
     const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
     function protectDataOnUpdate() {
@@ -2539,6 +2572,8 @@
       renderCodeWindow(w);
       const todayCount = matchLog.filter(m => matchDate(m) === dateKey()).length;
       $('openReportTop').innerHTML = `Today${todayCount ? ` (${todayCount})` : ''} <small>今日の記録</small>`;
+      $('matchNoTag').textContent = `#${todayCount + 1}`;
+      $('matchNoTag').title = `Today's match #${todayCount + 1} / 今日の${todayCount + 1}試合目`;
     }
 
 
@@ -2854,8 +2889,58 @@
       return min >= 60 ? `${Math.floor(min / 60)}時間${min % 60}分` : `${min}分`;
     }
 
+
+    /* ===== Per-match analysis: the Live Analysis panels for a saved match ===== */
+    let mmIndex = 0;
+    function withMatch(m, fn) {
+      const keep = { score: state.score, rallies: state.rallies, names: state.names, target: state.target };
+      state.score = { ...m.score }; state.rallies = m.rallies; state.names = { ...m.names }; state.target = m.target;
+      try { return fn(); } finally {
+        Object.assign(state, keep);
+        renderSheet(); renderScoreProgression(); renderRecent();   // put the main screen back
+      }
+    }
+    function openMatchAnalysis(i) {
+      const m = reportList[i];
+      if (!m) return;
+      mmIndex = i;
+      const html = withMatch(m, () => {
+        const st = computeStats();
+        const tot = st.A.totalErrors + st.B.totalErrors, win = st.A.W + st.B.W, late = st.A.after15Errors + st.B.after15Errors;
+        renderSheet(); renderScoreProgression(); renderRecent();
+        const card = (t, ja, body) => `<section class="card out-card mm-card"><div class="section-title"><h2>${t} <small>${ja}</small></h2></div>${body}</section>`;
+        return card('Analysis', '分析', `
+            <div class="summary-cards">
+              <div class="summary-card"><span class="num">${tot}</span><span class="txt">Total Errors</span></div>
+              <div class="summary-card"><span class="num">${win}</span><span class="txt">Winners</span></div>
+              <div class="summary-card"><span class="num">${late}</span><span class="txt">Late errors (≥${lateFrom(m.target)})</span></div>
+            </div>
+            <div class="stats-grid">${createStatBox('A', st)}${createStatBox('B', st)}</div>
+            <div class="insight" style="margin-top:12px;">${escapeHtml(buildInsight(st))}</div>`)
+          + card('Score Sheet', 'スコアシート', `<div class="sheet-wrap"><div class="sheet">${$('scoreSheet').innerHTML}</div></div>`)
+          + card('Score Progression', '点数の推移', `<div class="progress-wrap"><div class="progress-panel">
+              <div class="progress-legend"><div>
+                <span class="legend-team"><span class="legend-swatch"></span><span>${escapeHtml(m.names.A)}</span></span>
+                <span class="legend-team"><span class="legend-swatch b"></span><span>${escapeHtml(m.names.B)}</span></span>
+              </div><span>${m.rallies.length} rallies</span></div>
+              ${$('scoreProgression').innerHTML}</div></div>`)
+          + card('Rallies', 'ラリー（新しい順）', `<div class="rally-list">${$('recentRally').innerHTML}</div>`);
+      });
+      const tm = matchTiming(m);
+      $('mmTitle').innerHTML = `Match #${i + 1} <small>${i + 1}試合目</small>`;
+      $('mmSub').innerHTML = `${escapeHtml(m.names.A)} <b>${m.score.A}-${m.score.B}</b> ${escapeHtml(m.names.B)} · /${m.target} · ${timeLabel(m.startedAt)}${m.inProgress ? ' · 記録中' : `–${timeLabel(tm.end)} (${fmtDuration(tm.sec)})`}`;
+      $('mmBody').innerHTML = html;
+      $('mmPrev').disabled = i === 0;
+      $('mmNext').disabled = i >= reportList.length - 1;
+      $('matchModal').classList.add('show');
+      $('matchModal').querySelector('.modal').scrollTop = 0;
+    }
+
+    let reportList = [];   // matches shown in the report, for the per-match analysis view
+
     function buildReport(day) {
       const matches = reportMatches(day);
+      reportList = matches;
       if (!matches.length) return '<div class="report-empty">No matches on this day. / この日の記録はありません。</div>';
       const players = new Map();
       const row = (name) => {
@@ -2881,7 +2966,7 @@
         }
         const nm = (t) => `<span class="dot-${t.toLowerCase()}"></span><span class="${w === t ? 'win' : ''}">${escapeHtml(m.names[t])}</span>`;
         return `<tr>
-          <td class="num">${i + 1}</td>
+          <td class="num"><button type="button" class="match-no" data-mi="${i}" title="Open analysis / 分析を見る">${i + 1}</button></td>
           <td class="num time">${timeLabel(m.startedAt)}–${m.inProgress ? '' : timeLabel(timing.end)}<br><small class="muted">${fmtDuration(timing.sec)}${m.inProgress ? ' 記録中' : ''}</small></td>
           <td>${nm('A')} <span class="muted">vs</span> ${nm('B')}${m.inProgress ? ' <span class="tag">in progress / 記録中</span>' : (w ? '' : ' <span class="tag">unfinished / 途中</span>')}</td>
           <td class="num fscore">${m.score.A}-${m.score.B}<span class="muted"> /${m.target}</span></td>
@@ -2926,7 +3011,7 @@
         </table>
         <h3>Matches <span class="muted">試合ごと</span></h3>
         <table class="rep-table matches">
-          <thead><tr><th>#</th><th>Time <small>時間</small></th><th>Match <small>対戦</small></th><th>Score</th><th>A errors <small>ミス</small></th><th>B errors <small>ミス</small></th><th>Win A/B</th><th>Progress <small>推移</small></th><th class="no-print"></th></tr></thead>
+          <thead><tr><th title="Tap a number for the analysis / 番号で分析">#</th><th>Time <small>時間</small></th><th>Match <small>対戦</small></th><th>Score</th><th>A errors <small>ミス</small></th><th>B errors <small>ミス</small></th><th>Win A/B</th><th>Progress <small>推移</small></th><th class="no-print"></th></tr></thead>
           <tbody>${matchRows}</tbody>
         </table>
         ${buildAdviceSection(players)}
@@ -3140,8 +3225,14 @@
       if (e.target === $('reportModal')) closeModal('reportModal');
       const del = e.target.closest('.del');
       if (del) deleteMatch(del.dataset.id);
+      const no = e.target.closest('.match-no');
+      if (no) openMatchAnalysis(+no.dataset.mi);
     });
     $('reportDate').addEventListener('change', renderReport);
+    $('mmClose').addEventListener('click', () => closeModal('matchModal'));
+    $('mmPrev').addEventListener('click', () => openMatchAnalysis(mmIndex - 1));
+    $('mmNext').addEventListener('click', () => openMatchAnalysis(mmIndex + 1));
+    $('matchModal').addEventListener('click', (e) => { if (e.target === $('matchModal')) closeModal('matchModal'); });
     $('printReport').addEventListener('click', printReport);
     $('teamAName').addEventListener('change', () => rememberNames($('teamAName').value));
     $('teamBName').addEventListener('change', () => rememberNames($('teamBName').value));
