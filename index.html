@@ -73,6 +73,8 @@ a:focus-visible{outline:3px solid rgba(47,143,91,.45); outline-offset:3px}
 .news li{display:flex; gap:10px}
 .news time{color:var(--muted); font-variant-numeric:tabular-nums; flex:none}
 .news b{font-weight:700}
+.news.folded li:nth-child(n+6){display:none}
+.newsMore{margin-top:8px; padding:4px 0; border:none; background:none; color:var(--accent); font:inherit; font-size:13px; font-weight:700; cursor:pointer}
 .update{margin-top:14px; text-align:center}
 .update .btn{border:none; cursor:pointer; font:inherit; font-weight:700}
 .update .btn:disabled{opacity:.6}
@@ -173,6 +175,7 @@ a:focus-visible{outline:3px solid rgba(47,143,91,.45); outline-offset:3px}
       <li><time datetime="2026-10-20">10/20</time><span><b>ErrorZero v1.2.0</b> — 1タップ記録・保存して次へ・今日の記録（A4）とコーチのフィードバック</span></li>
       <li><time datetime="2026-10-20">10/20</time><span><b>PairPlay v1.5.0</b> — 英日併記・登録名簿・連続ペアの解消・スマホ向けA4表示</span></li>
     </ul>
+    <button type="button" id="newsMore" class="newsMore" hidden></button>
   </section>
 
   <div class="update">
@@ -181,6 +184,20 @@ a:focus-visible{outline:3px solid rgba(47,143,91,.45); outline-offset:3px}
   </div>
 </main>
 <script>
+// What's new: show the latest five, the rest behind "More".
+(function () {
+  var news = document.querySelector('.news'), btn = document.getElementById('newsMore');
+  var extra = news.querySelectorAll('li').length - 5;
+  if (extra <= 0) return;
+  var label = function () {
+    btn.innerHTML = news.classList.contains('folded')
+      ? 'More (' + extra + ') <small>もっと見る</small>'
+      : 'Show less <small>閉じる</small>';
+  };
+  news.classList.add('folded'); btn.hidden = false; label();
+  btn.addEventListener('click', function () { news.classList.toggle('folded'); label(); });
+})();
+
 // Manual update: re-download every app page past the browser cache, then reload this page.
 // Saved records live in the browser's storage, not in these files, so they are not touched.
 (function () {
