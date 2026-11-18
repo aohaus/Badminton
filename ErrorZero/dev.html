@@ -1475,6 +1475,26 @@
     body.night .modal { background: #0d2418; border: 1px solid var(--line); }
     body.night .seg.on { background: var(--accent); color: #052e16; border-color: var(--accent); }
     body.night #pickA .pick.on, body.night #pickB .pick.on { background: var(--accent); border-color: var(--accent); color: #052e16; }
+    /* v1.4.1: output panels are greyscale so the green input area stands apart */
+    body.night .out-card {
+      background: rgba(22, 24, 26, .82); border: 1px solid rgba(255, 255, 255, .08);
+      box-shadow: none; filter: grayscale(1);
+    }
+    body.night .out-card .section-title h2::before { background: #6b7280; }
+    body.night .out-card .wf-win { background: #e5e7eb; }
+    body.night .out-card .wf-fail, body.night .out-card .wf-dot.fail { background: #6b7280; }
+    body.night .out-card .wf-dot.win { background: #e5e7eb; }
+    body.night .out-card .bar-fill { background: #d1d5db; }
+    body.night .out-card .bar-track { background: rgba(255, 255, 255, .08); }
+    body.night .out-card, body.night .out-card .summary-card .txt, body.night .out-card .stat-head span { color: #9ca3af; }
+    body.night .out-card .summary-card .num, body.night .out-card .stat-head strong { color: #e5e7eb; }
+    /* greyscale chart: A solid light, B dashed darker */
+    body.night .out-card .progress-chart polyline:nth-of-type(1) { stroke: #e5e7eb; }
+    body.night .out-card .progress-chart polyline:nth-of-type(2) { stroke: #8b8f96; stroke-dasharray: 9 7; }
+    body.night .out-card .progress-chart circle:nth-of-type(1) { fill: #e5e7eb; }
+    body.night .out-card .progress-chart circle:nth-of-type(2) { fill: #8b8f96; }
+    body.night .out-card .legend-swatch { background: #e5e7eb; }
+    body.night .out-card .legend-swatch.b { background: repeating-linear-gradient(90deg, #8b8f96 0 6px, transparent 6px 10px); }
   </style>
 </head>
 <body>
@@ -1482,7 +1502,7 @@
     <header>
       <div class="brand">
         <h1><a class="hub-link" href="../" title="Badminton Apps / アプリ一覧へ" aria-label="Badminton Apps"><img src="../icons/badminton-icon.svg" alt=""></a>ErrorZero Badminton</h1>
-        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.4.0</a></p>
+        <p><span class="tagline">Track every point. Eliminate every mistake.</span> <a class="dev-badge" href="index.html" title="Open the stable version / 安定版を開く">DEV v1.4.1</a></p>
       </div>
       <div class="header-right">
         <div class="match-meta" aria-label="Match date, time and location">
@@ -1633,7 +1653,7 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card out-card">
         <div class="section-title">
           <h2>Live Analysis</h2>
           <span id="rallyCount">0 rallies</span>
@@ -1652,7 +1672,7 @@
       </section>
     </main>
 
-    <section class="card" style="margin-top:14px;">
+    <section class="card out-card" style="margin-top:14px;">
       <div class="section-title">
         <h2>Score Sheet</h2>
         <span>Basic sheet style with ErrorZero marks</span>
@@ -1662,7 +1682,7 @@
       </div>
     </section>
 
-    <section class="card" style="margin-top:14px;">
+    <section class="card out-card" style="margin-top:14px;">
       <div class="section-title">
         <h2>Score Progression</h2>
         <span>Rally-by-rally score trend</span>
@@ -1681,7 +1701,7 @@
       </div>
     </section>
 
-    <section class="card" style="margin-top:14px;">
+    <section class="card out-card" style="margin-top:14px;">
       <div class="section-title">
         <h2>Recent Rally</h2>
         <span>Latest 20 points</span>
@@ -2259,7 +2279,7 @@
      * versions (new fields are only added), and before a new version first runs, the saved data is
      * copied to AUTO_BACKUP_KEY so it can be merged back from the ⋯ menu.
      */
-    const APP_VERSION = '1.4.0';
+    const APP_VERSION = '1.4.1';
     const VERSION_KEY = 'errorzero_appver';
     const AUTO_BACKUP_KEY = 'errorzero_autobackup_v1';
     function protectDataOnUpdate() {
